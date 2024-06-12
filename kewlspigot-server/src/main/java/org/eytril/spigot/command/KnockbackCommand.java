@@ -22,20 +22,21 @@ public class KnockbackCommand extends Command {
 
         this.setAliases(Collections.singletonList("kb"));
         this.setUsage(StringUtils.join(new String[]{
-                "",
+                " ",
                 ChatColor.DARK_AQUA + "Knockback Commands:",
-                "",
+                " ",
                 ChatColor.AQUA + "/kb list" + ChatColor.GRAY + " - " + ChatColor.WHITE + "List all profiles",
                 ChatColor.AQUA + "/kb create <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Create new profile",
                 ChatColor.AQUA + "/kb delete <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Delete a profile",
                 ChatColor.AQUA + "/kb load <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Load existing profile",
-                ChatColor.AQUA + "/kb friction <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set friction",
+                ChatColor.AQUA + "/kb horfriction <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set horizontal friction",
+                ChatColor.AQUA + "/kb vertfriction <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical friction",
                 ChatColor.AQUA + "/kb horizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set horizontal",
                 ChatColor.AQUA + "/kb vertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical",
                 ChatColor.AQUA + "/kb extrahorizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra horizontal",
                 ChatColor.AQUA + "/kb extravertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra vertical",
-                ChatColor.AQUA + "/kb limit <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical limit",
-                "",
+                ChatColor.AQUA + "/kb vertmax <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical limit",
+                " ",
         }, "\n"));
     }
 
@@ -134,7 +135,7 @@ public class KnockbackCommand extends Command {
                     return true;
                 }
             }
-            case "friction": {
+            case "horfriction": {
                 if (args.length == 3 && NumberUtils.isNumber(args[2])) {
                     KnockbackProfile profile = KewlSpigot.INSTANCE.getConfig().getKbProfileByName(args[1]);
 
@@ -143,7 +144,28 @@ public class KnockbackCommand extends Command {
                         return true;
                     }
 
-                    profile.setFriction(Double.parseDouble(args[2]));
+                    profile.setHorizontalFriction(Double.parseDouble(args[2]));
+                    profile.save();
+
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
+
+                    for (String value : profile.getValues()) {
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Wrong syntax.");
+                }
+            }
+            case "vertfriction": {
+                if (args.length == 3 && NumberUtils.isNumber(args[2])) {
+                    KnockbackProfile profile = KewlSpigot.INSTANCE.getConfig().getKbProfileByName(args[1]);
+
+                    if (profile == null) {
+                        sender.sendMessage(ChatColor.RED + "A profile with that name could not be found.");
+                        return true;
+                    }
+
+                    profile.setVerticalFriction(Double.parseDouble(args[2]));
                     profile.save();
 
                     sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
@@ -244,7 +266,7 @@ public class KnockbackCommand extends Command {
                 }
             }
             break;
-            case "limit": {
+            case "vertmax": {
                 if (args.length == 3 && NumberUtils.isNumber(args[2])) {
                     KnockbackProfile profile = KewlSpigot.INSTANCE.getConfig().getKbProfileByName(args[1]);
 

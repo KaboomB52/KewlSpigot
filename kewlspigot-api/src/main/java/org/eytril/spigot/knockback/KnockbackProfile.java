@@ -6,9 +6,13 @@ public interface KnockbackProfile {
 
     String[] getValues();
 
-    double getFriction();
+    double getHorizontalFriction();
 
-    void setFriction(double friction);
+    void setHorizontalFriction(double friction);
+
+    double getVerticalFriction();
+
+    void setVerticalFriction(double friction);
 
     double getHorizontal();
 

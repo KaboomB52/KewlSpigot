@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -202,7 +203,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     already exist
      * @return true if the chunk has loaded successfully, otherwise false
      */
-    public boolean loadChunk(int x, int z, boolean generate);
+    public CompletableFuture<Boolean> loadChunk(int x, int z, boolean generate);
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates

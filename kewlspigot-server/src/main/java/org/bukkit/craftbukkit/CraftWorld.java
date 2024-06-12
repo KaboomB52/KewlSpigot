@@ -11,9 +11,13 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import net.minecraft.server.*;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang.Validate;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
@@ -57,6 +61,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.StandardMessenger;
 import org.bukkit.util.Vector;
 import org.github.paperspigot.exception.ServerInternalException;
+
+import net.jafama.FastMath;
 
 public class CraftWorld implements World {
     public static final int CUSTOM_DIMENSION_OFFSET = 10;
@@ -133,6 +139,7 @@ public class CraftWorld implements World {
                 callback.onLoad(cps.getChunkAt(x, z).bukkitChunk);
             }
         });
+        cps.getChunkAt(x, z, () -> callback.onLoad(cps.getChunkAt(x, z).bukkitChunk));
     }
     public void getChunkAtAsync(Block block, ChunkLoadCallback callback) {
         getChunkAtAsync(block.getX() >> 4, block.getZ() >> 4, callback);
@@ -270,25 +277,34 @@ public class CraftWorld implements World {
         return world.getPlayerChunkMap().isChunkInUse(x, z);
     }
 
-    public boolean loadChunk(int x, int z, boolean generate) {
-        org.spigotmc.AsyncCatcher.catchOp( "chunk load"); // Spigot
-        chunkLoadCount++;
-        if (generate) {
-            // Use the default variant of loadChunk when generate == true.
-            return world.chunkProviderServer.getChunkAt(x, z) != null;
-        }
+    Executor executor = Executors.newCachedThreadPool();
 
-        world.chunkProviderServer.unloadQueue.remove(x, z);
-        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
+    @Override
+    public CompletableFuture<Boolean> loadChunk(int x, int z, boolean generate) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+        CompletableFuture.supplyAsync(() -> {
+            chunkLoadCount++;
+            if (generate) {
+                return completableFuture.complete(world.chunkProviderServer.getChunkAt(x, z) != null);
+            }
 
-        if (chunk == null) {
-            world.timings.syncChunkLoadTimer.startTiming(); // Spigot
-            chunk = world.chunkProviderServer.loadChunk(x, z);
+            world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); // TacoSpigot - invoke LongHash directly
+            net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
 
-            chunkLoadPostProcess(chunk, x, z);
-            world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
-        }
-        return chunk != null;
+            if (chunk == null) {
+                world.timings.syncChunkLoadTimer.startTiming(); // Spigot
+                chunk = world.chunkProviderServer.loadChunk(x, z);
+                if (chunk == null) {
+                    chunk = world.chunkProviderServer.loadChunk(x, z);
+
+                    chunkLoadPostProcess(chunk, x, z);
+                    world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
+                }
+                return chunk != null;
+            }
+            return completableFuture.complete(chunk != null);
+        });
+        return completableFuture;
     }
 
     private void chunkLoadPostProcess(net.minecraft.server.Chunk chunk, int cx, int cz) {
@@ -351,24 +367,24 @@ public class CraftWorld implements World {
         double prevY = loc.getY();
         double prevZ = loc.getZ();
         loc.add(xs, ys, zs);
-        if (loc.getX() < Math.floor(prevX)) {
-            loc.setX(Math.floor(prevX));
-        }
-        if (loc.getX() >= Math.ceil(prevX)) {
-            loc.setX(Math.ceil(prevX - 0.01));
-        }
-        if (loc.getY() < Math.floor(prevY)) {
-            loc.setY(Math.floor(prevY));
-        }
-        if (loc.getY() >= Math.ceil(prevY)) {
-            loc.setY(Math.ceil(prevY - 0.01));
-        }
-        if (loc.getZ() < Math.floor(prevZ)) {
-            loc.setZ(Math.floor(prevZ));
-        }
-        if (loc.getZ() >= Math.ceil(prevZ)) {
-            loc.setZ(Math.ceil(prevZ - 0.01));
-        }
+            if (loc.getX() < FastMath.floor(prevX)) {
+                loc.setX(FastMath.floor(prevX));
+            }
+            if (loc.getX() >= FastMath.ceil(prevX)) {
+                loc.setX(FastMath.ceil(prevX - 0.01));
+            }
+            if (loc.getY() < FastMath.floor(prevY)) {
+                loc.setY(FastMath.floor(prevY));
+            }
+            if (loc.getY() >= FastMath.ceil(prevY)) {
+                loc.setY(FastMath.ceil(prevY - 0.01));
+            }
+            if (loc.getZ() < FastMath.floor(prevZ)) {
+                loc.setZ(FastMath.floor(prevZ));
+            }
+            if (loc.getZ() >= Math.ceil(prevZ)) {
+                loc.setZ(FastMath.ceil(prevZ - 0.01));
+            }
     }
 
     @Override

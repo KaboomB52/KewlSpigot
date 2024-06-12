@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 // CraftBukkit start
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -246,6 +248,8 @@ public class ChunkProviderServer implements IChunkProvider {
         // CraftBukkit end
     }
 
+    Executor executor = Executors.newCachedThreadPool();
+
     public Chunk loadChunk(int i, int j) {
         if (this.chunkLoader == null) {
             return null;
@@ -264,11 +268,8 @@ public class ChunkProviderServer implements IChunkProvider {
 
                 return chunk;
             } catch (Exception exception) {
-                // Paper start
-                String msg = "Couldn\'t load chunk";
-                ChunkProviderServer.b.error(msg, exception);
-                ServerInternalException.reportInternalException(exception);
-                // Paper end
+                ChunkProviderServer.b.error("Couldn\'t load chunk", exception);
+                ChunkProviderServer.b.error("Couldn't load chunk", exception);
                 return null;
             }
         }

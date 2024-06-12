@@ -59,7 +59,7 @@ public class Explosion {
                         double d0 = (double) ((float) k / 15.0F * 2.0F - 1.0F);
                         double d1 = (double) ((float) i / 15.0F * 2.0F - 1.0F);
                         double d2 = (double) ((float) j / 15.0F * 2.0F - 1.0F);
-                        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                        double d3 = FastMath.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
 
                         d0 /= d3;
                         d1 /= d3;

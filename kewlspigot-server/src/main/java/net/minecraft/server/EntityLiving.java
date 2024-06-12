@@ -959,9 +959,9 @@ public abstract class EntityLiving extends Entity {
             // Kohi start - configurable knockback
             double magnitude = MathHelper.sqrt(d0 * d0 + d1 * d1);
 
-            this.motX /= profile.getFriction();
-            this.motY /= profile.getFriction();
-            this.motZ /= profile.getFriction();
+            this.motX /= profile.getHorizontalFriction();
+            this.motY /= profile.getVerticalFriction();
+            this.motZ /= profile.getHorizontalFriction();
 
             this.motX -= d0 / magnitude * profile.getHorizontal();
             this.motY += profile.getVertical();

@@ -76,7 +76,7 @@ public abstract class Container {
             ItemStack itemstack = ((Slot) this.c.get(i)).getItem();
             ItemStack itemstack1 = (ItemStack) this.b.get(i);
 
-            if (!ItemStack.fastMatches(itemstack1, itemstack) || (tickCount % 20 == 0 && !ItemStack.matches(itemstack1, itemstack))) { // Spigot
+            if (!ItemStack.fastMatches(itemstack1, itemstack) || (!ItemStack.matches(itemstack1, itemstack))) { // Spigot
                 itemstack1 = itemstack == null ? null : itemstack.cloneItemStack();
                 this.b.set(i, itemstack1);
 

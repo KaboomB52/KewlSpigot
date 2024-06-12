@@ -5,6 +5,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Represents a chunk of blocks
  */
@@ -89,14 +91,14 @@ public interface Chunk {
 	 *                 already exist
 	 * @return true if the chunk has loaded successfully, otherwise false
 	 */
-	boolean load(boolean generate);
+	CompletableFuture<Boolean> load(boolean generate);
 
 	/**
 	 * Loads the chunk.
 	 *
 	 * @return true if the chunk has loaded successfully, otherwise false
 	 */
-	boolean load();
+	CompletableFuture<Boolean> load();
 
 	/**
 	 * Unloads and optionally saves the Chunk

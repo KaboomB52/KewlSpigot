@@ -21,6 +21,7 @@ import org.bukkit.entity.Entity;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 public class CraftChunk implements Chunk {
 	private static final byte[] emptyData = new byte[2048];
@@ -203,11 +204,11 @@ public class CraftChunk implements Chunk {
 		return getWorld().isChunkLoaded(this);
 	}
 
-	public boolean load() {
+	public CompletableFuture<Boolean> load() {
 		return getWorld().loadChunk(getX(), getZ(), true);
 	}
 
-	public boolean load(boolean generate) {
+	public CompletableFuture<Boolean> load(boolean generate) {
 		return getWorld().loadChunk(getX(), getZ(), generate);
 	}
 

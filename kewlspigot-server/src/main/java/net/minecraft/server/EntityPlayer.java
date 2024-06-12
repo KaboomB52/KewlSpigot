@@ -198,9 +198,9 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
         
         // PaperSpigot start - Configurable container update tick rate
-        if (--containerUpdateDelay <= 0) {
+        if (/*--containerUpdateDelay <= 0*/ true) {
             this.activeContainer.b();
-            containerUpdateDelay = world.paperSpigotConfig.containerUpdateTickRate;
+            /*containerUpdateDelay = world.paperSpigotConfig.containerUpdateTickRate;*/
         }
         // PaperSpigot end
         if (!this.world.isClientSide && !this.activeContainer.a((EntityHuman) this)) {

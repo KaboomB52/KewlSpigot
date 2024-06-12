@@ -101,7 +101,8 @@ public class KewlConfig {
                 this.kbProfiles.add(profile);
             }
 
-            profile.setFriction(this.getDouble(path + ".friction", 2.0D));
+            profile.setHorizontalFriction(this.getDouble(path + ".horizontalfriction", 2.0D));
+            profile.setVerticalFriction(this.getDouble(path + ".verticalfriction", 2.0D));
             profile.setHorizontal(this.getDouble(path + ".horizontal", 0.35D));
             profile.setVertical(this.getDouble(path + ".vertical", 0.35D));
             profile.setVerticalLimit(this.getDouble(path + ".vertical-limit", 0.4D));
