@@ -74,7 +74,7 @@ public class KeKConfig {
         try {
             config.load(this.configFile);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("Generating a new settings.yml file.");
         } catch (InvalidConfigurationException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not load settings.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
