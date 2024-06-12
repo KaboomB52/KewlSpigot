@@ -6,17 +6,17 @@
         <defaultGoal>clean install</defaultGoal>
     </build>
 
-    <groupId>org.eytril.kekspigot</groupId>
-    <artifactId>kekspigot-parent</artifactId>
+    <groupId>org.eytril.spigot</groupId>
+    <artifactId>kewlspigot-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>kekspigot-parent</name>
-    <description>Parent project for all KeKSpigot modules.</description>
+    <name>kewlspigot-parent</name>
+    <description>Parent project for all KewlSpigot modules.</description>
 
     <modules>
-        <module>kekspigot-server</module>
-        <module>kekspigot-api</module>
+        <module>kewlspigot-server</module>
+        <module>kewlspigot-api</module>
     </modules>
 
     <properties>

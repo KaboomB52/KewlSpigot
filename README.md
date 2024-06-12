@@ -1,4 +1,4 @@
-# KeK Spigot
+# Kewl Spigot
 A fork of SpigotX (based on ClubSpigot)
 
 This is a spigot built to be performant and optimized while allowing customizability over kb and smoother pots.
