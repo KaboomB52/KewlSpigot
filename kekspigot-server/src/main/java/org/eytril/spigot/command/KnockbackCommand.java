@@ -22,7 +22,9 @@ public class KnockbackCommand extends Command {
 
         this.setAliases(Collections.singletonList("kb"));
         this.setUsage(StringUtils.join(new String[]{
+                "",
                 ChatColor.DARK_AQUA + "Knockback Commands:",
+                "",
                 ChatColor.AQUA + "/kb list" + ChatColor.GRAY + " - " + ChatColor.WHITE + "List all profiles",
                 ChatColor.AQUA + "/kb create <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Create new profile",
                 ChatColor.AQUA + "/kb delete <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Delete a profile",
@@ -32,7 +34,8 @@ public class KnockbackCommand extends Command {
                 ChatColor.AQUA + "/kb vertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical",
                 ChatColor.AQUA + "/kb extrahorizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra horizontal",
                 ChatColor.AQUA + "/kb extravertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra vertical",
-                ChatColor.AQUA + "/kb limit <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical limit"
+                ChatColor.AQUA + "/kb limit <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical limit",
+                "",
         }, "\n"));
     }
 
@@ -62,8 +65,11 @@ public class KnockbackCommand extends Command {
                     }
                 }
 
+                sender.sendMessage("");
                 sender.sendMessage(ChatColor.DARK_AQUA + "Knockback Profiles:");
+                sender.sendMessage("");
                 sender.sendMessage(StringUtils.join(messages, "\n"));
+                sender.sendMessage("");
             }
             break;
             case "create": {

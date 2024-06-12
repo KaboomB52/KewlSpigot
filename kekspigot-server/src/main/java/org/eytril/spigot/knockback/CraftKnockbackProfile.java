@@ -28,12 +28,12 @@ public class CraftKnockbackProfile implements KnockbackProfile {
     @Override
     public String[] getValues() {
         return new String[]{
-                "Friction " + ChatColor.WHITE + ":" + this.friction,
-                "Horizontal " + ChatColor.WHITE + ":" + this.horizontal,
-                "Vertical " + ChatColor.WHITE + ":" + this.vertical,
-                "Vertical Limit " + ChatColor.WHITE + ":" + this.verticalLimit,
-                "Extra Horizontal " + ChatColor.WHITE + ":" + this.extraHorizontal,
-                "Extra Vertical " + ChatColor.WHITE + ":" + this.extraVertical,
+                ChatColor.AQUA + "Friction" + ChatColor.WHITE + ": " + this.friction,
+                ChatColor.AQUA + "Horizontal" + ChatColor.WHITE + ": " + this.horizontal,
+                ChatColor.AQUA + "Vertical" + ChatColor.WHITE + ": " + this.vertical,
+                ChatColor.AQUA + "Vertical Limit" + ChatColor.WHITE + ": " + this.verticalLimit,
+                ChatColor.AQUA + "Extra Horizontal" + ChatColor.WHITE + ": " + this.extraHorizontal,
+                ChatColor.AQUA + "Extra Vertical" + ChatColor.WHITE + ": " + this.extraVertical,
         };
     }
 

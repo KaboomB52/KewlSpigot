@@ -1,7 +1,12 @@
 package org.spigotmc;
 
+import com.mysql.jdbc.TimeUtil;
+import net.jafama.FastMath;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
 import org.eytril.spigot.util.DateUtil;
 import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 import net.minecraft.server.DedicatedServer;
 import net.minecraft.server.MinecraftServer;
@@ -20,42 +25,55 @@ public class TicksPerSecondCommand extends Command {
 		this.setPermission("bukkit.command.tps");
 	}
 
-	private static String format(double tps) {
-		return ((tps / 2 > 18.0) ? ChatColor.GREEN : (tps / 2 > 16.0) ? ChatColor.YELLOW : ChatColor.RED).toString()
-		       + ((tps / 2 > 20.0) ? "*" : "") + Math.min(Math.round(tps * 100.0) / 100.0, DedicatedServer.TPS);
+	private static String format(final double tps) {
+		return ((tps > 18.0) ? ChatColor.DARK_GREEN : ((tps > 16.0) ? ChatColor.YELLOW : ChatColor.RED)).toString() + ((tps > 20.0) ? "*" : "") + FastMath.min(FastMath.round(tps * 100.0) / 100.0, 20.0);
 	}
 
 	@Override
-	public boolean execute(CommandSender sender, String currentAlias, String[] args) {
-		if (!testPermission(sender)) {
+	public boolean execute(final CommandSender sender, final String currentAlias, final String[] args) {
+		if (!this.testPermission(sender)) {
 			return true;
 		}
 
-		double[] tps = org.bukkit.Bukkit.spigot().getTPS();
+		final double[] tps = Bukkit.spigot().getTPS();
+		final double tpsNow = Bukkit.spigot().getTPS()[0];
+		final double roundTPS = Math.round(tpsNow * 100.0) / 100.0;
+		final String[] tpsAvg = new String[tps.length];
+		final String[] tps2 = new String[3];
 
-		String[] tpsAvg = new String[tps.length];
+		for (int i = 0; i < tps2.length; ++i) {
+			tps2[i] = format(tps[i]);
+		}
 
-		for (int i = 0; i < tps.length; i++) {
+		for (int i = 0; i < tps.length; ++i) {
 			tpsAvg[i] = format(tps[i]);
 		}
 
 		int totalEntities = 0;
-
-		for (World world : Bukkit.getServer().getWorlds()) {
+		for (final World world : Bukkit.getServer().getWorlds()) {
 			totalEntities += world.getEntities().size();
 		}
 
-		final long usedMemory = ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 2) / 1048576L;
+		final double lag = (double)Math.round((1.0 - tpsNow / 20.0) * 100.0);
+		final long usedMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 2L / 1048576L;
 		final long allocatedMemory = Runtime.getRuntime().totalMemory() / 1048576L;
+		final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+		final World world2 = (sender instanceof Player) ? ((Player)sender).getWorld() : Bukkit.getWorlds().get(0);
+		final Chunk[] loadedChunks = world2.getLoadedChunks();
 
-		sender.sendMessage("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + "----------------------------------------------");
-		sender.sendMessage(ChatColor.GOLD + "TPS (1m, 5m, 15m): " + org.apache.commons.lang.StringUtils.join(tpsAvg, ", "));
-		sender.sendMessage(ChatColor.GOLD + "Online: " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers());
-		sender.sendMessage(ChatColor.GOLD + "Memory: " + ChatColor.GREEN + usedMemory + "/" + allocatedMemory + " MB");
-		sender.sendMessage(ChatColor.GOLD + "Uptime: " + ChatColor.GREEN + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
-		sender.sendMessage(ChatColor.GOLD + "Entities: " + ChatColor.GREEN + totalEntities);
-		sender.sendMessage(ChatColor.GOLD + "Last Tick Time: " + ChatColor.GREEN + (System.currentTimeMillis() - MinecraftServer.NORMAL_TICK_TIME) + "ms");
-		sender.sendMessage("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + "----------------------------------------------");
+		sender.sendMessage("");
+		sender.sendMessage("§3Performance §7[" + Bukkit.getOnlinePlayers().size() + " Online]§3:");
+		sender.sendMessage("");
+		sender.sendMessage("§bUptime: §f" + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
+		sender.sendMessage("§bTPS: §f" + format(tpsNow));
+		sender.sendMessage("§bLag: §f" + Math.round(lag * 10000.0) / 10000.0);
+		sender.sendMessage("");
+		sender.sendMessage("§bEntities: §f" + totalEntities);
+		sender.sendMessage("§bChunks: §f" + loadedChunks.length);
+		sender.sendMessage("");
+		sender.sendMessage("§bMemory: §f" + usedMemory + "/" + allocatedMemory + "MB");
+		sender.sendMessage("§bFull tick: §f" + MinecraftServer.LAST_TICK_TIME);
+		sender.sendMessage("");
 
 		return true;
 	}

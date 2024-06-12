@@ -58,6 +58,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     public static int TPS = 20;
     public static final long SEC_IN_NANO = 1000000000;
     private static final int SAMPLE_INTERVAL = TPS;
+    public static long LAST_TICK_TIME;
     public static long TICK_TIME = SEC_IN_NANO / TPS;
     public static long NORMAL_TICK_TIME = TPS / 20;
     public Convertable convertable;
@@ -575,6 +576,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
                 // PandaSpigot start - Modern tick loop
                 long start = System.nanoTime(), curTime, tickSection = start;
                 lastTick = start - TICK_TIME;
+                LAST_TICK_TIME = System.currentTimeMillis();
                 // PandaSpigot end
 
                 while (this.isRunning) {
