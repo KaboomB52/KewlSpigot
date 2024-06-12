@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -248,7 +248,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
 
         timings.doChunkUnload.startTiming();
 
-        if (SpigotX.INSTANCE.getConfig().isDoChunkUnload()) {
+        if (KeKSpigot.INSTANCE.getConfig().isDoChunkUnload()) {
             this.methodProfiler.c("chunkSource");
             this.chunkProvider.unloadChunks();
         }
@@ -488,7 +488,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
 
                 this.methodProfiler.c("tickBlocks");
 
-                if (SpigotX.INSTANCE.getConfig().isBlockOperations()) {
+                if (KeKSpigot.INSTANCE.getConfig().isBlockOperations()) {
                     timings.chunkTicksBlocks.startTiming();
 
                     i1 = this.getGameRules().c("randomTickSpeed");
@@ -629,6 +629,12 @@ public class WorldServer extends World implements IAsyncTaskHandler {
         if (this.worldData.getType() == WorldType.DEBUG_ALL_BLOCK_STATES) {
             return false;
         } else {
+            // MinetickMod start
+            if(!this.M.checkConsistency()) {
+                a.warn("TickNextTick list out of synch - World: " + this.getWorld().getName() + ". Recovering...");
+            }
+            // MinetickMod end
+
             int i = this.M.size();
 
             if (false) { // CraftBukkit
@@ -756,6 +762,13 @@ public class WorldServer extends World implements IAsyncTaskHandler {
                         && blockposition.getZ() >= structureboundingbox.c && blockposition.getZ() <
                         structureboundingbox.f) {
                     if (flag) {
+                        // MinetickMod start - dont miss to remove the entry from V if iterating over M and vice versa
+                        if(i == 0) {
+                            this.V.remove(nextticklistentry);
+                        } else {
+                            this.M.remove(nextticklistentry);
+                        }
+                        // MinetickMod end
                         // CraftBukkit - use M
                         iterator.remove();
                     }

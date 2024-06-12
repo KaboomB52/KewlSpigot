@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ public class ChunkProviderServer implements IChunkProvider {
     public WorldServer world;
 
     public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {
-        this.emptyChunk = new EmptyChunk(worldserver, 0, 0);
+        this.emptyChunk = new EmptyChunk(worldserver, Integer.MIN_VALUE, Integer.MIN_VALUE); // MinetickMod
         this.world = worldserver;
         this.chunkLoader = ichunkloader;
         this.chunkProvider = ichunkprovider;
@@ -55,7 +55,7 @@ public class ChunkProviderServer implements IChunkProvider {
 
     public void queueUnload(int i, int j) {
         // PaperSpigot start - Asynchronous lighting updates
-        if (SpigotX.INSTANCE.getConfig().isDoChunkUnload()) {
+        if (KeKSpigot.INSTANCE.getConfig().isDoChunkUnload()) {
             return;
         }
         Chunk chunk = chunks.get(LongHash.toLong(i, j));

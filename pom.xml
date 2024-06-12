@@ -11,7 +11,7 @@
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>spigotx-parent</name>
+    <name>kekspigot-parent</name>
     <description>Parent project for all KeKSpigot modules.</description>
 
     <modules>

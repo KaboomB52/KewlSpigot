@@ -1,7 +1,7 @@
 package org.bukkit.craftbukkit;
 
-import com.minexd.spigot.chunk.CraftFakeMultiBlockChange;
-import com.minexd.spigot.chunk.FakeMultiBlockChange;
+import org.eytril.spigot.chunk.CraftFakeMultiBlockChange;
+import org.eytril.spigot.chunk.FakeMultiBlockChange;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.BlockPosition;
 import net.minecraft.server.ChunkSection;

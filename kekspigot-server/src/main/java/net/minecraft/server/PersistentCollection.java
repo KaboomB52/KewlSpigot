@@ -187,4 +187,15 @@ public class PersistentCollection {
             return oshort.shortValue();
         }
     }
+
+    // MinetickMod start
+    public void removeTrackedPlayer(EntityHuman entityhuman) {
+        for(Object o: this.c) {
+            if(o instanceof WorldMap) {
+                WorldMap map = (WorldMap) o;
+                map.untrackPlayer(entityhuman);
+            }
+        }
+    }
+    // MinetickMod end
 }

@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
@@ -358,7 +358,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 		}
 		getHandle().listName = name.equals(getName()) ? null : CraftChatMessage.fromString(name)[0];
 		for (EntityPlayer player : server.getHandle().players) {
-			if (!SpigotX.INSTANCE.getConfig().isHidePlayersFromTab() || player.getBukkitEntity().canSee(this)) {
+			if (!KeKSpigot.INSTANCE.getConfig().isHidePlayersFromTab() || player.getBukkitEntity().canSee(this)) {
 				player.playerConnection.sendPacket(
 						new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME,
 								this.getHandle()));
@@ -1117,7 +1117,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 //			getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, other));
 //		}
 
-		if (SpigotX.INSTANCE.getConfig().isHidePlayersFromTab()) {
+		if (KeKSpigot.INSTANCE.getConfig().isHidePlayersFromTab()) {
 			getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, other));
 		}
 	}

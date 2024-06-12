@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 import lombok.Getter;
 
 import com.google.common.collect.Lists;
@@ -336,10 +336,10 @@ public abstract class PlayerList {
         for (int i = 0; i < this.players.size(); ++i) {
             EntityPlayer entityplayer1 = (EntityPlayer) this.players.get(i);
 
-            if (!SpigotX.INSTANCE.getConfig().isHidePlayersFromTab() || entityplayer1.getBukkitEntity().canSee(entityplayer.getBukkitEntity())) {
+            if (!KeKSpigot.INSTANCE.getConfig().isHidePlayersFromTab() || entityplayer1.getBukkitEntity().canSee(entityplayer.getBukkitEntity())) {
                 entityplayer1.playerConnection.sendPacket(packet);
             }
-            if (!SpigotX.INSTANCE.getConfig().isHidePlayersFromTab() || entityplayer.getBukkitEntity().canSee(entityplayer1.getBukkitEntity())) {
+            if (!KeKSpigot.INSTANCE.getConfig().isHidePlayersFromTab() || entityplayer.getBukkitEntity().canSee(entityplayer1.getBukkitEntity())) {
                 entityplayer.playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityplayer1));
             }
         }

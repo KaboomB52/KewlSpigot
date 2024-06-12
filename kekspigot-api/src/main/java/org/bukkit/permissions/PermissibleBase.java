@@ -1,6 +1,6 @@
 package org.bukkit.permissions;
 
-import com.minexd.spigot.SpigotXBridge;
+import org.eytril.spigot.KeKBridge;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -78,7 +78,7 @@ public class PermissibleBase implements Permissible {
 
             boolean isOp = isOp();
 
-            if (SpigotXBridge.disableOpPermissions) {
+            if (KeKBridge.disableOpPermissions) {
                 isOp = false;
             }
 
@@ -103,7 +103,7 @@ public class PermissibleBase implements Permissible {
 
         boolean isOp = isOp();
 
-        if (SpigotXBridge.disableOpPermissions) {
+        if (KeKBridge.disableOpPermissions) {
             isOp = false;
         }
 

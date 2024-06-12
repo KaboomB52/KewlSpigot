@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.util.OptimizedRemoveUtil;
+import org.eytril.spigot.util.OptimizedRemoveUtil;
 import co.aikar.timings.SpigotTimings;
 import co.aikar.timings.Timing;
 import java.util.Iterator;

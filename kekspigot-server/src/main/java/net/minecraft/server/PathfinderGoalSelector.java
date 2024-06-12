@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +25,7 @@ public class PathfinderGoalSelector {
     }
 
     public void a(int i, PathfinderGoal pathfindergoal) {
-        if (!SpigotX.INSTANCE.getConfig().isMobAIEnabled() && !(pathfindergoal instanceof PathfinderGoalBreed)) {
+        if (!KeKSpigot.INSTANCE.getConfig().isMobAIEnabled() && !(pathfindergoal instanceof PathfinderGoalBreed)) {
             return;
         }
 

@@ -13,7 +13,7 @@
     <version>1.8.8-R0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>SpigotX-API</name>
+    <name>KeKSpigot-API</name>
     <description>An enhanced plugin API for Minecraft servers.</description>
 
     <properties>

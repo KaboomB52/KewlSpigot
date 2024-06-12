@@ -1,6 +1,6 @@
 package org.spigotmc;
 
-import com.minexd.spigot.util.DateUtil;
+import org.eytril.spigot.util.DateUtil;
 import java.lang.management.ManagementFactory;
 
 import net.minecraft.server.DedicatedServer;
@@ -54,7 +54,7 @@ public class TicksPerSecondCommand extends Command {
 		sender.sendMessage(ChatColor.GOLD + "Memory: " + ChatColor.GREEN + usedMemory + "/" + allocatedMemory + " MB");
 		sender.sendMessage(ChatColor.GOLD + "Uptime: " + ChatColor.GREEN + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
 		sender.sendMessage(ChatColor.GOLD + "Entities: " + ChatColor.GREEN + totalEntities);
-		sender.sendMessage(ChatColor.GOLD + "Last Tick Time: " + ChatColor.GREEN + (System.currentTimeMillis() - MinecraftServer.LAST_TICK_TIME) + "ms");
+		sender.sendMessage(ChatColor.GOLD + "Last Tick Time: " + ChatColor.GREEN + (System.currentTimeMillis() - MinecraftServer.NORMAL_TICK_TIME) + "ms");
 		sender.sendMessage("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + "----------------------------------------------");
 
 		return true;

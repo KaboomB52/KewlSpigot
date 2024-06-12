@@ -2,7 +2,7 @@ package net.minecraft.server;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 import com.mojang.authlib.GameProfile;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 // CraftBukkit start
-import com.minexd.spigot.knockback.KnockbackProfile;
+import org.eytril.spigot.knockback.KnockbackProfile;
 import net.jafama.FastMath;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.entity.CraftItem;
@@ -1018,7 +1018,7 @@ public abstract class EntityHuman extends EntityLiving {
 
                 if (damaged) {
                     if (i > 0) {
-                        KnockbackProfile profile = this.getKnockbackProfile() == null ? SpigotX.INSTANCE.getConfig().getCurrentKb() : this.getKnockbackProfile();
+                        KnockbackProfile profile = this.getKnockbackProfile() == null ? KeKSpigot.INSTANCE.getConfig().getCurrentKb() : this.getKnockbackProfile();
 
                         entity.g(
                                 (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * profile.getExtraHorizontal()), profile.getExtraVertical(),

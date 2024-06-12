@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
-import com.minexd.spigot.handler.MovementHandler;
-import com.minexd.spigot.handler.PacketHandler;
-import com.minexd.spigot.util.NotchUtil;
+import org.eytril.spigot.KeKSpigot;
+import org.eytril.spigot.handler.MovementHandler;
+import org.eytril.spigot.handler.PacketHandler;
+import org.eytril.spigot.util.NotchUtil;
 
 import co.aikar.timings.SpigotTimings;
 
@@ -257,7 +257,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 				float deltaAngle = Math.abs(this.lastYaw - to.getYaw()) + Math.abs(this.lastPitch - to.getPitch());
 
 				if (packetplayinflying.hasPos && delta > 0.0D && this.checkMovement && !this.player.dead) {
-					for (MovementHandler handler : SpigotX.INSTANCE.getMovementHandlers()) {
+					for (MovementHandler handler : KeKSpigot.INSTANCE.getMovementHandlers()) {
 						try {
 							handler.handleUpdateLocation(player, to, from, packetplayinflying);
 						} catch (Exception e) {
@@ -267,7 +267,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 				}
 
 				if (packetplayinflying.hasLook && deltaAngle > 0.0F && this.checkMovement && !this.player.dead) {
-					for (MovementHandler handler : SpigotX.INSTANCE.getMovementHandlers()) {
+					for (MovementHandler handler : KeKSpigot.INSTANCE.getMovementHandlers()) {
 						try {
 							handler.handleUpdateRotation(player, to, from, packetplayinflying);
 						} catch (Exception e) {
@@ -283,7 +283,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 					this.lastYaw = to.getYaw();
 					this.lastPitch = to.getPitch();
 
-					if (SpigotX.INSTANCE.getConfig().isFirePlayerMoveEvent()) {
+					if (KeKSpigot.INSTANCE.getConfig().isFirePlayerMoveEvent()) {
 						Location oldTo = to.clone();
 						PlayerMoveEvent event = new PlayerMoveEvent(player, from, to);
 						this.server.getPluginManager().callEvent(event);
@@ -637,7 +637,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 						if (!this.minecraftServer.a(worldserver, blockposition, this.player) && worldserver.getWorldBorder().a(blockposition)) {
 							this.player.playerInteractManager.a(blockposition, packetplayinblockdig.b());
 						} else {
-							if (SpigotX.INSTANCE.getConfig().isFireLeftClickBlock()) {
+							if (KeKSpigot.INSTANCE.getConfig().isFireLeftClickBlock()) {
 								CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, blockposition, packetplayinblockdig.b(), this.player.inventory.getItemInHand());
 							}
 
@@ -862,7 +862,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 		try {
 			this.networkManager.handle(packet);
 
-			for (PacketHandler handler : SpigotX.INSTANCE.getPacketHandlers()) {
+			for (PacketHandler handler : KeKSpigot.INSTANCE.getPacketHandlers()) {
 				try {
 					handler.handleSentPacket(this, packet);
 				} catch (Exception e) {
@@ -1160,7 +1160,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 			return;
 		}
 
-		if (SpigotX.INSTANCE.getConfig().isInvalidArmAnimationKick()) {
+		if (KeKSpigot.INSTANCE.getConfig().isInvalidArmAnimationKick()) {
 			if (lastSwingTick != MinecraftServer.currentTick) {
 				swings = 0;
 				lastSwingTick = MinecraftServer.currentTick;
@@ -1184,7 +1184,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 
 		this.player.resetIdleTimer();
 
-		if (SpigotX.INSTANCE.getConfig().isFireLeftClickAir()) {
+		if (KeKSpigot.INSTANCE.getConfig().isFireLeftClickAir()) {
 			float pitch = this.player.pitch;
 			float yaw = this.player.yaw;
 			double locX = this.player.locX;

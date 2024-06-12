@@ -94,7 +94,13 @@ public class PortalTravelAgent {
 
     public boolean b(Entity entity, float f) {
         // CraftBukkit start - Modularize portal search process and entity teleportation
-        BlockPosition found = this.findPortal(entity.locX, entity.locY, entity.locZ, 128);
+        // MinetickMod start
+        BlockPosition found = this.findPortal(entity.locX, entity.locY, entity.locZ, 10);
+        if (found == null) {
+            found = this.findPortal(entity.locX, entity.locY, entity.locZ, 128);
+        }
+        // MinetickMod end
+
         if (found == null) {
             return false;
         }
@@ -133,26 +139,33 @@ public class PortalTravelAgent {
         } else {
             BlockPosition blockposition = new BlockPosition(x, y, z);
 
-            for (int l = -searchRadius; l <= searchRadius; ++l) {   // Paper - actually use search radius
-                BlockPosition blockposition1;
+            // MinetickMod start
+            BlockPosition.MutableBlockPosition mutableblockposition = new BlockPosition.MutableBlockPosition();
+            int range = searchRadius;
 
-                for (int i1 = -searchRadius; i1 <= searchRadius; ++i1) {    // Paper - actually use search radius
-                    for (BlockPosition blockposition2 = blockposition.a(l, this.a.V() - 1 - blockposition.getY(), i1); blockposition2.getY() >= 0; blockposition2 = blockposition1) {
-                        blockposition1 = blockposition2.down();
-                        if (this.a.getType(blockposition2).getBlock() == Blocks.PORTAL) {
-                            while (this.a.getType(blockposition1 = blockposition2.down()).getBlock() == Blocks.PORTAL) {
-                                blockposition2 = blockposition1;
-                            }
+            int zOffset = 0, yOffset = 0;
+            for (int xDiff = -range; xDiff <= range; ++xDiff) {
+                zOffset = (zOffset + 1) % 2;
+                for (int zDiff = -range + zOffset; zDiff <= range; zDiff = zDiff + 2) { // skipping every 2nd block in z direction and alternating from row to row in x direction
+                    yOffset = (yOffset + 1) % 3;
+                    for (int yPos = this.a.V() - (1 + yOffset); yPos >= 0; yPos = yPos - 3) { // checking only every 3rd block in y direction and alternating in height in each column
+                        mutableblockposition.c(blockposition.getX() + xDiff, yPos, blockposition.getZ() + zDiff);
+                        if (this.a.getType(mutableblockposition).getBlock() == Blocks.PORTAL) {
+                            int lowestCorrectHeight = mutableblockposition.getY();
+                            while (this.a.getType(mutableblockposition.c(mutableblockposition.getX(), mutableblockposition.getY() - 1, mutableblockposition.getZ())).getBlock() == Blocks.PORTAL) {
+                                lowestCorrectHeight = mutableblockposition.getY();
 
-                            double d1 = blockposition2.i(blockposition);
+                                double d1 = mutableblockposition.c(mutableblockposition.getX(), lowestCorrectHeight, mutableblockposition.getZ()).i(blockposition);
 
-                            if (d0 < 0.0D || d1 < d0) {
-                                d0 = d1;
-                                object = blockposition2;
+                                if (d0 < 0.0D || d1 < d0) {
+                                    d0 = d1;
+                                    object = new BlockPosition(mutableblockposition);
+                                }
                             }
                         }
                     }
                 }
+                // MinetickMod end
             }
         }
 

@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.event.inventory.PrepareAnvilRepairEvent;
+import org.eytril.spigot.event.inventory.PrepareAnvilRepairEvent;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.Random;
@@ -80,7 +80,7 @@ public class EntitySheep extends EntityAnimal {
             this.a(new ItemStack(Item.getItemOf(Blocks.WOOL), 1, this.getColor().getColorIndex()), 0.0F);
         }
 
-        if(SpigotX.INSTANCE.getConfig().isBaseVersionEnabled()) {
+        if(KeKSpigot.INSTANCE.getConfig().isBaseVersionEnabled()) {
             int j = this.random.nextInt(2) + 1 + this.random.nextInt(1 + i);
 
             for (int k = 0; k < j; ++k) {

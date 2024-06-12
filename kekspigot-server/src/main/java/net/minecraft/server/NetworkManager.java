@@ -1,7 +1,7 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
-import com.minexd.spigot.handler.PacketHandler;
+import org.eytril.spigot.KeKSpigot;
+import org.eytril.spigot.handler.PacketHandler;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.channel.Channel;
@@ -153,7 +153,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
             }
             if (this.m instanceof PlayerConnection) {
                 try {
-                    for (PacketHandler handler : SpigotX.INSTANCE.getPacketHandlers()) {
+                    for (PacketHandler handler : KeKSpigot.INSTANCE.getPacketHandlers()) {
                         handler.handleReceivedPacket((PlayerConnection) this.m, packet);
                     }
                 } catch (Exception e) {
@@ -276,6 +276,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 
     public void close(IChatBaseComponent ichatbasecomponent) {
         this.preparing = false;
+        this.packetQueue.clear(); // MinetickMod
 
         if (this.channel.isOpen()) {
             this.channel.close();

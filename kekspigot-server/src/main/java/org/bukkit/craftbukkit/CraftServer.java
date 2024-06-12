@@ -1,7 +1,7 @@
 package org.bukkit.craftbukkit;
 
-import com.minexd.spigot.SpigotX;
-import com.minexd.spigot.SpigotXConfig;
+import org.eytril.spigot.KeKSpigot;
+import org.eytril.spigot.KeKConfig;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -247,7 +247,7 @@ public final class CraftServer implements Server {
         animalSpawn = configuration.getInt("spawn-limits.animals");
         waterAnimalSpawn = configuration.getInt("spawn-limits.water-animals");
         ambientSpawn = configuration.getInt("spawn-limits.ambient");
-        console.autoSavePeriod = configuration.getInt("ticks-per.autosave");
+        console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
@@ -710,7 +710,7 @@ public final class CraftServer implements Server {
         ambientSpawn = configuration.getInt("spawn-limits.ambient");
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
         printSaveWarning = false;
-        console.autoSavePeriod = configuration.getInt("ticks-per.autosave");
+        console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
         loadIcon();
@@ -730,8 +730,8 @@ public final class CraftServer implements Server {
         org.github.paperspigot.PaperSpigotConfig.init((File) console.options.valueOf("spigot-settings")); // PaperSpigot
 
         // SpigotX
-        SpigotX.INSTANCE.setConfig(new SpigotXConfig());
-        SpigotX.INSTANCE.registerCommands();
+        KeKSpigot.INSTANCE.setConfig(new KeKConfig());
+        KeKSpigot.INSTANCE.registerCommands();
 
         for (WorldServer world : console.worlds) {
             world.worldData.setDifficulty(difficulty);
@@ -1722,7 +1722,7 @@ public final class CraftServer implements Server {
     }
 
     public void checkSaveState() {
-        if (this.playerCommandState || this.printSaveWarning || this.console.autoSavePeriod <= 0) {
+        if (this.playerCommandState || this.printSaveWarning || this.console.autosavePeriod <= 0) {
             return;
         }
         this.printSaveWarning = true;

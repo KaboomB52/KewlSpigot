@@ -313,4 +313,18 @@ public class WorldMap extends PersistentBase {
 
         }
     }
+
+    // MinetickMod start
+    public void untrackPlayer(EntityHuman entityhuman) {
+        if(this.i.containsKey(entityhuman)) {
+            this.i.remove(entityhuman);
+            java.util.Iterator<WorldMapHumanTracker> iter = (java.util.Iterator<WorldMapHumanTracker>) this.g.iterator();
+            while(iter.hasNext()) {
+                if(iter.next().trackee == entityhuman) {
+                    iter.remove();
+                }
+            }
+        }
+    }
+    // MinetickMod end
 }

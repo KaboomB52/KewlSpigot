@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
+import org.eytril.spigot.KeKSpigot;
+
+import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +27,7 @@ public abstract class EntityInsentient extends EntityLiving {
     protected NavigationAbstract navigation;
     public PathfinderGoalSelector goalSelector;
     public PathfinderGoalSelector targetSelector;
-    private EntityLiving goalTarget;
+    private WeakReference<EntityLiving> goalTarget = new WeakReference<EntityLiving>(null); // MinetickMod
     private EntitySenses bk;
     private ItemStack[] equipment = new ItemStack[5];
     public float[] dropChances = new float[5];
@@ -86,7 +88,7 @@ public abstract class EntityInsentient extends EntityLiving {
     }
 
     public EntityLiving getGoalTarget() {
-        return this.goalTarget;
+        return this.goalTarget.get(); // MinetickMod
     }
 
     public void setGoalTarget(EntityLiving entityliving) {
@@ -119,7 +121,7 @@ public abstract class EntityInsentient extends EntityLiving {
                 entityliving = null;
             }
         }
-        this.goalTarget = entityliving;
+        this.goalTarget = new WeakReference<EntityLiving>(entityliving); // MinetickMod
         // CraftBukkit end
     }
 
@@ -471,7 +473,7 @@ public abstract class EntityInsentient extends EntityLiving {
             return;
         }
         // Spigot End
-        if(SpigotX.INSTANCE.getConfig().isMobAIEnabled()) {
+        if(KeKSpigot.INSTANCE.getConfig().isMobAIEnabled()) {
             this.world.methodProfiler.a("sensing");
             this.bk.a();
             this.world.methodProfiler.b();
@@ -488,7 +490,7 @@ public abstract class EntityInsentient extends EntityLiving {
         this.world.methodProfiler.a("mob tick");
         this.E();
         this.world.methodProfiler.b();
-        if(SpigotX.INSTANCE.getConfig().isMobAIEnabled()) {
+        if(KeKSpigot.INSTANCE.getConfig().isMobAIEnabled()) {
             this.world.methodProfiler.a("controls");
             this.world.methodProfiler.a("move");
             this.moveController.c();

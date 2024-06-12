@@ -1,12 +1,12 @@
 package net.minecraft.server;
 
-import com.minexd.spigot.SpigotX;
-import com.minexd.spigot.event.potion.PotionEffectAddEvent;
-import com.minexd.spigot.event.potion.PotionEffectExpireEvent;
-import com.minexd.spigot.event.potion.PotionEffectExtendEvent;
-import com.minexd.spigot.event.potion.PotionEffectRemoveEvent;
-import com.minexd.spigot.knockback.KnockbackProfile;
-import com.minexd.spigot.util.CraftPotionUtil;
+import org.eytril.spigot.KeKSpigot;
+import org.eytril.spigot.event.potion.PotionEffectAddEvent;
+import org.eytril.spigot.event.potion.PotionEffectExpireEvent;
+import org.eytril.spigot.event.potion.PotionEffectExtendEvent;
+import org.eytril.spigot.event.potion.PotionEffectRemoveEvent;
+import org.eytril.spigot.knockback.KnockbackProfile;
+import org.eytril.spigot.util.CraftPotionUtil;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -945,7 +945,7 @@ public abstract class EntityLiving extends Entity {
         if (this.random.nextDouble() >= this.getAttributeInstance(GenericAttributes.c).getValue()) {
             this.ai = true;
 
-            KnockbackProfile profile = this.getKnockbackProfile() == null ? SpigotX.INSTANCE.getConfig().getCurrentKb() : this.getKnockbackProfile();
+            KnockbackProfile profile = this.getKnockbackProfile() == null ? KeKSpigot.INSTANCE.getConfig().getCurrentKb() : this.getKnockbackProfile();
 
             // Kohi start - configurable knockback
             double magnitude = MathHelper.sqrt(d0 * d0 + d1 * d1);
