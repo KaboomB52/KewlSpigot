@@ -22,17 +22,17 @@ public class KnockbackCommand extends Command {
 
         this.setAliases(Collections.singletonList("kb"));
         this.setUsage(StringUtils.join(new String[]{
-                ChatColor.GOLD + "Knockback commands:",
-                ChatColor.YELLOW + "/kb list" + ChatColor.GRAY + " - " + ChatColor.GREEN + "List all profiles",
-                ChatColor.YELLOW + "/kb create <name>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Create new profile",
-                ChatColor.YELLOW + "/kb delete <name>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Delete a profile",
-                ChatColor.YELLOW + "/kb load <name>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Load existing profile",
-                ChatColor.YELLOW + "/kb friction <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set friction",
-                ChatColor.YELLOW + "/kb horizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set horizontal",
-                ChatColor.YELLOW + "/kb vertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set vertical",
-                ChatColor.YELLOW + "/kb extrahorizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set extra horizontal",
-                ChatColor.YELLOW + "/kb extravertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set extra vertical",
-                ChatColor.YELLOW + "/kb limit <name> <double>" + ChatColor.GRAY + " - " + ChatColor.GREEN + "Set vertical limit"
+                ChatColor.DARK_AQUA + "Knockback Commands:",
+                ChatColor.AQUA + "/kb list" + ChatColor.GRAY + " - " + ChatColor.WHITE + "List all profiles",
+                ChatColor.AQUA + "/kb create <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Create new profile",
+                ChatColor.AQUA + "/kb delete <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Delete a profile",
+                ChatColor.AQUA + "/kb load <name>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Load existing profile",
+                ChatColor.AQUA + "/kb friction <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set friction",
+                ChatColor.AQUA + "/kb horizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set horizontal",
+                ChatColor.AQUA + "/kb vertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical",
+                ChatColor.AQUA + "/kb extrahorizontal <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra horizontal",
+                ChatColor.AQUA + "/kb extravertical <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set extra vertical",
+                ChatColor.AQUA + "/kb limit <name> <double>" + ChatColor.GRAY + " - " + ChatColor.WHITE + "Set vertical limit"
         }, "\n"));
     }
 
@@ -55,14 +55,14 @@ public class KnockbackCommand extends Command {
                 for (KnockbackProfile profile : KeKSpigot.INSTANCE.getConfig().getKbProfiles()) {
                     boolean current = KeKSpigot.INSTANCE.getConfig().getCurrentKb().getName().equals(profile.getName());
 
-                    messages.add((current ? ChatColor.GRAY + "-> " : "") + ChatColor.GOLD + profile.getName());
+                    messages.add(ChatColor.AQUA + profile.getName() + (current ? ChatColor.GREEN + " [Active]" : ""));
 
                     for (String value : profile.getValues()) {
-                        messages.add(ChatColor.GRAY + " * " + value);
+                        messages.add(ChatColor.WHITE + " * " + value);
                     }
                 }
 
-                sender.sendMessage(ChatColor.GOLD + "Knockback profiles:");
+                sender.sendMessage(ChatColor.DARK_AQUA + "Knockback Profiles:");
                 sender.sendMessage(StringUtils.join(messages, "\n"));
             }
             break;
@@ -83,7 +83,7 @@ public class KnockbackCommand extends Command {
 
                     KeKSpigot.INSTANCE.getConfig().getKbProfiles().add(profile);
 
-                    sender.sendMessage(ChatColor.GOLD + "You created a new profile " + ChatColor.GREEN + name + ChatColor.GOLD + ".");
+                    sender.sendMessage(ChatColor.AQUA + "You created a new profile " + ChatColor.WHITE + name + ChatColor.AQUA + ".");
                 } else {
                     sender.sendMessage(ChatColor.RED + "Usage: /kb create <name>");
                 }
@@ -99,7 +99,7 @@ public class KnockbackCommand extends Command {
                     } else {
                         if (KeKSpigot.INSTANCE.getConfig().getKbProfiles().removeIf(profile -> profile.getName().equalsIgnoreCase(name))) {
                             KeKSpigot.INSTANCE.getConfig().set("knockback.profiles." + name, null);
-                            sender.sendMessage(ChatColor.GOLD + "You deleted the profile " + ChatColor.GREEN + name + ChatColor.GOLD + ".");
+                            sender.sendMessage(ChatColor.RED + "You deleted the profile " + ChatColor.WHITE + name + ChatColor.RED + ".");
                         } else {
                             sender.sendMessage(ChatColor.RED + "A profile with that name could not be found.");
                         }
@@ -124,7 +124,7 @@ public class KnockbackCommand extends Command {
                     KeKSpigot.INSTANCE.getConfig().set("knockback.current", profile.getName());
                     KeKSpigot.INSTANCE.getConfig().save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You loaded the profile " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + ".");
+                    sender.sendMessage(ChatColor.AQUA + "You loaded the profile " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + ".");
                     return true;
                 }
             }
@@ -140,10 +140,10 @@ public class KnockbackCommand extends Command {
                     profile.setFriction(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");
@@ -162,10 +162,10 @@ public class KnockbackCommand extends Command {
                     profile.setHorizontal(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");
@@ -184,10 +184,10 @@ public class KnockbackCommand extends Command {
                     profile.setVertical(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");
@@ -206,10 +206,10 @@ public class KnockbackCommand extends Command {
                     profile.setExtraHorizontal(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");
@@ -228,10 +228,10 @@ public class KnockbackCommand extends Command {
                     profile.setExtraVertical(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");
@@ -250,10 +250,10 @@ public class KnockbackCommand extends Command {
                     profile.setVerticalLimit(Double.parseDouble(args[2]));
                     profile.save();
 
-                    sender.sendMessage(ChatColor.GOLD + "You have updated " + ChatColor.GREEN + profile.getName() + ChatColor.GOLD + "'s values to:");
+                    sender.sendMessage(ChatColor.AQUA + "You have updated " + ChatColor.WHITE + profile.getName() + ChatColor.AQUA + "'s values to:");
 
                     for (String value : profile.getValues()) {
-                        sender.sendMessage(ChatColor.GRAY + "* " + value);
+                        sender.sendMessage(ChatColor.WHITE + "* " + value);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Wrong syntax.");

@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 @Setter
 public class KeKConfig {
 
-    private static final String HEADER = "This is the main configuration file for SpigotX.\n"
+    private static final String HEADER = "This is the main configuration file for KeKSpigot.\n"
                                          + "Modify with caution, and make sure you know what you are doing.\n";
 
     private File configFile;

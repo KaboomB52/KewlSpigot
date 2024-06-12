@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -30,13 +31,12 @@ public class VersionCommand extends BukkitCommand {
 		}
 
 		if (args.length == 0) {
-			sender.sendMessage("This server is running " +
-			                   Bukkit.getName() +
-			                   " version " +
-			                   Bukkit.getVersion() +
-			                   " (Implementing API version " +
-			                   Bukkit.getBukkitVersion() + ")");
-			// sendVersion(sender);
+			sender.sendMessage("This server is running " + ChatColor.AQUA +
+			                   Bukkit.getName() + ChatColor.RESET +
+			                   " version " + ChatColor.AQUA +
+			                   Bukkit.getVersion() + ChatColor.WHITE +
+			                   " (Implementing API version " + ChatColor.AQUA +
+			                   Bukkit.getBukkitVersion() + ChatColor.WHITE + ")");
 		} else {
 			StringBuilder name = new StringBuilder();
 

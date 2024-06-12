@@ -175,33 +175,20 @@ public class PaperSpigotConfig
         stackableWaterBuckets = getBoolean( "stackable-buckets.water", false );
         stackableMilkBuckets = getBoolean( "stackable-buckets.milk", false );
 
-        Field maxStack;
-
-        try {
-            maxStack = Material.class.getDeclaredField("maxStack");
-            maxStack.setAccessible(true);
-
-            Field modifiers = Field.class.getDeclaredField("modifiers");
-            modifiers.setAccessible(true);
-            modifiers.setInt(maxStack, maxStack.getModifiers() & ~Modifier.FINAL);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
         try {
             if (stackableLavaBuckets) {
-                maxStack.set(Material.LAVA_BUCKET, Material.BUCKET.getMaxStackSize());
+                // KigPaper - don't update Bukkit enum, broken in Java 17
+                //maxStack.set(Material.LAVA_BUCKET, Material.BUCKET.getMaxStackSize());
                 Items.LAVA_BUCKET.c(Material.BUCKET.getMaxStackSize());
             }
 
             if (stackableWaterBuckets) {
-                maxStack.set(Material.WATER_BUCKET, Material.BUCKET.getMaxStackSize());
+                //maxStack.set(Material.WATER_BUCKET, Material.BUCKET.getMaxStackSize());
                 Items.WATER_BUCKET.c(Material.BUCKET.getMaxStackSize());
             }
 
             if (stackableMilkBuckets) {
-                maxStack.set(Material.MILK_BUCKET, Material.BUCKET.getMaxStackSize());
+                //maxStack.set(Material.MILK_BUCKET, Material.BUCKET.getMaxStackSize());
                 Items.MILK_BUCKET.c(Material.BUCKET.getMaxStackSize());
             }
         } catch (Exception e) {

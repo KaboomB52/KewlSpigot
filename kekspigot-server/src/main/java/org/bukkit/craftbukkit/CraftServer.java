@@ -73,6 +73,7 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.util.DatFileFilter;
 import org.bukkit.craftbukkit.util.Versioning;
 import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
@@ -130,7 +131,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 
 public final class CraftServer implements Server {
     private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
-    private final String serverName = "Spigot";
+    private final String serverName = "KeKSpigot";
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
@@ -727,7 +728,7 @@ public final class CraftServer implements Server {
         }
 
         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
-        org.github.paperspigot.PaperSpigotConfig.init((File) console.options.valueOf("spigot-settings")); // PaperSpigot
+        org.github.paperspigot.PaperSpigotConfig.init((File) console.options.valueOf("paper-settings")); // PaperSpigot
 
         // SpigotX
         KeKSpigot.INSTANCE.setConfig(new KeKConfig());
@@ -1019,10 +1020,31 @@ public final class CraftServer implements Server {
             } catch (ExceptionWorldConflict ex) {
                 getLogger().log(Level.SEVERE, null, ex);
             }
+        } else { // KigPaper start
+            ChunkProviderServer cps = handle.chunkProviderServer;
+            ChunkRegionLoader loader = (ChunkRegionLoader) cps.chunkLoader;
+            loader.b.clear();
+            loader.c.clear();
+            try {
+                FileIOThread.a().b();
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            cps.chunkLoader = null;
+            cps.chunkProvider = null;
+            cps.chunks.clear();
+            // KigPaper end
         }
 
         worlds.remove(world.getName().toLowerCase());
         console.worlds.remove(console.worlds.indexOf(handle));
+
+        // KigPaper start - fix memory leak
+        CraftingManager craftingManager = CraftingManager.getInstance();
+        CraftInventoryView lastView = (CraftInventoryView) craftingManager.lastCraftView;
+        if (lastView != null && lastView.getHandle() instanceof ContainerWorkbench
+                && ((ContainerWorkbench) lastView.getHandle()).g == handle) craftingManager.lastCraftView = null;
+        // KigPaper end
 
         File parentFolder = world.getWorldFolder().getAbsoluteFile();
 

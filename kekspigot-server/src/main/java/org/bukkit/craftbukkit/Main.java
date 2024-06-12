@@ -19,6 +19,11 @@ public class Main {
 
     public static void main(String[] args) {
         // Todo: Installation script
+        // KigPaper start - see https://www.evanjones.ca/java-bytebuffer-leak.html
+        if (System.getProperty("jdk.nio.maxCachedBufferSize") == null) {
+            System.setProperty("jdk.nio.maxCachedBufferSize", "262144");
+        }
+        // KigPaper end
         OptionParser parser = new OptionParser() {
             {
                 acceptsAll(asList("?", "help"), "Show the help");
@@ -125,10 +130,10 @@ public class Main {
                 // Spigot End
 
                 // PaperSpigot Start
-                acceptsAll(asList("spigot", "spigot-settings"), "File for paperspigot settings")
+                acceptsAll(asList("spigot", "paper-settings"), "File for paperspigot settings")
                         .withRequiredArg()
                         .ofType(File.class)
-                        .defaultsTo(new File("spigot.yml"))
+                        .defaultsTo(new File("paper.yml"))
                         .describedAs("Yml file");
                 // PaperSpigot End
             }

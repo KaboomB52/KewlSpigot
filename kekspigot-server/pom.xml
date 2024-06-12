@@ -16,6 +16,7 @@
     <description>An enhanced spigot for Minecraft servers.</description>
 
     <properties>
+        <finalName>KeKSpigot</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <api.version>unknown</api.version>
         <junit.version>4.11</junit.version>

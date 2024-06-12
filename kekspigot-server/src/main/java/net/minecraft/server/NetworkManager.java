@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import io.netty.util.concurrent.AbstractEventExecutor;
 import org.eytril.spigot.KeKSpigot;
 import org.eytril.spigot.handler.PacketHandler;
 import com.google.common.collect.Queues;
@@ -224,8 +225,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 
             channelfuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         } else {
-            this.channel.eventLoop().execute(new Runnable() {
-                public void run() {
+            this.channel.eventLoop().execute((AbstractEventExecutor.LazyRunnable) () -> {
                     if (packetProtocol != channelProtocol) {
                         NetworkManager.this.a(packetProtocol);
                     }
@@ -237,7 +237,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
                     }
 
                     channelfuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-                }
             });
         }
 

@@ -8,6 +8,7 @@ We currently use patches from the following spigots (authors are also listed if 
  - SpigotX (Joeleoli)
  - ClubSpigot (Joeleoli, Dewgs, TehNeon, Manthe, & more)
  - PandaSpigot (A lot of people)
+ - KigPaper (ProjectKig)
 
 New Features:
  - Custom KB System allowing for changing the Vertical and Horizontal friction at different values.

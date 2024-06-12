@@ -147,7 +147,9 @@ public class EnchantmentManager {
         } else if (EnchantmentManager.b.a < 0) {
             EnchantmentManager.b.a = 0;
         }
-
+        // KigPaper start
+        EnchantmentManager.b.b = null;
+        // KigPaper end
         return (EnchantmentManager.b.a + 1 >> 1) + EnchantmentManager.a.nextInt((EnchantmentManager.b.a >> 1) + 1);
     }
 
@@ -168,7 +170,10 @@ public class EnchantmentManager {
         if (entity instanceof EntityHuman) {
             a((EnchantmentManager.EnchantmentModifier) EnchantmentManager.d, entityliving.bA());
         }
-
+        // KigPaper start
+        EnchantmentManager.d.a = null;
+        EnchantmentManager.d.b = null;
+        // KigPaper end
         // MinetickMod start
         EnchantmentManager.d.a = null;
         EnchantmentManager.d.b = null;
@@ -185,7 +190,10 @@ public class EnchantmentManager {
         if (entityliving instanceof EntityHuman) {
             a((EnchantmentManager.EnchantmentModifier) EnchantmentManager.e, entityliving.bA());
         }
-
+        // KigPaper start
+        EnchantmentManager.e.a = null;
+        EnchantmentManager.e.b = null;
+        // KigPaper end
         // MinetickMod start
         EnchantmentManager.e.a = null;
         EnchantmentManager.e.b = null;

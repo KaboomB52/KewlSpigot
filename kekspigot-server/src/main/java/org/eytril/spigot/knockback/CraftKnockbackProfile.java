@@ -1,5 +1,6 @@
 package org.eytril.spigot.knockback;
 
+import org.bukkit.ChatColor;
 import org.eytril.spigot.KeKSpigot;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,12 +28,12 @@ public class CraftKnockbackProfile implements KnockbackProfile {
     @Override
     public String[] getValues() {
         return new String[]{
-                "Friction: " + this.friction,
-                "Horizontal: " + this.horizontal,
-                "Vertical: " + this.vertical,
-                "Vertical Limit: " + this.verticalLimit,
-                "Extra Horizontal: " + this.extraHorizontal,
-                "Extra Vertical: " + this.extraVertical,
+                "Friction " + ChatColor.WHITE + ":" + this.friction,
+                "Horizontal " + ChatColor.WHITE + ":" + this.horizontal,
+                "Vertical " + ChatColor.WHITE + ":" + this.vertical,
+                "Vertical Limit " + ChatColor.WHITE + ":" + this.verticalLimit,
+                "Extra Horizontal " + ChatColor.WHITE + ":" + this.extraHorizontal,
+                "Extra Vertical " + ChatColor.WHITE + ":" + this.extraVertical,
         };
     }
 
