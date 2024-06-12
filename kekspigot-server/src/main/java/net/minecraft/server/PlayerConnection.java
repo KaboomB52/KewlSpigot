@@ -1363,6 +1363,12 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
 						return;
 					}
 
+					// fix sword blocking desync
+					if (this.player.isBlocking()) {
+						this.player.bU();
+					}
+					// - kabberz
+
 					this.player.attack(entity);
 
 					if (itemInHand != null && itemInHand.count <= -1) {
