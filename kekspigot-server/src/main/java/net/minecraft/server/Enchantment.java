@@ -2,11 +2,24 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class Enchantment {
+
+    public static final File CONFIG_FILE = new File("enchantments.yml"); // Confluence - Enchantz
+    public static YamlConfiguration config = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+    public static Boolean inititated = false;
 
     // CraftBukkit - update CraftEnchant.getName(i) if this changes
     private static final Enchantment[] byId = new Enchantment[256];
@@ -37,10 +50,18 @@ public abstract class Enchantment {
     public static final Enchantment ARROW_INFINITE = new EnchantmentInfiniteArrows(51, new MinecraftKey("infinity"), 1);
     public static final Enchantment LUCK = new EnchantmentLootBonus(61, new MinecraftKey("luck_of_the_sea"), 2, EnchantmentSlotType.FISHING_ROD);
     public static final Enchantment LURE = new EnchantmentLure(62, new MinecraftKey("lure"), 2, EnchantmentSlotType.FISHING_ROD);
+
     public final int id;
-    private final int weight;
+    public int weight;
     public EnchantmentSlotType slot;
     protected String name;
+    protected String configName;
+    @Getter
+    private int startLevel;
+    @Getter
+    private int maxLevel;
+    private List<String> conflictingNames;
+    private boolean[] conflicts;
 
     public static Enchantment getById(int i) {
         return i >= 0 && i < Enchantment.byId.length ? Enchantment.byId[i] : null;
@@ -48,7 +69,6 @@ public abstract class Enchantment {
 
     protected Enchantment(int i, MinecraftKey minecraftkey, int j, EnchantmentSlotType enchantmentslottype) {
         this.id = i;
-        this.weight = j;
         this.slot = enchantmentslottype;
         if (Enchantment.byId[i] != null) {
             throw new IllegalArgumentException("Duplicate enchantment id!");
@@ -56,28 +76,56 @@ public abstract class Enchantment {
             Enchantment.byId[i] = this;
             Enchantment.E.put(minecraftkey, this);
         }
-
-        org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.enchantments.CraftEnchantment(this)); // CraftBukkit
+        if (!Enchantment.CONFIG_FILE.exists()) {
+            try {
+                System.out.println("Generated a new enchantments.yml file.");
+                Enchantment.CONFIG_FILE.createNewFile();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        final CraftEnchantment craftEnch = new CraftEnchantment(this);
+        org.bukkit.enchantments.Enchantment.registerEnchantment(craftEnch);
+        this.configName = craftEnch.getName().toLowerCase().replace('_', '-');
+        if (!Enchantment.config.contains(String.valueOf(this.configName) + ".weight")) {
+            Enchantment.config.set(String.valueOf(this.configName) + ".weight", j);
+        }
+        if (!Enchantment.config.contains(String.valueOf(this.configName) + ".start-level")) {
+            Enchantment.config.set(String.valueOf(this.configName) + ".start-level", 1);
+        }
+        if (!Enchantment.config.contains(String.valueOf(this.configName) + ".max-level")) {
+            Enchantment.config.set(String.valueOf(this.configName) + ".max-level", this.getMaxLevel());
+        }
+        if (!Enchantment.config.contains(String.valueOf(this.configName) + ".conflicting")) {
+            Enchantment.config.set(String.valueOf(this.configName) + ".conflicting", new ArrayList());
+        }
+        this.weight = Enchantment.config.getInt(String.valueOf(this.configName) + ".weight", j);
+        this.startLevel = Enchantment.config.getInt(String.valueOf(this.configName) + ".start-level", 1);
+        this.maxLevel = Enchantment.config.getInt(String.valueOf(this.configName) + ".max-level", this.getFixedMaxLevel());
+        this.conflictingNames = Enchantment.config.getStringList(String.valueOf(this.configName) + ".conflicting");
+        try {
+            Enchantment.config.save(Enchantment.CONFIG_FILE);
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static Enchantment getByName(String s) {
-        return (Enchantment) Enchantment.E.get(new MinecraftKey(s));
+        return Enchantment.E.get(new MinecraftKey(s));
     }
 
     public static Set<MinecraftKey> getEffects() {
         return Enchantment.E.keySet();
     }
 
+    public int getFixedMaxLevel(){
+        return maxLevel;
+    }
+
     public int getRandomWeight() {
         return this.weight;
-    }
-
-    public int getStartLevel() {
-        return 1;
-    }
-
-    public int getMaxLevel() {
-        return 1;
     }
 
     public int a(int i) {
@@ -96,8 +144,28 @@ public abstract class Enchantment {
         return 0.0F;
     }
 
-    public boolean a(Enchantment enchantment) {
-        return this != enchantment;
+    public boolean a(final Enchantment enchantment) {
+        if (enchantment == this) {
+            return false;
+        }
+        this.initCustomConflicts();
+        enchantment.initCustomConflicts();
+        return !this.conflicts[enchantment.id] && !enchantment.conflicts[this.id];
+    }
+
+    private void initCustomConflicts() {
+        if (this.conflicts == null) {
+            this.conflicts = new boolean[256];
+            for (final String s : this.conflictingNames) {
+                for (int i = 0; i < 256; ++i) {
+                    if (Enchantment.byId[i] != null && Enchantment.byId[i].configName.equals(s)) {
+                        this.conflicts[i] = true;
+                        System.out.println(String.valueOf(this.configName) + " conflicts " + s);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public Enchantment c(String s) {

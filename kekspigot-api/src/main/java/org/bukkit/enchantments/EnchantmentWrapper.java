@@ -21,8 +21,14 @@ public class EnchantmentWrapper extends Enchantment {
 
     @Override
     public int getMaxLevel() {
-        return getEnchantment().getMaxLevel();
+        return getEnchantment().getFixedMaxLevel();
     }
+
+    @Override
+    public int getFixedMaxLevel() {
+        return getEnchantment().getFixedMaxLevel();
+    }
+    // Customizable enchant limits - Kab
 
     @Override
     public int getStartLevel() {

@@ -16,7 +16,12 @@ public class CraftEnchantment extends Enchantment {
 
     @Override
     public int getMaxLevel() {
-        return target.getMaxLevel();
+        return target.getFixedMaxLevel();
+    }
+
+    @Override
+    public int getFixedMaxLevel() {
+        return target.getFixedMaxLevel();
     }
 
     @Override
@@ -27,28 +32,28 @@ public class CraftEnchantment extends Enchantment {
     @Override
     public EnchantmentTarget getItemTarget() {
         switch (target.slot) {
-        case ALL:
-            return EnchantmentTarget.ALL;
-        case ARMOR:
-            return EnchantmentTarget.ARMOR;
-        case ARMOR_FEET:
-            return EnchantmentTarget.ARMOR_FEET;
-        case ARMOR_HEAD:
-            return EnchantmentTarget.ARMOR_HEAD;
-        case ARMOR_LEGS:
-            return EnchantmentTarget.ARMOR_LEGS;
-        case ARMOR_TORSO:
-            return EnchantmentTarget.ARMOR_TORSO;
-        case DIGGER:
-            return EnchantmentTarget.TOOL;
-        case WEAPON:
-            return EnchantmentTarget.WEAPON;
-        case BOW:
-            return EnchantmentTarget.BOW;
-        case FISHING_ROD:
-            return EnchantmentTarget.FISHING_ROD;
-        default:
-            return null;
+            case ALL:
+                return EnchantmentTarget.ALL;
+            case ARMOR:
+                return EnchantmentTarget.ARMOR;
+            case ARMOR_FEET:
+                return EnchantmentTarget.ARMOR_FEET;
+            case ARMOR_HEAD:
+                return EnchantmentTarget.ARMOR_HEAD;
+            case ARMOR_LEGS:
+                return EnchantmentTarget.ARMOR_LEGS;
+            case ARMOR_TORSO:
+                return EnchantmentTarget.ARMOR_TORSO;
+            case DIGGER:
+                return EnchantmentTarget.TOOL;
+            case WEAPON:
+                return EnchantmentTarget.WEAPON;
+            case BOW:
+                return EnchantmentTarget.BOW;
+            case FISHING_ROD:
+                return EnchantmentTarget.FISHING_ROD;
+            default:
+                return null;
         }
     }
 
@@ -60,58 +65,58 @@ public class CraftEnchantment extends Enchantment {
     @Override
     public String getName() {
         switch (target.id) {
-        case 0:
-            return "PROTECTION_ENVIRONMENTAL";
-        case 1:
-            return "PROTECTION_FIRE";
-        case 2:
-            return "PROTECTION_FALL";
-        case 3:
-            return "PROTECTION_EXPLOSIONS";
-        case 4:
-            return "PROTECTION_PROJECTILE";
-        case 5:
-            return "OXYGEN";
-        case 6:
-            return "WATER_WORKER";
-        case 7:
-            return "THORNS";
-        case 8:
-            return "DEPTH_STRIDER";
-        case 16:
-            return "DAMAGE_ALL";
-        case 17:
-            return "DAMAGE_UNDEAD";
-        case 18:
-            return "DAMAGE_ARTHROPODS";
-        case 19:
-            return "KNOCKBACK";
-        case 20:
-            return "FIRE_ASPECT";
-        case 21:
-            return "LOOT_BONUS_MOBS";
-        case 32:
-            return "DIG_SPEED";
-        case 33:
-            return "SILK_TOUCH";
-        case 34:
-            return "DURABILITY";
-        case 35:
-            return "LOOT_BONUS_BLOCKS";
-        case 48:
-            return "ARROW_DAMAGE";
-        case 49:
-            return "ARROW_KNOCKBACK";
-        case 50:
-            return "ARROW_FIRE";
-        case 51:
-            return "ARROW_INFINITE";
-        case 61:
-            return "LUCK";
-        case 62:
-            return "LURE";
-        default:
-            return "UNKNOWN_ENCHANT_" + target.id;
+            case 0:
+                return "PROTECTION_ENVIRONMENTAL";
+            case 1:
+                return "PROTECTION_FIRE";
+            case 2:
+                return "PROTECTION_FALL";
+            case 3:
+                return "PROTECTION_EXPLOSIONS";
+            case 4:
+                return "PROTECTION_PROJECTILE";
+            case 5:
+                return "OXYGEN";
+            case 6:
+                return "WATER_WORKER";
+            case 7:
+                return "THORNS";
+            case 8:
+                return "DEPTH_STRIDER";
+            case 16:
+                return "DAMAGE_ALL";
+            case 17:
+                return "DAMAGE_UNDEAD";
+            case 18:
+                return "DAMAGE_ARTHROPODS";
+            case 19:
+                return "KNOCKBACK";
+            case 20:
+                return "FIRE_ASPECT";
+            case 21:
+                return "LOOT_BONUS_MOBS";
+            case 32:
+                return "DIG_SPEED";
+            case 33:
+                return "SILK_TOUCH";
+            case 34:
+                return "DURABILITY";
+            case 35:
+                return "LOOT_BONUS_BLOCKS";
+            case 48:
+                return "ARROW_DAMAGE";
+            case 49:
+                return "ARROW_KNOCKBACK";
+            case 50:
+                return "ARROW_FIRE";
+            case 51:
+                return "ARROW_INFINITE";
+            case 61:
+                return "LUCK";
+            case 62:
+                return "LURE";
+            default:
+                return "UNKNOWN_ENCHANT_" + target.id;
         }
     }
 

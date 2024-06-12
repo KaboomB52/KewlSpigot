@@ -171,6 +171,13 @@ public abstract class Enchantment {
     public abstract int getMaxLevel();
 
     /**
+     * Fuck you, nigger.
+     *
+     * @return Maximum level of the Enchantment
+     */
+    public abstract int getFixedMaxLevel();
+
+    /**
      * Gets the level that this Enchantment should start at
      *
      * @return Starting level of the Enchantment
