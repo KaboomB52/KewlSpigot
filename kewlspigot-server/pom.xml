@@ -8,7 +8,7 @@
         <version>dev-SNAPSHOT</version>
     </parent>
 
-    <artifactId>Kewlspigot-server</artifactId>
+    <artifactId>kewlspigot-server</artifactId>
     <version>1.8.8-R0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
