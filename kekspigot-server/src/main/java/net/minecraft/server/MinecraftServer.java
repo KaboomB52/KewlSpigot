@@ -1142,7 +1142,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     }
 
     public void sendMessage(IChatBaseComponent ichatbasecomponent) {
-        MinecraftServer.LOGGER.info(ichatbasecomponent.c());
+        this.console.sendMessage(ichatbasecomponent.c()); // CraftBukkit - we want coloured and pretty messages too!
     }
 
     public boolean a(int i, String s) {

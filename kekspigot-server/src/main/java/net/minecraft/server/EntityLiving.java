@@ -485,7 +485,7 @@ public abstract class EntityLiving extends Entity {
     }
 
     protected void bi() {
-        Iterator iterator = this.effects.keySet().iterator();
+        Iterator iterator = com.google.common.collect.ImmutableSet.copyOf(this.effects.keySet()).iterator(); // SportBukkit - copy to allow concurrent modification
         isTickingEffects = true;
 
         while (iterator.hasNext()) {
@@ -503,23 +503,25 @@ public abstract class EntityLiving extends Entity {
                         continue;
                     }
 
-                    iterator.remove();
+                    // SportBukkit start - fire event
+                    PotionEffectExpireEvent event2 = new PotionEffectExpireEvent((LivingEntity) this.getBukkitEntity(),
+                            CraftPotionUtil.toBukkit(mobeffect));
+                    this.world.getServer().getPluginManager().callEvent(event2);
+                    if(event.isCancelled()) {
+                        // Duration must be extended if event is cancelled
+                        CraftPotionUtil.extendDuration(mobeffect, event2.getDuration());
+                        continue;
+                    }
+
+                    //iterator.remove();
+                    this.effects.remove(integer);
+                    // SportBukkit end
                     this.b(mobeffect);
                 }
             } else if (mobeffect.getDuration() % 600 == 0) {
                 this.a(mobeffect, false);
             }
         }
-        // CraftBukkit start
-        isTickingEffects = false;
-        for (Object e : effectsToProcess) {
-            if (e instanceof MobEffect) {
-                addEffect((MobEffect) e);
-            } else {
-                removeEffect((Integer) e);
-            }
-        }
-        // CraftBukkit end
 
         if (this.updateEffects) {
             if (!this.world.isClientSide) {
@@ -576,15 +578,15 @@ public abstract class EntityLiving extends Entity {
     }
 
     public void removeAllEffects() {
-        Iterator iterator = this.effects.keySet().iterator();
+        Iterator iterator = com.google.common.collect.ImmutableSet.copyOf(this.effects.keySet()).iterator(); // SportBukkit - copy to allow concurrent modification
 
         while (iterator.hasNext()) {
             Integer integer = (Integer) iterator.next();
+            if(!this.effects.keySet().contains(integer)) continue; // SportBukkit - skip if effect was removed during iteration
             MobEffect mobeffect = (MobEffect) this.effects.get(integer);
 
             if (!this.world.isClientSide) {
-                iterator.remove();
-                this.b(mobeffect);
+                this.removeEffect(integer);
             }
         }
 
@@ -642,9 +644,22 @@ public abstract class EntityLiving extends Entity {
             }
 
             if (this.effects.containsKey(Integer.valueOf(mobeffect.getEffectId()))) {
+                // SportBukkit start - fire event
+                PotionEffectExtendEvent event = new PotionEffectExtendEvent((LivingEntity) this.getBukkitEntity(),
+                        CraftPotionUtil.toBukkit(mobeffect),
+                        CraftPotionUtil.toBukkit(this.effects.get(mobeffect.getEffectId())));
+                this.world.getServer().getPluginManager().callEvent(event);
+                if(event.isCancelled()) return;
+                // SportBukkit end
                 ((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId()))).a(mobeffect);
                 this.a((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId())), true);
             } else {
+                // SportBukkit start - fire event
+                PotionEffectAddEvent event = new PotionEffectAddEvent((LivingEntity) this.getBukkitEntity(),
+                        CraftPotionUtil.toBukkit(mobeffect));
+                this.world.getServer().getPluginManager().callEvent(event);
+                if(event.isCancelled()) return;
+                // SportBukkit end
                 this.effects.put(Integer.valueOf(mobeffect.getEffectId()), mobeffect);
                 this.a(mobeffect);
             }
@@ -669,12 +684,6 @@ public abstract class EntityLiving extends Entity {
     }
 
     public void removeEffect(int i) {
-        // CraftBukkit start
-        if (isTickingEffects) {
-            effectsToProcess.add(i);
-            return;
-        }
-        // CraftBukkit end
         MobEffect mobeffect = (MobEffect) this.effects.remove(Integer.valueOf(i));
 
         if (mobeffect != null) {

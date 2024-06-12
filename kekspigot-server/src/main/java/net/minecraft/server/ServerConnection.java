@@ -84,6 +84,7 @@ public class ServerConnection {
 		        protected void initChannel(Channel channel) throws Exception {
 			        try {
 				        channel.config().setOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(true));
+                        channel.config().setOption(ChannelOption.IP_TOS, 0x18);
 			        } catch (ChannelException channelexception) {
 				        ;
 			        }
