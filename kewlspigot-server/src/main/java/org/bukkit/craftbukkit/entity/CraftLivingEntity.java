@@ -310,10 +310,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return getHandle().killer == null ? null : (Player) getHandle().killer.getBukkitEntity();
     }
 
+    @Override
     public boolean addPotionEffect(PotionEffect effect) {
         return addPotionEffect(effect, false);
     }
 
+    @Override
     public boolean addPotionEffect(PotionEffect effect, boolean force) {
         if (hasPotionEffect(effect.getType())) {
             if (!force) {
@@ -321,10 +323,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
             }
             removePotionEffect(effect.getType());
         }
-        getHandle().addEffect(new MobEffect(effect.getType().getId(), effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles()));
+        getHandle().addEffect(new MobEffect(effect.getType().getId(), effect.getDuration(), effect.getAmplifier(),
+                effect.isAmbient(), effect.hasParticles()));
         return true;
     }
 
+    @Override
     public boolean addPotionEffects(Collection<PotionEffect> effects) {
         boolean success = true;
         for (PotionEffect effect : effects) {
@@ -333,21 +337,23 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return success;
     }
 
+    @Override
     public boolean hasPotionEffect(PotionEffectType type) {
         return getHandle().hasEffect(MobEffectList.byId[type.getId()]);
     }
 
+    @Override
     public void removePotionEffect(PotionEffectType type) {
         getHandle().removeEffect(type.getId());
     }
 
+    @Override
     public Collection<PotionEffect> getActivePotionEffects() {
         List<PotionEffect> effects = new ArrayList<PotionEffect>();
-        for (Object raw : getHandle().effects.values()) {
-            if (!(raw instanceof MobEffect))
-                continue;
-            MobEffect handle = (MobEffect) raw;
-            effects.add(new PotionEffect(PotionEffectType.getById(handle.getEffectId()), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isShowParticles()));
+        for (MobEffect raw : getHandle().effects.values()) {
+            MobEffect handle = raw;
+            effects.add(new PotionEffect(PotionEffectType.getById(handle.getEffectId()), handle.getDuration(),
+                    handle.getAmplifier(), handle.isAmbient(), handle.isShowParticles()));
         }
         return effects;
     }

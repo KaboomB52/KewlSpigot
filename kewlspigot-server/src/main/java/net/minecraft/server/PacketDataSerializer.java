@@ -25,12 +25,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.bukkit.craftbukkit.inventory.CraftItemStack; // CraftBukkit
+// TacoSpigot start
+// TacoSpigot end
 
 public class PacketDataSerializer extends ByteBuf {
 
     private final ByteBuf a;
 
+    // TacoSpigot start
+    private final boolean allowLargePackets;
     public PacketDataSerializer(ByteBuf bytebuf) {
+        /*
+         * By default, we limit the size of the received byte array to Short.MAX_VALUE, which is 31 KB.
+         * However, we make an exception when ProtocolSupport is installed, to allow 1.7 clients to work,
+         * and limit them to 31 MEGABYTES as they seem to need to send larger packets sometimes.
+         * Although a 31 MB limit leaves the server slightly vulnerable,
+         * it's still much better than the old system of having no limit,
+         * which would leave the server vulnerable to packets up to 2 GIGABYTES in size.
+         */
+        this.allowLargePackets = false;
         // TacoSpigot end
         this.a = bytebuf;
     }
@@ -50,12 +63,17 @@ public class PacketDataSerializer extends ByteBuf {
         this.writeBytes(abyte);
     }
 
+    // TacoSpigot start
+    private static final int DEFAULT_LIMIT = Short.MAX_VALUE;
+    private static final int LARGE_PACKET_LIMIT = Short.MAX_VALUE * 1024;
     public byte[] a() {
-        return readByteArray(Short.MAX_VALUE * 1024);
+        // TacoSpigot start
+        int limit = allowLargePackets ? LARGE_PACKET_LIMIT : DEFAULT_LIMIT;
+        return readByteArray(limit);
     }
 
     public byte[] readByteArray(int limit) {
-        int len = this.e();
+        int len = this.readVarInt();
         if (len > limit) throw new DecoderException("The received a byte array longer than allowed " + len + " > " + limit);
         byte[] abyte = new byte[len];
         // TacoSpigot end
@@ -72,7 +90,7 @@ public class PacketDataSerializer extends ByteBuf {
     }
 
     public IChatBaseComponent d() throws IOException {
-        return IChatBaseComponent.ChatSerializer.a(this.c(32767)); // Nacho - deobfuscate readUtf
+        return IChatBaseComponent.ChatSerializer.a(this.c(32767));
     }
 
     public void a(IChatBaseComponent ichatbasecomponent) throws IOException {
@@ -80,14 +98,15 @@ public class PacketDataSerializer extends ByteBuf {
     }
 
     public <T extends Enum<T>> T a(Class<T> oclass) {
-        return ((T[]) oclass.getEnumConstants())[this.e()]; // CraftBukkit - fix decompile error
+        return ((T[]) oclass.getEnumConstants())[this.readVarInt()]; // CraftBukkit - fix decompile error
     }
 
     public void a(Enum<?> oenum) {
-        this.b(oenum.ordinal()); // Nacho - deobfuscate writeVarInt
+        this.b(oenum.ordinal());
     }
 
-    public int e() { // Nacho - deobfuscate
+    public int readVarInt() { return e(); } // Nacho - OBFHELPER
+    public int e() {
         byte b0;
         int i = 0;
         int j = 0;
@@ -118,11 +137,15 @@ public class PacketDataSerializer extends ByteBuf {
         this.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public UUID g() { // Nacho - deobfuscate
+    public UUID readUUID() { return g(); } // Nacho - OBFHELPER
+
+    public UUID g() {
         return new UUID(this.readLong(), this.readLong());
     }
 
-    public void b(int i) { // Nacho - deobfuscate
+    public void writeVarInt(int value) { this.b(value); } // Nacho - OBFHELPER
+
+    public void b(int i) {
         while ((i & -128) != 0) {
             this.writeByte(i & 127 | 128);
             i >>>= 7;
@@ -164,7 +187,7 @@ public class PacketDataSerializer extends ByteBuf {
         } else {
             this.readerIndex(i);
             try {
-                return NBTCompressedStreamTools.a((DataInput) (new ByteBufInputStream(this)), new NBTReadLimiter(50000L));
+                return NBTCompressedStreamTools.a((new ByteBufInputStream(this)), new NBTReadLimiter(50000L));
             } catch (IOException ioexception) {
                 throw new EncoderException(ioexception);
             }
@@ -220,19 +243,16 @@ public class PacketDataSerializer extends ByteBuf {
         return itemstack;
     }
 
-    public String c(int i) { // Nacho - deobfuscate
-        int j = this.e();
+    public String readUUID(int maxLength) { return c(maxLength); } // Nacho - OBFHELPER
+
+    public String c(int i) {
+        int j = this.readVarInt();
         if (j > i * 4)
             throw new DecoderException("The received encoded string buffer length is longer than maximum allowed (" + j + " > " + (i * 4) + ")");
         if (j < 0)
             throw new DecoderException("The received encoded string buffer length is less than zero! Weird string!");
-
-        // PandaSpigot start - Switch from readBytes().array() to readBytes(byte[]) as we could be dealing with a DirectByteBuf
-        byte[] b = new byte[j];
-        this.readBytes(b);
-        String s = new String(b, Charsets.UTF_8);
-        // PandaSpigot end
-
+        String s = toString(readerIndex(), j, StandardCharsets.UTF_8);
+        readerIndex(readerIndex() + j);
         if (s.length() > i)
             throw new DecoderException("The received string length is longer than maximum allowed (" + j + " > " + i + ")");
         // Nacho end
@@ -240,17 +260,15 @@ public class PacketDataSerializer extends ByteBuf {
     }
 
     public PacketDataSerializer a(String s) {
-        // PandaSpigot start - Optimize string writing
-        int utf8Bytes = io.netty.buffer.ByteBufUtil.utf8Bytes(s);
+        byte[] abyte = s.getBytes(Charsets.UTF_8);
 
-        if (utf8Bytes > 32767) {
+        if (abyte.length > 32767) {
             throw new EncoderException("String too big (was " + s.length() + " bytes encoded, max " + 32767 + ")");
         } else {
-            this.b(utf8Bytes);
-            this.writeCharSequence(s, Charsets.UTF_8);
+            this.b(abyte.length);
+            this.writeBytes(abyte);
             return this;
         }
-        // PandaSpigot end
     }
 
     public int capacity() {

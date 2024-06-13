@@ -267,24 +267,29 @@ public abstract class EntityHuman extends EntityLiving {
 
         if (itemstack.m() == EnumAnimation.EAT) {
             for (int j = 0; j < i; ++j) {
-                Vec3D vec3d = new Vec3D(((double) this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+                // Confluence - use faster randoms
+                Vec3D vec3d = new Vec3D((this.random.nextFloat() - 0.5D) * 0.1D, random.nextDouble() * 0.1D + 0.1D, 0.0D);
 
                 vec3d = vec3d.a(-this.pitch * 3.1415927F / 180.0F);
                 vec3d = vec3d.b(-this.yaw * 3.1415927F / 180.0F);
-                double d0 = (double) (-this.random.nextFloat()) * 0.6D - 0.3D;
-                Vec3D vec3d1 = new Vec3D(((double) this.random.nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+                double d0 = (-this.random.nextFloat()) * 0.6D - 0.3D;
+                Vec3D vec3d1 = new Vec3D((this.random.nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
 
                 vec3d1 = vec3d1.a(-this.pitch * 3.1415927F / 180.0F);
                 vec3d1 = vec3d1.b(-this.yaw * 3.1415927F / 180.0F);
-                vec3d1 = vec3d1.add(this.locX, this.locY + (double) this.getHeadHeight(), this.locZ);
+                vec3d1 = vec3d1.add(this.locX, this.locY + this.getHeadHeight(), this.locZ);
                 if (itemstack.usesData()) {
-                    this.world.addParticle(EnumParticle.ITEM_CRACK, vec3d1.a, vec3d1.b, vec3d1.c, vec3d.a, vec3d.b + 0.05D, vec3d.c, new int[]{Item.getId(itemstack.getItem()), itemstack.getData()});
+                    this.world.addParticle(EnumParticle.ITEM_CRACK, vec3d1.a, vec3d1.b, vec3d1.c, vec3d.a,
+                            vec3d.b + 0.05D, vec3d.c,
+                            new int[] { Item.getId(itemstack.getItem()), itemstack.getData() });
                 } else {
-                    this.world.addParticle(EnumParticle.ITEM_CRACK, vec3d1.a, vec3d1.b, vec3d1.c, vec3d.a, vec3d.b + 0.05D, vec3d.c, new int[]{Item.getId(itemstack.getItem())});
+                    this.world.addParticle(EnumParticle.ITEM_CRACK, vec3d1.a, vec3d1.b, vec3d1.c, vec3d.a,
+                            vec3d.b + 0.05D, vec3d.c, new int[] { Item.getId(itemstack.getItem()) });
                 }
             }
 
-            this.makeSound("random.eat", 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            this.makeSound("random.eat", 0.5F + 0.5F * this.random.nextInt(2),
+                    (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         }
 
     }
@@ -302,7 +307,8 @@ public abstract class EntityHuman extends EntityLiving {
             if (event.isCancelled()) {
                 // Update client
                 if (this instanceof EntityPlayer) {
-                    ((EntityPlayer) this).playerConnection.sendPacket(new PacketPlayOutSetSlot((byte) 0, activeContainer.getSlot((IInventory) this.inventory, this.inventory.itemInHandIndex).index, this.g));
+                    ((EntityPlayer) this).playerConnection.sendPacket(new PacketPlayOutSetSlot((byte) 0,
+                            activeContainer.getSlot(this.inventory, this.inventory.itemInHandIndex).index, this.g));
                     // Spigot Start
                     ((EntityPlayer) this).getBukkitEntity().updateInventory();
                     ((EntityPlayer) this).getBukkitEntity().updateScaledHealth();
@@ -317,7 +323,8 @@ public abstract class EntityHuman extends EntityLiving {
 
                 // Update client
                 if (this instanceof EntityPlayer) {
-                    ((EntityPlayer) this).playerConnection.sendPacket(new PacketPlayOutSetSlot((byte) 0, activeContainer.getSlot((IInventory) this.inventory, this.inventory.itemInHandIndex).index, this.g));
+                    ((EntityPlayer) this).playerConnection.sendPacket(new PacketPlayOutSetSlot((byte) 0,
+                            activeContainer.getSlot(this.inventory, this.inventory.itemInHandIndex).index, this.g));
                 }
                 return;
             }
