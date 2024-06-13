@@ -1,15 +1,10 @@
 package org.bukkit.craftbukkit;
 
+import net.minecraft.server.*;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+import org.bukkit.entity.HumanEntity;
 import org.eytril.spigot.chunk.CraftFakeMultiBlockChange;
 import org.eytril.spigot.chunk.FakeMultiBlockChange;
-import net.minecraft.server.BiomeBase;
-import net.minecraft.server.BlockPosition;
-import net.minecraft.server.ChunkSection;
-import net.minecraft.server.EmptyChunk;
-import net.minecraft.server.IBlockData;
-import net.minecraft.server.PacketPlayOutMultiBlockChange;
-import net.minecraft.server.WorldChunkManager;
-import net.minecraft.server.WorldServer;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
@@ -20,7 +15,9 @@ import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.entity.Entity;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class CraftChunk implements Chunk {
@@ -338,4 +335,75 @@ public class CraftChunk implements Chunk {
 		return new CraftFakeMultiBlockChange(packetPlayOutMultiBlockChange);
 	}
 	// SpigotX end
+
+	@Override
+	public org.eytril.spigot.chunksnapshot.ChunkSnapshot takeSnapshot() {
+		net.minecraft.server.Chunk handle = getHandle();
+		org.eytril.spigot.chunksnapshot.CraftChunkSnapshot snap = new org.eytril.spigot.chunksnapshot.CraftChunkSnapshot();
+
+		// save chunk sections to snapshot
+		for (int i = 0; i < 16; i++) {
+			if (handle.getSections()[i] != null) {
+				snap.getSections()[i] = handle.getSections()[i].createSnapshot();
+			}
+		}
+
+		// save tile entities to snapshot
+		for (Map.Entry<BlockPosition, TileEntity> entry : handle.tileEntities.entrySet()) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			entry.getValue().b(nbt); // writeToNBT
+			snap.getTileEntities().add(nbt);
+		}
+		return (org.eytril.spigot.chunksnapshot.ChunkSnapshot) snap;
+	}
+
+	@Override
+	public void restoreSnapshot(org.eytril.spigot.chunksnapshot.ChunkSnapshot snapshot) {
+		org.eytril.spigot.chunksnapshot.CraftChunkSnapshot snap = (org.eytril.spigot.chunksnapshot.CraftChunkSnapshot) snapshot;
+		net.minecraft.server.Chunk handle = getHandle();
+
+		// add chunk sections from snapshot
+		for (int i = 0; i < 16; i++) {
+			if (snap.getSections()[i] == null) {
+				handle.getSections()[i] = null;
+			} else {
+				handle.getSections()[i] = new ChunkSection(i << 4, !worldServer.worldProvider.e());
+				handle.getSections()[i].restoreSnapshot(snap.getSections()[i]);
+			}
+		}
+
+		// clear tile entities currently in the chunk
+		for (TileEntity tileEntity : handle.tileEntities.values()) {
+			if (tileEntity instanceof IInventory) {
+				for (HumanEntity h : new ArrayList<>(((IInventory) tileEntity).getViewers())) {
+					if (h instanceof CraftHumanEntity) {
+						((CraftHumanEntity) h).getHandle().closeInventory();
+					}
+				}
+			}
+			worldServer.a(tileEntity);
+		}
+		handle.tileEntities.clear();
+
+		// add tile entities from snapshot
+		for (NBTTagCompound nbt : snap.getTileEntities()) {
+			// deserialize nbt to new tile entity instance
+			TileEntity tileEntity = TileEntity.c(nbt);
+			// TODO: might have to fix this
+			// move the tile entity into this chunk's space
+			tileEntity.setPosition(new BlockPosition(
+					(tileEntity.getPosition().getX() & 15) | handle.locX << 4,
+					tileEntity.getPosition().getY(),
+					(tileEntity.getPosition().getZ() & 15) | handle.locX << 4
+			));
+
+			// add it
+			handle.a(tileEntity);
+		}
+
+		handle.mustSave = true; // needs saving flag
+		worldServer.getPlayerChunkMap().resend(x, z);
+	}
+
+
 }

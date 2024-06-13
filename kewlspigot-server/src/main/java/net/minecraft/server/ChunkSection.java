@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.eytril.spigot.chunksnapshot.ChunkSectionSnapshot;
+
 public class ChunkSection {
 
     private int yPos;
@@ -144,5 +146,23 @@ public class ChunkSection {
 
     public void b(NibbleArray nibblearray) {
         this.skyLight = nibblearray;
+    }
+
+    // Kab -- ChunkSnapshot
+    public ChunkSectionSnapshot createSnapshot() {
+        return new ChunkSectionSnapshot(
+                nonEmptyBlockCount,
+                tickingBlockCount,
+                blockIds.clone(),
+                new NibbleArray(),
+                new NibbleArray()
+        );
+    }
+
+    public void restoreSnapshot(ChunkSectionSnapshot snap) {
+        nonEmptyBlockCount = snap.getNonEmptyBlockCount();
+        tickingBlockCount = snap.getTickingBlockCount();
+        blockIds = snap.getBlockIds().clone();
+        isDirty = true;
     }
 }

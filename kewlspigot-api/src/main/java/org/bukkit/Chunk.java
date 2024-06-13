@@ -128,4 +128,9 @@ public interface Chunk {
 	// RageSpigot start
 	FakeMultiBlockChange createFakeBlockUpdate(final Location[] locations, final int[] ids, final int[] datas);
 	// RageSpigot end
+
+	// ForestBukkit start - chunk snapshot api
+	org.eytril.spigot.chunksnapshot.ChunkSnapshot takeSnapshot();
+	void restoreSnapshot(org.eytril.spigot.chunksnapshot.ChunkSnapshot snapshot);
+	// ForestBukkit end
 }

@@ -373,6 +373,15 @@ public class PlayerChunkMap {
             PlayerChunkMap.this.a().chunkProviderServer.getChunkAt(i, j, loadedRunnable); // CraftBukkit
         }
 
+        public void resend() {
+            if (this.dirtyCount == 0) {
+                PlayerChunkMap.this.e.add(this);
+            }
+            this.dirtyCount = 64;
+            this.f = 0xFFFF;
+        }
+
+
         public void a(final EntityPlayer entityplayer) {  // CraftBukkit - added final to argument
             if (this.b.contains(entityplayer)) {
                 PlayerChunkMap.a.debug("Failed to add player. {} already is in chunk {}, {}", new Object[] { entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z)});
@@ -380,7 +389,6 @@ public class PlayerChunkMap {
                 if (this.b.isEmpty()) {
                     this.g = PlayerChunkMap.this.world.getTime();
                 }
-
                 this.b.add(entityplayer);
                 // CraftBukkit start - use async chunk io
                 Runnable playerRunnable;
@@ -593,4 +601,13 @@ public class PlayerChunkMap {
         }
     }
     // CraftBukkit end
+
+    public void resend(int chunkX, int chunkZ) {
+        PlayerChunk chunk = this.a(chunkX, chunkZ, false);
+
+        if (chunk != null) {
+            chunk.resend();
+        }
+    }
+
 }

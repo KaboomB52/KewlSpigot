@@ -118,6 +118,10 @@ public abstract class TileEntity implements OptimizedRemoveUtil.Marker {
 		return this.position;
 	}
 
+	public void setPosition(BlockPosition position) {
+		this.position = position;
+	}
+
 	public Block w() {
 		if (this.e == null) {
 			this.e = this.world.getType(this.position).getBlock();
