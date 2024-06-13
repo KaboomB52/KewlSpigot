@@ -75,7 +75,7 @@ public abstract class PlayerList {
         this.cserver = minecraftserver.server = new CraftServer(minecraftserver, this);
         minecraftserver.console = org.bukkit.craftbukkit.command.ColouredConsoleSender.getInstance();
         minecraftserver.reader.addCompleter(new org.bukkit.craftbukkit.command.ConsoleCommandCompleter(minecraftserver.server));
-        
+
         this.k = new GameProfileBanList(PlayerList.a);
         this.l = new IpBanList(PlayerList.b);
         this.operators = new OpList(PlayerList.c);
@@ -140,7 +140,7 @@ public abstract class PlayerList {
 
         entityplayer.spawnIn(world);
         entityplayer.setPosition(loc.getX(), loc.getY(), loc.getZ());
-        entityplayer.setYawPitch(loc.getYaw(), loc.getPitch()); 
+        entityplayer.setYawPitch(loc.getYaw(), loc.getPitch());
         // Spigot end
 
         // CraftBukkit - Moved message to after join
@@ -369,7 +369,7 @@ public abstract class PlayerList {
         cserver.getPluginManager().callEvent(playerQuitEvent);
         entityplayer.getBukkitEntity().disconnect(playerQuitEvent.getQuitMessage());
         // CraftBukkit end
-        
+
         this.savePlayerFile(entityplayer);
         WorldServer worldserver = entityplayer.u();
 
@@ -528,7 +528,7 @@ public abstract class PlayerList {
         return new EntityPlayer(this.server, this.server.getWorldServer(0), gameprofile, (PlayerInteractManager) object);
         */
         return player;
-        // CraftBukkit end 
+        // CraftBukkit end
     }
 
     // CraftBukkit start
@@ -561,7 +561,7 @@ public abstract class PlayerList {
         org.bukkit.World fromWorld = entityplayer.getBukkitEntity().getWorld();
         entityplayer.viewingCredits = false;
         // CraftBukkit end
-        
+
         entityplayer1.playerConnection = entityplayer.playerConnection;
         entityplayer1.copyTo(entityplayer, flag);
         entityplayer1.d(entityplayer.getId());
@@ -854,11 +854,10 @@ public abstract class PlayerList {
     }
 
     public void tick() {
-        if (++this.u > 600) {
-            this.sendAll(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_LATENCY, this.players));
-            this.u = 0;
-        }
-
+        //if (++this.u > 600) {
+            //this.sendAll(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_LATENCY, (EntityPlayer) this.players));
+            //this.u = 0;
+        //}
     }
 
     public void sendAll(Packet packet) {

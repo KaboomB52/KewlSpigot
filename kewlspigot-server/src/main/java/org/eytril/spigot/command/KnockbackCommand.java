@@ -1,5 +1,6 @@
 package org.eytril.spigot.command;
 
+import org.bukkit.ChatColor;
 import org.eytril.spigot.KewlSpigot;
 import org.eytril.spigot.knockback.CraftKnockbackProfile;
 import org.eytril.spigot.knockback.KnockbackProfile;
@@ -11,7 +12,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

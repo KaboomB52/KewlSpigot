@@ -1,17 +1,15 @@
 package org.spigotmc;
 
-import com.mysql.jdbc.TimeUtil;
 import net.jafama.FastMath;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.eytril.spigot.util.DateUtil;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
-import net.minecraft.server.DedicatedServer;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,7 +24,7 @@ public class TicksPerSecondCommand extends Command {
 	}
 
 	private static String format(final double tps) {
-		return ((tps > 18.0) ? ChatColor.DARK_GREEN : ((tps > 16.0) ? ChatColor.YELLOW : ChatColor.RED)).toString() + ((tps > 20.0) ? "*" : "") + FastMath.min(FastMath.round(tps * 100.0) / 100.0, 20.0);
+		return ((tps > 18.0) ? ChatColor.GREEN : ((tps > 16.0) ? ChatColor.YELLOW : ChatColor.RED)).toString() + ((tps > 20.0) ? "*" : "") + FastMath.min(FastMath.round(tps * 100.0) / 100.0, 20.0);
 	}
 
 	@Override

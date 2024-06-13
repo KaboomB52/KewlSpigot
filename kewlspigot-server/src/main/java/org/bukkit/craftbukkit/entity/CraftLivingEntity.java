@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerHealthChangeEvent;
 import org.eytril.spigot.knockback.KnockbackProfile;
 import net.minecraft.server.DamageSource;
 import net.minecraft.server.EntityArmorStand;
@@ -92,6 +94,10 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public void setHealth(double health) {
+        if(this instanceof CraftPlayer) {
+            PlayerHealthChangeEvent event = new PlayerHealthChangeEvent((Player)this, getHealth(), health);
+            server.getPluginManager().callEvent(event);
+        }
         if ((health < 0) || (health > getMaxHealth())) {
             throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth() + ", but was " + health
                 + ". (attribute base value: " + this.getHandle().getAttributeInstance(GenericAttributes.maxHealth).b()

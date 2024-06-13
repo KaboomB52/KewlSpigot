@@ -275,7 +275,7 @@ public enum ChatColor{
      * Gets the color represented by the specified color code
      *
      * @param code Code to check
-     * @return Associative {@link org.bukkit.ChatColor} with the given code,
+     * @return Associative {@link ChatColor} with the given code,
      *     or null if it doesn't exist
      */
     public static ChatColor getByChar(char code) {
@@ -286,7 +286,7 @@ public enum ChatColor{
      * Gets the color represented by the specified color code
      *
      * @param code Code to check
-     * @return Associative {@link org.bukkit.ChatColor} with the given code,
+     * @return Associative {@link ChatColor} with the given code,
      *     or null if it doesn't exist
      */
     public static ChatColor getByChar(String code) {
@@ -329,6 +329,10 @@ public enum ChatColor{
             }
         }
         return new String(b);
+    }
+
+    public static String translate(String textToTranslate){
+        return translateAlternateColorCodes('&', textToTranslate);
     }
 
     /**
