@@ -91,14 +91,14 @@ public interface Chunk {
 	 *                 already exist
 	 * @return true if the chunk has loaded successfully, otherwise false
 	 */
-	CompletableFuture<Boolean> load(boolean generate);
+	boolean load(boolean generate);
 
 	/**
 	 * Loads the chunk.
 	 *
 	 * @return true if the chunk has loaded successfully, otherwise false
 	 */
-	CompletableFuture<Boolean> load();
+	boolean load();
 
 	/**
 	 * Unloads and optionally saves the Chunk

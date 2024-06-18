@@ -203,7 +203,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      *     already exist
      * @return true if the chunk has loaded successfully, otherwise false
      */
-    public CompletableFuture<Boolean> loadChunk(int x, int z, boolean generate);
+    public boolean loadChunk(int x, int z, boolean generate);
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates

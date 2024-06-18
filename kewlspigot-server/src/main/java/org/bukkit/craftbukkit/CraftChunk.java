@@ -201,11 +201,11 @@ public class CraftChunk implements Chunk {
 		return getWorld().isChunkLoaded(this);
 	}
 
-	public CompletableFuture<Boolean> load() {
+	public boolean load() {
 		return getWorld().loadChunk(getX(), getZ(), true);
 	}
 
-	public CompletableFuture<Boolean> load(boolean generate) {
+	public boolean load(boolean generate) {
 		return getWorld().loadChunk(getX(), getZ(), generate);
 	}
 

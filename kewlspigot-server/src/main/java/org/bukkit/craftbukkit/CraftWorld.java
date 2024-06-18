@@ -280,31 +280,25 @@ public class CraftWorld implements World {
     Executor executor = Executors.newCachedThreadPool();
 
     @Override
-    public CompletableFuture<Boolean> loadChunk(int x, int z, boolean generate) {
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-        CompletableFuture.supplyAsync(() -> {
-            chunkLoadCount++;
-            if (generate) {
-                return completableFuture.complete(world.chunkProviderServer.getChunkAt(x, z) != null);
-            }
+    public boolean loadChunk(int x, int z, boolean generate) {
+        org.spigotmc.AsyncCatcher.catchOp("chunk load"); // Spigot
+        chunkLoadCount++;
+        if (generate) {
+            // Use the default variant of loadChunk when generate == true.
+            return world.chunkProviderServer.getChunkAt(x, z) != null;
+        }
 
-            world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); // TacoSpigot - invoke LongHash directly
-            net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
+        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); // TacoSpigot - invoke LongHash directly
+        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
 
-            if (chunk == null) {
-                world.timings.syncChunkLoadTimer.startTiming(); // Spigot
-                chunk = world.chunkProviderServer.loadChunk(x, z);
-                if (chunk == null) {
-                    chunk = world.chunkProviderServer.loadChunk(x, z);
+        if (chunk == null) {
+            world.timings.syncChunkLoadTimer.startTiming(); // Spigot
+            chunk = world.chunkProviderServer.loadChunk(x, z);
 
-                    chunkLoadPostProcess(chunk, x, z);
-                    world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
-                }
-                return chunk != null;
-            }
-            return completableFuture.complete(chunk != null);
-        });
-        return completableFuture;
+            chunkLoadPostProcess(chunk, x, z);
+            world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
+        }
+        return chunk != null;
     }
 
     private void chunkLoadPostProcess(net.minecraft.server.Chunk chunk, int cx, int cz) {
