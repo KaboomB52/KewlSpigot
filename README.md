@@ -17,4 +17,4 @@ New Features:
  - A lot of data leak fixes.
  - Customizable enchant limits.
 
-**This specific spigot is made by KaboomB52 (otherwise known as "Kab" online), do not buy it from anyone else unless listed below here as a person with resell rights.**
+**This specific spigot is made by KaboomB52 (otherwise known as "Kab" online), do not buy it from anyone.**
