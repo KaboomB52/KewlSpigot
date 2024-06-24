@@ -35,6 +35,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 
 // PaperSpigot start
 import org.bukkit.Bukkit;
+import org.spigotmc.AsyncCatcher;
 import org.spigotmc.event.entity.EntityDismountEvent;
 // PaperSpigot end
 
@@ -487,66 +488,67 @@ public abstract class EntityLiving extends Entity {
     }
 
     protected void bi() {
-        Iterator iterator = this.effects.keySet().iterator();
-        isTickingEffects = true;
-
+        final Iterator iterator = this.effects.keySet().iterator();
+        this.isTickingEffects = true;
         while (iterator.hasNext()) {
-            Integer integer = (Integer) iterator.next();
-            MobEffect mobeffect = this.effects.get(integer);
-
+            final Integer integer = (Integer) iterator.next();
+            final MobEffect mobeffect = this.effects.get(integer);
             if (!mobeffect.tick(this)) {
-                if (!this.world.isClientSide) {
+                if (this.world.isClientSide) {
+                    continue;
+                }
+                final PotionEffectExpireEvent event = new PotionEffectExpireEvent((LivingEntity)this.getBukkitEntity(), CraftPotionUtil.toBukkit(mobeffect));
+                this.world.getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    CraftPotionUtil.extendDuration(mobeffect, event.getDuration());
+                }
+                else {
+                    iterator.remove();
                     this.b(mobeffect);
                 }
-            } else if (mobeffect.getDuration() % 600 == 0) {
+            }
+            else {
+                if (mobeffect.getDuration() % 600 != 0) {
+                    continue;
+                }
                 this.a(mobeffect, false);
             }
         }
-
-                // CraftBukkit start
-                        isTickingEffects = false;
-               for (Object e : effectsToProcess) {
-                       if (e instanceof MobEffect) {
-                                addEffect((MobEffect) e);
-                            } else {
-                                removeEffect((Integer) e);
-                            }
-                    }
-                // CraftBukkit end
-
+        this.isTickingEffects = false;
+        for (final Object e : this.effectsToProcess) {
+            if (e instanceof MobEffect) {
+                this.addEffect((MobEffect)e);
+            }
+            else {
+                this.removeEffect((int)e);
+            }
+        }
         if (this.updateEffects) {
             if (!this.world.isClientSide) {
                 this.B();
             }
-
             this.updateEffects = false;
         }
-
-        int i = this.datawatcher.getInt(7);
-        boolean flag = this.datawatcher.getByte(8) > 0;
-
+        final int i = this.datawatcher.getInt(7);
+        final boolean flag = this.datawatcher.getByte(8) > 0;
         if (i > 0) {
-            boolean flag1 = false;
-
+            boolean flag2 = false;
             if (!this.isInvisible()) {
-                flag1 = this.random.nextBoolean();
-            } else {
-                flag1 = this.random.nextInt(15) == 0;
+                flag2 = this.random.nextBoolean();
             }
-
+            else {
+                flag2 = (this.random.nextInt(15) == 0);
+            }
             if (flag) {
-                flag1 &= this.random.nextInt(5) == 0;
+                flag2 &= (this.random.nextInt(5) == 0);
             }
-
-            if (flag1 && i > 0) {
-                double d0 = (double) (i >> 16 & 255) / 255.0D;
-                double d1 = (double) (i >> 8 & 255) / 255.0D;
-                double d2 = (double) (i >> 0 & 255) / 255.0D;
-
-                this.world.addParticle(flag ? EnumParticle.SPELL_MOB_AMBIENT : EnumParticle.SPELL_MOB, this.locX + (this.random.nextDouble() - 0.5D) * (double) this.width, this.locY + this.random.nextDouble() * (double) this.length, this.locZ + (this.random.nextDouble() - 0.5D) * (double) this.width, d0, d1, d2, new int[0]);
+            if (flag2 && i > 0) {
+                final double d0 = (i >> 16 & 0xFF) / 255.0;
+                final double d2 = (i >> 8 & 0xFF) / 255.0;
+                final double d3 = (i >> 0 & 0xFF) / 255.0;
+                this.world.addParticle(flag ? EnumParticle.SPELL_MOB_AMBIENT : EnumParticle.SPELL_MOB, this.locX + (this.random.nextDouble() - 0.5) * this.width, this.locY + this.random.nextDouble() * this.length, this.locZ + (this.random.nextDouble() - 0.5) * this.width, d0, d2, d3, new int[0]);
             }
         }
-
     }
 
     protected void B() {
@@ -601,33 +603,40 @@ public abstract class EntityLiving extends Entity {
         return (MobEffect) this.effects.get(Integer.valueOf(mobeffectlist.id));
     }
 
-    public void addEffect(MobEffect mobeffect) {
-        org.spigotmc.AsyncCatcher.catchOp("effect add"); // Spigot
-        // CraftBukkit start
-        if (isTickingEffects) {
-            effectsToProcess.add(mobeffect);
+    public void addEffect(final MobEffect mobeffect) {
+        AsyncCatcher.catchOp("effect add");
+        if (this.isTickingEffects) {
+            this.effectsToProcess.add(mobeffect);
             return;
         }
-        // CraftBukkit end
         if (this.d(mobeffect)) {
-            MobEffect currentEffect = this.effects.get(mobeffect.getEffectId());
-
+            final MobEffect currentEffect = this.effects.get(mobeffect.getEffectId());
             if (currentEffect == null) {
+                final PotionEffectAddEvent event = new PotionEffectAddEvent((LivingEntity)this.getBukkitEntity(), CraftPotionUtil.toBukkit(mobeffect));
+                this.world.getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    return;
+                }
                 this.effects.put(mobeffect.getEffectId(), mobeffect);
                 this.a(mobeffect);
-            } else {
+            }
+            else {
+                final PotionEffectExtendEvent event2 = new PotionEffectExtendEvent((LivingEntity)this.getBukkitEntity(), CraftPotionUtil.toBukkit(mobeffect), CraftPotionUtil.toBukkit(mobeffect));
+                this.world.getServer().getPluginManager().callEvent(event2);
+                if (event2.isCancelled()) {
+                    return;
+                }
                 currentEffect.a(mobeffect);
                 this.a(currentEffect, true);
             }
-
-            if (this.effects.containsKey(Integer.valueOf(mobeffect.getEffectId()))) {
-                ((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId()))).a(mobeffect);
-                this.a((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId())), true);
-            } else {
-                this.effects.put(Integer.valueOf(mobeffect.getEffectId()), mobeffect);
+            if (this.effects.containsKey(mobeffect.getEffectId())) {
+                this.effects.get(mobeffect.getEffectId()).a(mobeffect);
+                this.a(this.effects.get(mobeffect.getEffectId()), true);
+            }
+            else {
+                this.effects.put(mobeffect.getEffectId(), mobeffect);
                 this.a(mobeffect);
             }
-
         }
     }
 
@@ -647,13 +656,20 @@ public abstract class EntityLiving extends Entity {
         return this.getMonsterType() == EnumMonsterType.UNDEAD;
     }
 
-    public void removeEffect(int i) {
-        MobEffect mobeffect = (MobEffect) this.effects.remove(Integer.valueOf(i));
-
+    public void removeEffect(final int i) {
+        if (this.isTickingEffects) {
+            this.effectsToProcess.add(i);
+            return;
+        }
+        final MobEffect mobeffect = this.effects.remove(i);
         if (mobeffect != null) {
+            final PotionEffectRemoveEvent event = new PotionEffectRemoveEvent((LivingEntity)this.getBukkitEntity(), CraftPotionUtil.toBukkit(mobeffect));
+            this.world.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
             this.b(mobeffect);
         }
-
     }
 
     protected void a(MobEffect mobeffect) {

@@ -115,7 +115,7 @@ public class KewlConfig {
         }
 
         this.hidePlayersFromTab = this.getBoolean("hide-players-from-tab", true);
-        this.firePlayerMoveEvent = this.getBoolean("fire-player-move-event", false);
+        this.firePlayerMoveEvent = this.getBoolean("fire-player-move-event", true);
         this.fireLeftClickAir = this.getBoolean("fire-left-click-air", false);
         this.fireLeftClickBlock = this.getBoolean("fire-left-click-block", false);
         this.entityActivation = this.getBoolean("entity-activation", false);
