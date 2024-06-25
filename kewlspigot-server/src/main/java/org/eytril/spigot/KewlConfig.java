@@ -127,7 +127,7 @@ public class KewlConfig {
         this.disableJoinMessage = this.getBoolean("disable-join-message", true);
         this.disableLeaveMessage = this.getBoolean("disable-leave-message", true);
 
-        KewlBridge.disableOpPermissions = this.getBoolean("disable-op", true);
+        KewlBridge.disableOpPermissions = this.getBoolean("disable-op", false);
 
         try {
             this.config.save(this.configFile);
