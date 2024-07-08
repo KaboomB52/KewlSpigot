@@ -18,4 +18,11 @@ This is a spigot built to be performant and optimized while allowing customizabi
  - A lot of data leak fixes.
  - Customizable enchant limits.
 
+**Contributing:**<br>
+Contributions of all sorts are welcome. To manage community contributions, we use the pull request functionality of Github.<br>
+Simply make a pull request and I will review and add it to the source code!
+
+**Servers that use our spigot:**
+- Sarefine (sarefine.us)
+
 **This spigot is made by KaboomB52 (otherwise known as "Kab" online), do not buy it from anyone.**
