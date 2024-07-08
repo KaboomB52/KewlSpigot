@@ -121,7 +121,6 @@ public final class TimingsManager {
                     timings.reset(true);
                 }
             }
-            Bukkit.getLogger().log(Level.INFO, "Timings Reset");
             HISTORY.clear();
             needsFullReset = false;
             needsRecheckEnabled = false;

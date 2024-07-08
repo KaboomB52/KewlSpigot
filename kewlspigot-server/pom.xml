@@ -112,7 +112,7 @@
     <repositories>
         <repository>
             <id>mc-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
+            <url>https://maven.elmakers.com/repository/</url>
         </repository>
     </repositories>
 

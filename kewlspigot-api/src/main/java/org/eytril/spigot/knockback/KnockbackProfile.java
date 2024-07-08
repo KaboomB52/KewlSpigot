@@ -35,5 +35,4 @@ public interface KnockbackProfile {
     void setExtraVertical(double extraVertical);
 
     void save();
-
 }

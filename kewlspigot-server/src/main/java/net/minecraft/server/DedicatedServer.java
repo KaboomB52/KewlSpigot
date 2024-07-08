@@ -178,7 +178,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         KewlSpigot.INSTANCE.setConfig(new KewlConfig());
         KewlSpigot.INSTANCE.registerCommands();
 
-        DedicatedServer.LOGGER.info("Generating keypair");
         this.a(MinecraftEncryption.b());
         DedicatedServer.LOGGER.info("Starting Minecraft server on " + (this.getServerIp().isEmpty() ? "*" : this.getServerIp()) + ":" + this.R());
 
@@ -260,7 +259,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             this.c((this.getMaxBuildHeight() + 8) / 16 * 16);
             this.c(MathHelper.clamp(this.getMaxBuildHeight(), 64, 256));
             this.propertyManager.setProperty("max-build-height", Integer.valueOf(this.getMaxBuildHeight()));
-            DedicatedServer.LOGGER.info("Preparing level \"" + this.U() + "\"");
             this.a(this.U(), this.U(), k, worldtype, s2);
             long i1 = System.nanoTime() - j;
             String s3 = String.format("%.3fs", Double.valueOf((double) i1 / 1.0E9D));
@@ -529,7 +527,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     }
 
     protected boolean aR() {
-        server.getLogger().info( "**** Beginning UUID conversion, this may take A LONG time ****"); // Spigot, let the user know whats up!
         boolean flag = false;
 
         int i;
