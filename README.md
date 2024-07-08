@@ -3,7 +3,7 @@ A fork of SpigotX (based on ClubSpigot)
 
 This is a spigot built to be performant and optimized while allowing customizability over kb and smoother pots.
 
-**We currently use patches from the following spigots (authors are also listed if found):**
+### We currently use patches from the following spigots (authors are also listed if found):
  - MineTick (Poweruser)
  - SpigotX (Joeleoli)
  - ClubSpigot (Joeleoli, Dewgs, TehNeon, Manthe, & more)
@@ -12,17 +12,17 @@ This is a spigot built to be performant and optimized while allowing customizabi
  - SportPaper (OCTC / Electroid)
  - GoatSpigot (Johannes [Karhu Dev])
 
-**New Features:**
- - Custom KB System allowing for changing the Vertical and Horizontal friction at different values.
- - Tickloop fixes.
- - A lot of data leak fixes.
- - Customizable enchant limits.
+### New Features
+ - Custom KB System allowing for changing the Vertical and Horizontal friction at different values.<br>
+ - Tickloop fixes.<br>
+ - A lot of data leak fixes.<br>
+ - Customizable enchant limits.<br>
 
-**Contributing:**<br>
-Contributions of all sorts are welcome. To manage community contributions, we use the pull request functionality of Github.<br>
-Simply make a pull request and I will review and add it to the source code!
+### Contributing
+Contributions of all sorts are welcome. We use GitHub's pull requests to add in your code!<br>
+Simply make a pull request and after reviewing it and testing it on a demo server it will be added to the repo!
 
-**Servers that use our spigot:**
-- Sarefine (sarefine.us)
+### Servers that use KewlSpigot
+ - Sarefine (sarefine.us)
 
-**This spigot is made by KaboomB52 (otherwise known as "Kab" online), do not buy it from anyone.**
+**This spigot is free for everyone, feel free to contribute if you want to!**
