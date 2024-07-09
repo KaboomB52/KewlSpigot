@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
-import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+import java.util.Iterator;
 
 public class BlockLever extends Block {
 

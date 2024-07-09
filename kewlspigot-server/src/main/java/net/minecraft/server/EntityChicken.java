@@ -1,7 +1,5 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-
 public class EntityChicken extends EntityAnimal {
 
     public float bm;

@@ -1,7 +1,5 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-
 public class EntitySquid extends EntityWaterAnimal {
 
     public float a;

@@ -1,8 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.base.Predicate;
-
-import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class BlockTrapdoor extends Block {
 

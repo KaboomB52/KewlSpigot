@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 public class EntityPig extends EntityAnimal {
 

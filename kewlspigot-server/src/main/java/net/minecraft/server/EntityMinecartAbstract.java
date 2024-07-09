@@ -1,17 +1,15 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Maps;
-import java.util.Iterator;
-import java.util.Map;
-
-// CraftBukkit start
-import net.jafama.FastMath;
 import org.bukkit.Location;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
+
+import java.util.Iterator;
+import java.util.Map;
 // CraftBukkit end
 
 public abstract class EntityMinecartAbstract extends Entity implements INamableTileEntity {

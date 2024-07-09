@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.jafama.FastMath;
 import net.minecraft.server.EntityFireball;
 
 import net.minecraft.server.MathHelper;

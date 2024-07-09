@@ -2,15 +2,9 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+
+import java.util.*;
 
 public class CraftingManager {
 

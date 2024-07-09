@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
-import java.util.Random;
+import org.bukkit.event.block.BlockFromToEvent;
 
-import org.bukkit.event.block.BlockFromToEvent; // CraftBukkit
+import java.util.Random;
 
 public class BlockDragonEgg extends Block {
 

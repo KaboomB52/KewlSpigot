@@ -1,10 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.base.Predicate;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.util.BlockStateListPopulator;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 // CraftBukkit end
 

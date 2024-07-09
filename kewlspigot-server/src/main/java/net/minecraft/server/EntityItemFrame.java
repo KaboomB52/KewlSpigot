@@ -1,7 +1,8 @@
 package net.minecraft.server;
 
-import java.util.UUID;
 import org.apache.commons.codec.Charsets;
+
+import java.util.UUID;
 
 public class EntityItemFrame extends EntityHanging {
 

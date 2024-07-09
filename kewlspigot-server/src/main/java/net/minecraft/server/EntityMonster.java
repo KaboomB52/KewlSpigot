@@ -1,7 +1,6 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-import org.bukkit.event.entity.EntityCombustByEntityEvent; // CraftBukkit
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 
 public abstract class EntityMonster extends EntityCreature implements IMonster {
 

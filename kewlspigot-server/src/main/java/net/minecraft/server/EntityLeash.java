@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+
 import java.util.Iterator;
 import java.util.List;
-
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
 public class EntityLeash extends EntityHanging {
 

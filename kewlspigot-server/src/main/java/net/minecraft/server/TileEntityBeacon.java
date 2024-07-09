@@ -1,21 +1,17 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
-import org.bukkit.entity.HumanEntity;
-// CraftBukkit end
-
-// PaperSpigot start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.github.paperspigot.event.block.BeaconEffectEvent;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 // PaperSpigot end
 
 public class TileEntityBeacon extends TileEntityContainer implements IUpdatePlayerListBox, IInventory {

@@ -1,13 +1,12 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftShapelessRecipe;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-// CraftBukkit start
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.inventory.CraftShapelessRecipe;
 // CraftBukkit end
 
 public class ShapelessRecipes implements IRecipe {

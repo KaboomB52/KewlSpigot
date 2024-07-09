@@ -1,14 +1,13 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
-import java.util.List;
 import org.apache.commons.lang3.Validate;
-
-// CraftBukkit start
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public abstract class EntityHanging extends Entity {

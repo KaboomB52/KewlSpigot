@@ -1,13 +1,12 @@
 package net.minecraft.server;
 
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockGrass extends Block implements IBlockFragilePlantElement {

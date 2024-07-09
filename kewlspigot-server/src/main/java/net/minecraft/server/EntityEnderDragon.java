@@ -1,12 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
-import net.jafama.FastMath;
+import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.BlockStateListPopulator;
@@ -14,7 +9,10 @@ import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.Bukkit;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class EntityEnderDragon extends EntityInsentient implements IComplex, IMonster {

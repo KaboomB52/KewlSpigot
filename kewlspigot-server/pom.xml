@@ -30,7 +30,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.86.Final</version>
+            <version>4.1.105.Final</version>
         </dependency>
         <dependency>
             <groupId>com.eatthepath</groupId>
@@ -103,58 +103,44 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.jafama</groupId>
-            <artifactId>jafama</artifactId>
-            <version>2.1.0</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.17.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-iostreams</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>mc-repo</id>
-            <url>https://maven.elmakers.com/repository/</url>
-        </repository>
-    </repositories>
-
-    <!-- required until fixed plexus-compiler-eclipse is deployed -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spigotmc-public</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </pluginRepository>
-
-        <!-- PaperSpigot - Repo for gitdescribe -->
-        <pluginRepository>
-            <id>destroystokyo</id>
-            <url>https://ci.destroystokyo.com/plugin/repository/everything/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
     <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>com.lukegb.mojo</groupId>-->
-<!--                <artifactId>gitdescribe-maven-plugin</artifactId>-->
-<!--                <version>1.3</version>-->
-<!--                <configuration>-->
-<!--                    <outputPrefix>git-</outputPrefix>-->
-<!--                    <scmDirectory>..</scmDirectory>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>gitdescribe</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.3.0</version>
                 <configuration>
                     <forceCreation>true</forceCreation> <!-- Required to prevent shading the jar multiple times -->
                     <archive>
@@ -193,7 +179,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

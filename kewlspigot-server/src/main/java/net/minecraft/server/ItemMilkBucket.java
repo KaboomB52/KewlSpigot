@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.github.paperspigot.PaperSpigotConfig; // PaperSpigot
+import org.github.paperspigot.PaperSpigotConfig;
 
 public class ItemMilkBucket extends Item {
 

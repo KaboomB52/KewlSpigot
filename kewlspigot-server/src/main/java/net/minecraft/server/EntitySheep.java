@@ -1,14 +1,13 @@
 package net.minecraft.server;
 
-import org.eytril.spigot.KewlSpigot;
 import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.InventoryView;
+import org.eytril.spigot.KewlSpigot;
+
+import java.util.Map;
+import java.util.Random;
 // CraftBukkit end
 
 public class EntitySheep extends EntityAnimal {

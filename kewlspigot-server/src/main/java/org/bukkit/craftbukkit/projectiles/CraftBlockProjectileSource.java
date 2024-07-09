@@ -2,7 +2,6 @@ package org.bukkit.craftbukkit.projectiles;
 
 import java.util.Random;
 
-import net.jafama.FastMath;
 import net.minecraft.server.MathHelper;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;

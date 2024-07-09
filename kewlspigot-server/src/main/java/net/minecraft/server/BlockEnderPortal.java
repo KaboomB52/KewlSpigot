@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
+import org.bukkit.event.entity.EntityPortalEnterEvent;
+
 import java.util.List;
 import java.util.Random;
-
-import org.bukkit.event.entity.EntityPortalEnterEvent; // CraftBukkit
 
 public class BlockEnderPortal extends BlockContainer {
 

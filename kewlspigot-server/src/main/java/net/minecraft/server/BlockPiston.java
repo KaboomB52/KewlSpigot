@@ -1,17 +1,12 @@
 package net.minecraft.server;
 
-import java.util.List;
-
-// CraftBukkit start
-import java.util.AbstractList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ListIterator;
-
 import com.google.common.collect.ImmutableList;
 import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+
+import java.util.AbstractList;
+import java.util.List;
 // CraftBukkit end
 
 public class BlockPiston extends Block {
