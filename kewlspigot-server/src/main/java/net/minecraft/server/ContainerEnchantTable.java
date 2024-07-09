@@ -1,8 +1,5 @@
 package net.minecraft.server;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftInventoryEnchanting;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
@@ -10,6 +7,10 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 // CraftBukkit start
 // CraftBukkit end

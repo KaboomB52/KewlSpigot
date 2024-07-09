@@ -1,14 +1,7 @@
 package net.minecraft.server;
 
-import org.eytril.spigot.util.OptimizedRemoveUtil;
 import co.aikar.timings.SpigotTimings;
 import co.aikar.timings.Timing;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -31,7 +24,14 @@ import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.plugin.PluginManager;
+import org.eytril.spigot.util.OptimizedRemoveUtil;
 import org.spigotmc.event.entity.EntityDismountEvent;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Marker {
 

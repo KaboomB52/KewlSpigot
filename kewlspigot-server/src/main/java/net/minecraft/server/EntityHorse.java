@@ -1,11 +1,10 @@
 package net.minecraft.server;
 
 import com.google.common.base.Predicate;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+
 import java.util.Iterator;
 import java.util.List;
-
-import net.jafama.FastMath;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason; // CraftBukkit
 
 public class EntityHorse extends EntityAnimal implements IInventoryListener {
 

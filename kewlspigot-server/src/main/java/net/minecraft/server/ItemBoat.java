@@ -1,7 +1,5 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-
 import java.util.List;
 
 public class ItemBoat extends Item {

@@ -1,11 +1,10 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import net.jafama.FastMath;
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
 public class EntityFallingBlock extends Entity {
 

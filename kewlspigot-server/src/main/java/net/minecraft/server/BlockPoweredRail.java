@@ -1,8 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.base.Predicate;
-
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 public class BlockPoweredRail extends BlockMinecartTrackAbstract {
 

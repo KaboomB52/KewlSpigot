@@ -1,13 +1,12 @@
 package net.minecraft.server;
 
 // CraftBukkit start
+
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-// CraftBukkit end
-
-import org.github.paperspigot.PaperSpigotConfig; // PaperSpigot
+import org.github.paperspigot.PaperSpigotConfig;
 
 public class ItemBucket extends Item {
 

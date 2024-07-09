@@ -1,10 +1,11 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
+import net.minecraft.server.ScoreboardTeamBase.EnumNameTagVisibility;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import net.minecraft.server.ScoreboardTeamBase.EnumNameTagVisibility;
 
 public class PacketPlayOutScoreboardTeam implements Packet<PacketListenerPlayOut> {
     public String a = "";

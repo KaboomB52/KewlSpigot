@@ -1,15 +1,13 @@
 package net.minecraft.server;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
-
-//CraftBukkit start
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 //CraftBukkit end
 
 public class EntityZombie extends EntityMonster {

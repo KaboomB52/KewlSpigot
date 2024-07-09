@@ -1,12 +1,10 @@
 package net.minecraft.server;
 
-import org.eytril.spigot.KewlSpigot;
-import org.eytril.spigot.optimized.OptimizedWorldTileEntitySet;
-import org.eytril.spigot.util.OptimizedRemoveUtil;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.CraftServer;
@@ -17,19 +15,16 @@ import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.generator.ChunkGenerator;
+import org.eytril.spigot.KewlSpigot;
+import org.eytril.spigot.optimized.OptimizedWorldTileEntitySet;
+import org.eytril.spigot.util.OptimizedRemoveUtil;
+import org.github.paperspigot.event.ServerExceptionEvent;
+import org.github.paperspigot.exception.ServerInternalException;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-
-// PaperSpigot start
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.github.paperspigot.event.ServerExceptionEvent;
-import org.github.paperspigot.exception.ServerInternalException;
-// PaperSpigot end
-
-import net.jafama.FastMath;
 
 // CraftBukkit start
 // CraftBukkit end
@@ -1934,8 +1929,8 @@ public abstract class World implements IBlockAccess {
         double d0 = 1.0D / ((axisalignedbb.d - axisalignedbb.a) * 2.0D + 1.0D);
         double d1 = 1.0D / ((axisalignedbb.e - axisalignedbb.b) * 2.0D + 1.0D);
         double d2 = 1.0D / ((axisalignedbb.f - axisalignedbb.c) * 2.0D + 1.0D);
-        double d3 = (1.0D - FastMath.floor(1.0D / d0));
-        double d4 = (1.0D - FastMath.floor(1.0D / d2));
+        double d3 = (1.0D - Math.floor(1.0D / d0) * d0) / 2.0D;
+        double d4 = (1.0D - Math.floor(1.0D / d2) * d2) / 2.0D;
 
         if (d0 >= 0.0D && d1 >= 0.0D && d2 >= 0.0D) {
             int i = 0;

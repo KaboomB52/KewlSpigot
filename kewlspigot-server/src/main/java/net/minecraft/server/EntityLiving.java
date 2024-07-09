@@ -1,29 +1,11 @@
 package net.minecraft.server;
 
-import org.eytril.spigot.KewlSpigot;
-import org.eytril.spigot.event.potion.PotionEffectAddEvent;
-import org.eytril.spigot.event.potion.PotionEffectExpireEvent;
-import org.eytril.spigot.event.potion.PotionEffectExtendEvent;
-import org.eytril.spigot.event.potion.PotionEffectRemoveEvent;
-import org.eytril.spigot.knockback.KnockbackProfile;
-import org.eytril.spigot.util.CraftPotionUtil;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Maps;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-// CraftBukkit start
-import java.util.ArrayList;
-
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import net.jafama.FastMath;
+import com.google.common.collect.Maps;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Vehicle;
@@ -31,12 +13,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-// CraftBukkit end
-
-// PaperSpigot start
-import org.bukkit.Bukkit;
+import org.eytril.spigot.KewlSpigot;
+import org.eytril.spigot.event.potion.PotionEffectAddEvent;
+import org.eytril.spigot.event.potion.PotionEffectExpireEvent;
+import org.eytril.spigot.event.potion.PotionEffectExtendEvent;
+import org.eytril.spigot.event.potion.PotionEffectRemoveEvent;
+import org.eytril.spigot.knockback.KnockbackProfile;
+import org.eytril.spigot.util.CraftPotionUtil;
 import org.spigotmc.AsyncCatcher;
 import org.spigotmc.event.entity.EntityDismountEvent;
+
+import java.util.*;
 // PaperSpigot end
 
 public abstract class EntityLiving extends Entity {
@@ -1542,7 +1529,7 @@ public abstract class EntityLiving extends Entity {
             f3 = 1.0F;
             f2 = (float) Math.sqrt((double) f) * 3.0F;
             // CraftBukkit - Math -> TrigMath
-            f1 = (float) FastMath.atan2(d1, d0) * 180.0F / 3.1415927F - 90.0F;
+            f1 = (float) org.bukkit.craftbukkit.TrigMath.atan2(d1, d0) * 180.0F / 3.1415927F - 90.0F;
         }
 
         if (this.az > 0.0F) {

@@ -1,11 +1,9 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityChest extends TileEntityContainer implements IInventory { // PaperSpigot - remove IUpdatePlayerListBox

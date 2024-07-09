@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.bukkit.craftbukkit.entity.CraftHumanEntity; // CraftBukkit
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 
 public interface IInventory extends INamableTileEntity {
 

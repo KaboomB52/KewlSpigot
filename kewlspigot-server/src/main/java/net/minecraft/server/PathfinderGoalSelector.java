@@ -1,14 +1,12 @@
 package net.minecraft.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.craftbukkit.util.UnsafeList;
 import org.eytril.spigot.KewlSpigot;
 
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.bukkit.craftbukkit.util.UnsafeList; // CraftBukkit
 
 
 public class PathfinderGoalSelector {

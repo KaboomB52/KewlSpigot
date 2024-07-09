@@ -1,31 +1,20 @@
 package net.minecraft.server;
 
-import org.eytril.spigot.KewlSpigot;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ListenableFuture;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.*;
-import java.util.logging.Level;
-
 import org.bukkit.WeatherType;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.util.HashTreeSet;
-
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
+import org.eytril.spigot.KewlSpigot;
+
+import java.util.*;
+import java.util.logging.Level;
 
 public class WorldServer extends World implements IAsyncTaskHandler {
 

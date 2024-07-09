@@ -5,9 +5,10 @@
 
 package net.minecraft.server;
 
+import net.minecraft.server.DataWatcher.WatchableObject;
+
 import java.io.IOException;
 import java.util.List;
-import net.minecraft.server.DataWatcher.WatchableObject;
 
 public class PacketPlayOutSpawnEntityLiving implements Packet<PacketListenerPlayOut> {
 	private int a;

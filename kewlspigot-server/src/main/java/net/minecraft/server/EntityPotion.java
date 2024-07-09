@@ -1,12 +1,12 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.HashMap;
-
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityPotion extends EntityProjectile {
 

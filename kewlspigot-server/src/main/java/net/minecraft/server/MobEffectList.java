@@ -1,17 +1,14 @@
 package net.minecraft.server;
 
+import com.eatthepath.uuid.FastUUID;
+import com.google.common.collect.Maps;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-// CraftBukkit start
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-// CraftBukkit end
-
-import com.eatthepath.uuid.FastUUID;
-import com.google.common.collect.Maps;
 
 public class MobEffectList {
 

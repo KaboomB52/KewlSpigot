@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 
 public class RecipeArmorDye extends ShapelessRecipes implements IRecipe { // CraftBukkit - added extends

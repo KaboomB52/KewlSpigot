@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
-import java.util.List;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import java.util.List;
 
 public class EntityLightning extends EntityWeather {
 

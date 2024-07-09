@@ -1,12 +1,10 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
-import java.util.List;
-
-// CraftBukkit start
-import java.util.List;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
 // CraftBukkit end
 
 public class InventorySubcontainer implements IInventory {

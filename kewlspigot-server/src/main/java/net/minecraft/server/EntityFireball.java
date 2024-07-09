@@ -1,9 +1,8 @@
 package net.minecraft.server;
 
-import java.util.List;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import net.jafama.FastMath;
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import java.util.List;
 
 public abstract class EntityFireball extends Entity {
 

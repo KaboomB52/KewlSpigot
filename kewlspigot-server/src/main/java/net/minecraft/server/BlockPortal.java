@@ -1,10 +1,10 @@
 package net.minecraft.server;
 
 import com.google.common.cache.LoadingCache;
-import java.util.Random;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 
-import org.bukkit.event.entity.EntityPortalEnterEvent; // CraftBukkit
-import org.bukkit.event.world.PortalCreateEvent; // CraftBukkit
+import java.util.Random;
 
 public class BlockPortal extends BlockHalfTransparent {
 

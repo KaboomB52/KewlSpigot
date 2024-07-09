@@ -2,27 +2,20 @@ package net.minecraft.server;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import org.eytril.spigot.KewlSpigot;
 import com.mojang.authlib.GameProfile;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-// CraftBukkit start
-import org.eytril.spigot.knockback.KnockbackProfile;
-import net.jafama.FastMath;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.entity.CraftItem;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.event.player.*;
+import org.eytril.spigot.KewlSpigot;
+import org.eytril.spigot.knockback.KnockbackProfile;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 // CraftBukkit end
 
 public abstract class EntityHuman extends EntityLiving {
@@ -416,7 +409,7 @@ public abstract class EntityHuman extends EntityLiving {
 
         this.k((float) attributeinstance.getValue());
         float f = (float) MathHelper.sqrt(this.motX * this.motX + this.motZ * this.motZ);
-        float f1 = (float) (FastMath.atan(-this.motY * 0.20000000298023224D) * 15.0D); // CraftBukkit
+        float f1 = (float) ( org.bukkit.craftbukkit.TrigMath.atan(-this.motY * 0.20000000298023224D) * 15.0D); // CraftBukkit
 
         if (f > 0.1F) {
             f = 0.1F;

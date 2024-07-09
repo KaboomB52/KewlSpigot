@@ -1,11 +1,12 @@
 package net.minecraft.server;
 
 // CraftBukkit start
-import java.util.List;
 
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
+
+import java.util.List;
 // CraftBukkit end
 
 public abstract class EntityMinecartContainer extends EntityMinecartAbstract implements ITileInventory {

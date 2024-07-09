@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.bukkit.event.entity.SheepDyeWoolEvent; // CraftBukkit
+import org.bukkit.event.entity.SheepDyeWoolEvent;
 
 public class ItemDye extends Item {
 

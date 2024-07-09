@@ -1,11 +1,10 @@
 package net.minecraft.server;
 
-import java.util.List;
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+
+import java.util.List;
+import java.util.Random;
 // CraftBukkit end
 
 public abstract class BlockButtonAbstract extends Block {

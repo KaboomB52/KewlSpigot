@@ -2,19 +2,12 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import net.jafama.FastMath;
-
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+
+import java.util.*;
 
 public class Explosion {
 
@@ -59,7 +52,7 @@ public class Explosion {
                         double d0 = (double) ((float) k / 15.0F * 2.0F - 1.0F);
                         double d1 = (double) ((float) i / 15.0F * 2.0F - 1.0F);
                         double d2 = (double) ((float) j / 15.0F * 2.0F - 1.0F);
-                        double d3 = FastMath.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
 
                         d0 /= d3;
                         d1 /= d3;

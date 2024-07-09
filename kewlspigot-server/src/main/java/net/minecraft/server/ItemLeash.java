@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
+import org.bukkit.event.hanging.HangingPlaceEvent;
+
 import java.util.Iterator;
 import java.util.List;
-
-import org.bukkit.event.hanging.HangingPlaceEvent; // CraftBukkit
 
 public class ItemLeash extends Item {
 

@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import co.aikar.timings.SpigotTimings;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Futures;
@@ -13,41 +14,29 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
-import java.awt.GraphicsEnvironment;
+import jline.console.ConsoleReader;
+import joptsimple.OptionSet;
+import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.craftbukkit.Main;
+import org.eytril.spigot.tick.ReentrantIAsyncHandler;
+import org.eytril.spigot.tick.TasksPerTick;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
 import java.security.KeyPair;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
-import javax.imageio.ImageIO;
-
-import lombok.Getter;
-import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-
-import jline.console.ConsoleReader;
-import joptsimple.OptionSet;
-
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.Main;
-import co.aikar.timings.SpigotTimings; // Spigot
-import org.eytril.spigot.tick.ReentrantIAsyncHandler;
-import org.eytril.spigot.tick.TasksPerTick;
 // CraftBukkit end
 
 public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTick> implements Runnable, ICommandListener, IAsyncTaskHandler {
