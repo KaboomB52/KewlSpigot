@@ -1057,7 +1057,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     }
 
     public String getServerModName() {
-        return "DickSpigot"; // TacoSpigot - TacoSpigot // PaperSpigot - PaperSpigot > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+        return "KewlSpigot"; // TacoSpigot - TacoSpigot // PaperSpigot - PaperSpigot > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
     }
 
     public CrashReport b(CrashReport crashreport) {
