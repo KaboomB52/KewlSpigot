@@ -1,6 +1,5 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
 import org.github.paperspigot.exception.ServerInternalException;
 
 import java.util.Iterator;

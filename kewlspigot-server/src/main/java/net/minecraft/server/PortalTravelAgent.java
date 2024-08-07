@@ -1,14 +1,13 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityPortalExitEvent;
 import org.bukkit.util.Vector;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 // CraftBukkit end
 
 public class PortalTravelAgent {

@@ -1,10 +1,9 @@
 package net.minecraft.server;
 
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityInteractEvent;
+
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockRedstoneOre extends Block {

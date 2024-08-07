@@ -1,12 +1,10 @@
 package net.minecraft.server;
 
-import java.util.concurrent.Callable;
-
-// CraftBukkit start
-import java.util.List;
-
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
+import java.util.concurrent.Callable;
 // CraftBukkit end
 
 public class PlayerInventory implements IInventory {

@@ -1,7 +1,6 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class EntityTNTPrimed extends Entity {
 

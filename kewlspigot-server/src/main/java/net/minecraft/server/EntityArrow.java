@@ -1,12 +1,10 @@
 package net.minecraft.server;
 
-import java.util.List;
-
-// CraftBukkit start
-import net.jafama.FastMath;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+
+import java.util.List;
 // CraftBukkit end
 
 public class EntityArrow extends Entity implements IProjectile {

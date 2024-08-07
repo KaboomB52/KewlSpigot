@@ -1,10 +1,10 @@
 package net.minecraft.server;
 
-import java.util.concurrent.Callable;
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+
+import java.util.concurrent.Callable;
 // CraftBukkit end
 
 public class WorldData {

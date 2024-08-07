@@ -1,10 +1,10 @@
 package net.minecraft.server;
 
-import java.util.Collection;
-import java.util.List;
-// CraftBukkit start
 import org.bukkit.craftbukkit.command.ProxiedNativeCommandSender;
 import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
+
+import java.util.Collection;
+import java.util.List;
 // CraftBukkit end
 
 public class CommandExecute extends CommandAbstract {

@@ -2,14 +2,12 @@ package net.minecraft.server;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
-import net.jafama.FastMath;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class EntityWither extends EntityMonster implements IRangedEntity {

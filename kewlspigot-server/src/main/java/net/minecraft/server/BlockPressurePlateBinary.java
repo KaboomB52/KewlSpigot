@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
+import org.bukkit.event.entity.EntityInteractEvent;
+
 import java.util.Iterator;
 import java.util.List;
-
-import org.bukkit.event.entity.EntityInteractEvent; // CraftBukkit
 
 public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 

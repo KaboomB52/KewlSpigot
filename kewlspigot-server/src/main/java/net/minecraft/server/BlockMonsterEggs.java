@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
-import java.util.Random;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason; // CraftBukkit
+import java.util.Random;
 
 public class BlockMonsterEggs extends Block {
 

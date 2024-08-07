@@ -1,7 +1,5 @@
 package net.minecraft.server;
 
-import net.jafama.FastMath;
-
 public class EntityMinecartFurnace extends EntityMinecartAbstract {
 
     private int c;

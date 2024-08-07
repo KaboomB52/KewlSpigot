@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.bukkit.craftbukkit.inventory.CraftInventoryView; // CraftBukkit
+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 
 public class ContainerMerchant extends Container {
 

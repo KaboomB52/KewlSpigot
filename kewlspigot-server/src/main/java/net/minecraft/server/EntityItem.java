@@ -1,9 +1,10 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.event.player.PlayerPickupItemEvent; // CraftBukkit
+import org.bukkit.event.player.PlayerPickupItemEvent;
+
+import java.util.Iterator;
 
 public class EntityItem extends Entity {
 

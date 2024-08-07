@@ -1,15 +1,14 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.Inventory;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityHopper extends TileEntityContainer implements IHopper, IUpdatePlayerListBox {

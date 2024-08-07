@@ -3,11 +3,6 @@ package net.minecraft.server;
 import java.util.List;
 import java.util.UUID;
 
-import net.jafama.FastMath;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 public abstract class EntityProjectile extends Entity implements IProjectile {
 
     private int blockX = -1;

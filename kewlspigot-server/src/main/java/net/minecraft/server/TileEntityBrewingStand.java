@@ -1,12 +1,11 @@
 package net.minecraft.server;
 
-import java.util.Arrays;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.BrewEvent;
+
+import java.util.Arrays;
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityBrewingStand extends TileEntityContainer implements IUpdatePlayerListBox, IWorldInventory {

@@ -3,8 +3,6 @@ package net.minecraft.server;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multisets;
-
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.MapInitializeEvent;
 // CraftBukkit end

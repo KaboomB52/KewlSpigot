@@ -1,7 +1,6 @@
 package org.bukkit.event.world;
 
 import org.bukkit.Chunk;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 /**

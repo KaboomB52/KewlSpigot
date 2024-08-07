@@ -1,13 +1,11 @@
 package net.minecraft.server;
 
+import org.bukkit.entity.Fish;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerFishEvent;
+
 import java.util.Arrays;
 import java.util.List;
-
-// CraftBukkit start
-import net.jafama.FastMath;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Fish;
-import org.bukkit.event.player.PlayerFishEvent;
 // CraftBukkit end
 
 public class EntityFishingHook extends Entity {

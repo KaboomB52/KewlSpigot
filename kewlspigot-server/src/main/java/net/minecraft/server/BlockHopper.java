@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.base.Predicate;
+
 import java.util.List;
 
 public class BlockHopper extends BlockContainer {
