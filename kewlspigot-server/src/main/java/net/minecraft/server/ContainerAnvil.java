@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.eytril.spigot.event.inventory.PrepareAnvilRepairEvent;
+import org.bukkit.event.inventory.PrepareAnvilRepairEvent;
 
 import java.util.Iterator;
 import java.util.Map;

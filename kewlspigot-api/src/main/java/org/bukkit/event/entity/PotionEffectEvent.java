@@ -1,4 +1,4 @@
-package org.eytril.spigot.event.potion;
+package org.bukkit.event.entity;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityEvent;

@@ -1,10 +1,9 @@
-package org.eytril.spigot.event.inventory;
+package org.bukkit.event.inventory;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,7 +26,7 @@ public class PrepareAnvilRepairEvent extends InventoryEvent implements Cancellab
 	private ItemStack result;
 
 	public PrepareAnvilRepairEvent(final HumanEntity repairer, final InventoryView view, final Block anvil,
-	                               final ItemStack first, final ItemStack second, final ItemStack result) {
+								   final ItemStack first, final ItemStack second, final ItemStack result) {
 		super(view);
 		this.first = first;
 		this.second = second;
