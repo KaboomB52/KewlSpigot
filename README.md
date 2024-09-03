@@ -24,5 +24,6 @@ Simply make a pull request and after reviewing it and testing it on a demo serve
 
 ### Servers that use KewlSpigot
  - Sarefine (sarefine.us)
+ - MineOrigins (mineorigins.net)
 
 **This spigot is free for everyone, feel free to contribute if you want to!**

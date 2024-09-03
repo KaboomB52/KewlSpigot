@@ -1,0 +1,22 @@
+--- a/net/minecraft/server/BlockCake.java
++++ b/net/minecraft/server/BlockCake.java
+@@ -55,7 +55,18 @@
+     private void b(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
+         if (entityhuman.j(false)) {
+             entityhuman.b(StatisticList.H);
+-            entityhuman.getFoodData().eat(2, 0.1F);
++            // CraftBukkit start
++            // entityhuman.getFoodData().eat(2, 0.1F);
++            int oldFoodLevel = entityhuman.getFoodData().foodLevel;
++
++            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callFoodLevelChangeEvent(entityhuman, 2 + oldFoodLevel);
++
++            if (!event.isCancelled()) {
++                entityhuman.getFoodData().eat(event.getFoodLevel() - oldFoodLevel, 0.1F);
++            }
++
++            ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutUpdateHealth(((EntityPlayer) entityhuman).getBukkitEntity().getScaledHealth(), entityhuman.getFoodData().foodLevel, entityhuman.getFoodData().saturationLevel));
++            // CraftBukkit end
+             int i = ((Integer) iblockdata.get(BlockCake.BITES)).intValue();
+ 
+             if (i < 6) {

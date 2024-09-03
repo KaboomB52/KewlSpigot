@@ -78,6 +78,8 @@ public class Location implements Cloneable, ConfigurationSerializable {
         return world.getChunkAt(this);
     }
 
+    public boolean isChunkLoaded() { return world.isChunkLoaded(locToBlock(x) >> 4, locToBlock(z) >> 4); } // Paper
+
     /**
      * Gets the block at the represented location
      *

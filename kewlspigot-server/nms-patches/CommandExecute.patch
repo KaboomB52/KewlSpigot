@@ -1,0 +1,58 @@
+--- a/net/minecraft/server/CommandExecute.java
++++ b/net/minecraft/server/CommandExecute.java
+@@ -2,6 +2,10 @@
+ 
+ import java.util.Collection;
+ import java.util.List;
++// CraftBukkit start
++import org.bukkit.craftbukkit.command.ProxiedNativeCommandSender;
++import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
++// CraftBukkit end
+ 
+ public class CommandExecute extends CommandAbstract {
+ 
+@@ -94,12 +98,31 @@
+             ICommandHandler icommandhandler = MinecraftServer.getServer().getCommandHandler();
+ 
+             try {
+-                int j = icommandhandler.a(icommandlistener1, s);
++                // CraftBukkit start
++                org.bukkit.command.CommandSender sender = null;
++                if (icommandlistener instanceof DedicatedServer) {
++                    sender = MinecraftServer.getServer().server.getConsoleSender();
++                } else if (icommandlistener instanceof CommandBlockListenerAbstract) {
++                    sender = ((CommandBlockListenerAbstract) icommandlistener).sender;
++                } else if (VanillaCommandWrapper.lastSender != null) {
++                    sender = VanillaCommandWrapper.lastSender;
++                }else if (icommandlistener.f() != null) {
++                    sender = icommandlistener.f().getBukkitEntity();
++                } else {
++                    throw new CommandException("Unhandled executor " + icommandlistener.getClass().getSimpleName(), new Object[0]);
++                }
++                int j = CommandBlockListenerAbstract.executeCommand(icommandlistener1, new ProxiedNativeCommandSender(icommandlistener1, sender, entity.getBukkitEntity()), s); 
++                // CraftBukkit end
+ 
+                 if (j < 1) {
+                     throw new CommandException("commands.execute.allInvocationsFailed", new Object[] { s});
+                 }
+             } catch (Throwable throwable) {
++                // CraftBukkit start
++                if (throwable instanceof CommandException) {
++                    throw (CommandException) throwable;
++                }
++                // CraftBukkit end
+                 throw new CommandException("commands.execute.failed", new Object[] { s, entity.getName()});
+             }
+         }
+@@ -112,4 +135,11 @@
+     public boolean isListStart(String[] astring, int i) {
+         return i == 0;
+     }
++
++    // CraftBukkit start - fix decompiler error
++    @Override
++    public int compareTo(ICommand o) {
++        return a((ICommand) o);
++    }
++    // CraftBukkit end
+ }

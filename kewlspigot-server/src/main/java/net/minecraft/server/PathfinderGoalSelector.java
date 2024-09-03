@@ -1,19 +1,17 @@
 package net.minecraft.server;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.craftbukkit.util.UnsafeList;
-import org.eytril.spigot.KewlSpigot;
-
 import java.util.Iterator;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import org.bukkit.craftbukkit.util.UnsafeList; // CraftBukkit
 
 public class PathfinderGoalSelector {
 
     private static final Logger a = LogManager.getLogger();
-    private List<PathfinderGoalSelector.PathfinderGoalSelectorItem> b = new UnsafeList<PathfinderGoalSelector.PathfinderGoalSelectorItem>();
-    private List<PathfinderGoalSelector.PathfinderGoalSelectorItem> c = new UnsafeList<PathfinderGoalSelector.PathfinderGoalSelectorItem>();
+    public List<PathfinderGoalSelector.PathfinderGoalSelectorItem> b = new UnsafeList<>(); // joeleoli
+    public List<PathfinderGoalSelector.PathfinderGoalSelectorItem> c = new UnsafeList<>(); // joeleoli
     private final MethodProfiler d;
     private int e;
     private int f = 3;
@@ -23,10 +21,6 @@ public class PathfinderGoalSelector {
     }
 
     public void a(int i, PathfinderGoal pathfindergoal) {
-        if (!KewlSpigot.INSTANCE.getConfig().isMobAIEnabled() && !(pathfindergoal instanceof PathfinderGoalBreed)) {
-            return;
-        }
-
         this.b.add(new PathfinderGoalSelector.PathfinderGoalSelectorItem(i, pathfindergoal));
     }
 
@@ -34,13 +28,13 @@ public class PathfinderGoalSelector {
         Iterator iterator = this.b.iterator();
 
         while (iterator.hasNext()) {
-            PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
-            PathfinderGoal pathfindergoal1 = pathfindergoalselector_pathfindergoalselectoritem.a;
+            PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
+            PathfinderGoal goal = selectorItem.a;
 
-            if (pathfindergoal1 == pathfindergoal) {
-                if (this.c.contains(pathfindergoalselector_pathfindergoalselectoritem)) {
-                    pathfindergoal1.d();
-                    this.c.remove(pathfindergoalselector_pathfindergoalselectoritem);
+            if (goal == pathfindergoal) {
+                if (this.c.contains(selectorItem)) {
+                    goal.d();
+                    this.c.remove(selectorItem);
                 }
 
                 iterator.remove();
@@ -52,36 +46,36 @@ public class PathfinderGoalSelector {
     public void a() {
         this.d.a("goalSetup");
         Iterator iterator;
-        PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem;
+        PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem;
 
         if (this.e++ % this.f == 0) {
             iterator = this.b.iterator();
 
             while (iterator.hasNext()) {
-                pathfindergoalselector_pathfindergoalselectoritem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
-                boolean flag = this.c.contains(pathfindergoalselector_pathfindergoalselectoritem);
+                selectorItem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
 
+                boolean flag = this.c.contains(selectorItem);
                 if (flag) {
-                    if (this.b(pathfindergoalselector_pathfindergoalselectoritem) && this.a(pathfindergoalselector_pathfindergoalselectoritem)) {
+                    if (this.b(selectorItem) && this.a(selectorItem)) {
                         continue;
                     }
 
-                    pathfindergoalselector_pathfindergoalselectoritem.a.d();
-                    this.c.remove(pathfindergoalselector_pathfindergoalselectoritem);
+                    selectorItem.a.d();
+                    this.c.remove(selectorItem);
                 }
 
-                if (this.b(pathfindergoalselector_pathfindergoalselectoritem) && pathfindergoalselector_pathfindergoalselectoritem.a.a()) {
-                    pathfindergoalselector_pathfindergoalselectoritem.a.c();
-                    this.c.add(pathfindergoalselector_pathfindergoalselectoritem);
+                if (this.b(selectorItem) && selectorItem.a.a()) {
+                    selectorItem.a.c();
+                    this.c.add(selectorItem);
                 }
             }
         } else {
             iterator = this.c.iterator();
 
             while (iterator.hasNext()) {
-                pathfindergoalselector_pathfindergoalselectoritem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
-                if (!this.a(pathfindergoalselector_pathfindergoalselectoritem)) {
-                    pathfindergoalselector_pathfindergoalselectoritem.a.d();
+                selectorItem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
+                if (!this.a(selectorItem)) {
+                    selectorItem.a.d();
                     iterator.remove();
                 }
             }
@@ -92,32 +86,33 @@ public class PathfinderGoalSelector {
         iterator = this.c.iterator();
 
         while (iterator.hasNext()) {
-            pathfindergoalselector_pathfindergoalselectoritem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
-            pathfindergoalselector_pathfindergoalselectoritem.a.e();
+            selectorItem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
+            selectorItem.a.e();
         }
 
         this.d.b();
     }
 
-    private boolean a(PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem) {
-        boolean flag = pathfindergoalselector_pathfindergoalselectoritem.a.b();
+    private boolean a(PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem) {
+        boolean flag = selectorItem.a.b();
 
         return flag;
     }
 
-    private boolean b(PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem) {
+    // takes priority over other items?
+    private boolean b(PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem) {
         Iterator iterator = this.b.iterator();
 
         while (iterator.hasNext()) {
-            PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem1 = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
+            PathfinderGoalSelector.PathfinderGoalSelectorItem nextItem = (PathfinderGoalSelector.PathfinderGoalSelectorItem) iterator.next();
 
-            if (pathfindergoalselector_pathfindergoalselectoritem1 != pathfindergoalselector_pathfindergoalselectoritem) {
-                if (pathfindergoalselector_pathfindergoalselectoritem.b >= pathfindergoalselector_pathfindergoalselectoritem1.b) {
-                    if (!this.a(pathfindergoalselector_pathfindergoalselectoritem, pathfindergoalselector_pathfindergoalselectoritem1) && this.c.contains(pathfindergoalselector_pathfindergoalselectoritem1)) {
+            if (nextItem != selectorItem) {
+                if (selectorItem.b >= nextItem.b) {
+                    if (!this.a(selectorItem, nextItem) && this.c.contains(nextItem)) {
                         ((UnsafeList.Itr) iterator).valid = false; // CraftBukkit - mark iterator for reuse
                         return false;
                     }
-                } else if (!pathfindergoalselector_pathfindergoalselectoritem1.a.i() && this.c.contains(pathfindergoalselector_pathfindergoalselectoritem1)) {
+                } else if (!nextItem.a.i() && this.c.contains(nextItem)) {
                     ((UnsafeList.Itr) iterator).valid = false; // CraftBukkit - mark iterator for reuse
                     return false;
                 }
@@ -127,12 +122,11 @@ public class PathfinderGoalSelector {
         return true;
     }
 
-    private boolean a(PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem, PathfinderGoalSelector.PathfinderGoalSelectorItem pathfindergoalselector_pathfindergoalselectoritem1) {
-        return (pathfindergoalselector_pathfindergoalselectoritem.a.j() & pathfindergoalselector_pathfindergoalselectoritem1.a.j()) == 0;
+    private boolean a(PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem1, PathfinderGoalSelector.PathfinderGoalSelectorItem selectorItem2) {
+        return (selectorItem1.a.j() & selectorItem2.a.j()) == 0;
     }
 
-    class PathfinderGoalSelectorItem {
-
+    public class PathfinderGoalSelectorItem {
         public PathfinderGoal a;
         public int b;
 
@@ -141,4 +135,5 @@ public class PathfinderGoalSelector {
             this.a = pathfindergoal;
         }
     }
+
 }

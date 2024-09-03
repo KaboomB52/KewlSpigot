@@ -1,0 +1,20 @@
+--- a/net/minecraft/server/EntityAnimal.java
++++ b/net/minecraft/server/EntityAnimal.java
+@@ -38,6 +38,9 @@
+ 
+     }
+ 
++    /* CraftBukkit start
++    // Function disabled as it has no special function anymore after
++    // setSitting is disabled.
+     public boolean damageEntity(DamageSource damagesource, float f) {
+         if (this.isInvulnerable(damagesource)) {
+             return false;
+@@ -46,6 +49,7 @@
+             return super.damageEntity(damagesource, f);
+         }
+     }
++    // CraftBukkit end */
+ 
+     public float a(BlockPosition blockposition) {
+         return this.world.getType(blockposition.down()).getBlock() == Blocks.GRASS ? 10.0F : this.world.o(blockposition) - 0.5F;

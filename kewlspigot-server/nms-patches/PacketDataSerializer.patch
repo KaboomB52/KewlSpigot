@@ -1,0 +1,67 @@
+--- a/net/minecraft/server/PacketDataSerializer.java
++++ b/net/minecraft/server/PacketDataSerializer.java
+@@ -21,6 +21,8 @@
+ import java.nio.charset.Charset;
+ import java.util.UUID;
+ 
++import org.bukkit.craftbukkit.inventory.CraftItemStack; // CraftBukkit
++
+ public class PacketDataSerializer extends ByteBuf {
+ 
+     private final ByteBuf a;
+@@ -68,7 +70,7 @@
+     }
+ 
+     public <T extends Enum<T>> T a(Class<T> oclass) {
+-        return ((Enum[]) oclass.getEnumConstants())[this.e()];
++        return ((T[]) oclass.getEnumConstants())[this.e()]; // CraftBukkit - fix decompile error
+     }
+ 
+     public void a(Enum<?> oenum) {
+@@ -142,7 +144,7 @@
+         } else {
+             try {
+                 NBTCompressedStreamTools.a(nbttagcompound, (DataOutput) (new ByteBufOutputStream(this)));
+-            } catch (IOException ioexception) {
++            } catch (Exception ioexception) { // CraftBukkit - IOException -> Exception
+                 throw new EncoderException(ioexception);
+             }
+         }
+@@ -162,7 +164,7 @@
+     }
+ 
+     public void a(ItemStack itemstack) {
+-        if (itemstack == null) {
++        if (itemstack == null || itemstack.getItem() == null) { // CraftBukkit - NPE fix itemstack.getItem()
+             this.writeShort(-1);
+         } else {
+             this.writeShort(Item.getId(itemstack.getItem()));
+@@ -189,6 +191,11 @@
+ 
+             itemstack = new ItemStack(Item.getById(short0), b0, short1);
+             itemstack.setTag(this.h());
++            // CraftBukkit start
++            if (itemstack.getTag() != null) {
++                CraftItemStack.setItemMeta(itemstack, CraftItemStack.getItemMeta(itemstack));
++            }
++            // CraftBukkit end
+         }
+ 
+         return itemstack;
+@@ -803,16 +810,4 @@
+     public boolean release(int i) {
+         return this.a.release(i);
+     }
+-
+-    public ReferenceCounted retain(int i) {
+-        return this.retain(i);
+-    }
+-
+-    public ReferenceCounted retain() {
+-        return this.retain();
+-    }
+-
+-    public int compareTo(Object object) {
+-        return this.compareTo((ByteBuf) object);
+-    }
+ }

@@ -1,0 +1,10 @@
+--- a/net/minecraft/server/CrashReport.java
++++ b/net/minecraft/server/CrashReport.java
+@@ -124,6 +124,7 @@
+                 return this.a();
+             }
+         });
++        this.d.a("CraftBukkit Information", (Callable) (new org.bukkit.craftbukkit.CraftCrashReport())); // CraftBukkit
+     }
+ 
+     public String a() {

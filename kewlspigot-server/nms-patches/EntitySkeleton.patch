@@ -1,0 +1,96 @@
+--- a/net/minecraft/server/EntitySkeleton.java
++++ b/net/minecraft/server/EntitySkeleton.java
+@@ -2,6 +2,8 @@
+ 
+ import java.util.Calendar;
+ 
++import org.bukkit.event.entity.EntityCombustEvent; // CraftBukkit
++
+ public class EntitySkeleton extends EntityMonster implements IRangedEntity {
+ 
+     private PathfinderGoalArrowAttack a = new PathfinderGoalArrowAttack(this, 1.0D, 20, 60, 15.0F);
+@@ -89,7 +91,14 @@
+                 }
+ 
+                 if (flag) {
+-                    this.setOnFire(8);
++                    // CraftBukkit start
++                    EntityCombustEvent event = new EntityCombustEvent(this.getBukkitEntity(), 8);
++                    this.world.getServer().getPluginManager().callEvent(event);
++
++                    if (!event.isCancelled()) {
++                        this.setOnFire(event.getDuration());
++                    }
++                    // CraftBukkit end
+                 }
+             }
+         }
+@@ -112,7 +121,7 @@
+     }
+ 
+     public void die(DamageSource damagesource) {
+-        super.die(damagesource);
++        // super.die(damagesource); // CraftBukkit
+         if (damagesource.i() instanceof EntityArrow && damagesource.getEntity() instanceof EntityHuman) {
+             EntityHuman entityhuman = (EntityHuman) damagesource.getEntity();
+             double d0 = entityhuman.locX - this.locX;
+@@ -123,16 +132,25 @@
+             }
+         } else if (damagesource.getEntity() instanceof EntityCreeper && ((EntityCreeper) damagesource.getEntity()).isPowered() && ((EntityCreeper) damagesource.getEntity()).cp()) {
+             ((EntityCreeper) damagesource.getEntity()).cq();
+-            this.a(new ItemStack(Items.SKULL, 1, this.getSkeletonType() == 1 ? 1 : 0), 0.0F);
++            // CraftBukkit start
++            // this.a(new ItemStack(Items.SKULL, 1, this.getSkeletonType() == 1 ? 1 : 0), 0.0F);
++            headDrop = new ItemStack(Items.SKULL, 1, this.getSkeletonType() == 1 ? 1 : 0);
++            // CraftBukkit end
++
+         }
+ 
++        super.die(damagesource); // CraftBukkit - moved from above
++
+     }
+ 
++    /* CraftBukkit start
+     protected Item getLoot() {
+         return Items.ARROW;
+     }
++    // CraftBukkit end */
+ 
+     public void dropDeathLoot(boolean flag, int i) {
++        super.dropDeathLoot(flag, i); // CraftBukkit
+         int j;
+         int k;
+ 
+@@ -224,11 +242,30 @@
+         }
+ 
+         if (EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_FIRE.id, this.bA()) > 0 || this.getSkeletonType() == 1) {
+-            entityarrow.setOnFire(100);
++            // CraftBukkit start - call EntityCombustEvent
++            EntityCombustEvent event = new EntityCombustEvent(entityarrow.getBukkitEntity(), 100);
++            this.world.getServer().getPluginManager().callEvent(event);
++
++            if (!event.isCancelled()) {
++                entityarrow.setOnFire(event.getDuration());
++            }
++            // CraftBukkit end
++        }
++
++        // CraftBukkit start
++        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(this, this.bA(), entityarrow, 0.8F);
++        if (event.isCancelled()) {
++            event.getProjectile().remove();
++            return;
++        }
++
++        if (event.getProjectile() == entityarrow.getBukkitEntity()) {
++            world.addEntity(entityarrow);
+         }
++        // CraftBukkit end
+ 
+         this.makeSound("random.bow", 1.0F, 1.0F / (this.bc().nextFloat() * 0.4F + 0.8F));
+-        this.world.addEntity(entityarrow);
++        // this.world.addEntity(entityarrow); // CraftBukkit - moved up
+     }
+ 
+     public int getSkeletonType() {

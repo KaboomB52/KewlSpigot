@@ -1,0 +1,47 @@
+--- a/net/minecraft/server/JsonList.java
++++ b/net/minecraft/server/JsonList.java
+@@ -83,7 +83,7 @@
+ 
+     public V get(K k0) {
+         this.h();
+-        return (JsonListEntry) this.d.get(this.a(k0));
++        return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
+     }
+ 
+     public void remove(K k0) {
+@@ -101,6 +101,12 @@
+         return (String[]) this.d.keySet().toArray(new String[this.d.size()]);
+     }
+ 
++    // CraftBukkit start
++    public Collection<V> getValues() {
++        return this.d.values();
++    }
++    // CraftBukkit end
++
+     public boolean isEmpty() {
+         return this.d.size() < 1;
+     }
+@@ -176,7 +182,7 @@
+                 JsonListEntry jsonlistentry = (JsonListEntry) iterator.next();
+ 
+                 if (jsonlistentry.getKey() != null) {
+-                    this.d.put(this.a(jsonlistentry.getKey()), jsonlistentry);
++                    this.d.put(this.a((K) jsonlistentry.getKey()), (V) jsonlistentry); // CraftBukkit - fix decompile error
+                 }
+             }
+         }
+@@ -205,11 +211,11 @@
+             }
+         }
+ 
+-        public JsonElement serialize(Object object, Type type, JsonSerializationContext jsonserializationcontext) {
++        public JsonElement serialize(JsonListEntry<K> object, Type type, JsonSerializationContext jsonserializationcontext) { // CraftBukkit - fix decompile error
+             return this.a((JsonListEntry) object, type, jsonserializationcontext);
+         }
+ 
+-        public Object deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
++        public JsonListEntry<K> deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException { // CraftBukkit - fix decompile error
+             return this.a(jsonelement, type, jsondeserializationcontext);
+         }
+ 

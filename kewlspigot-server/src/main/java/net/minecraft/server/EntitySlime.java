@@ -81,7 +81,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
             for (int j = 0; j < i * 8; ++j) {
                 float f = this.random.nextFloat() * 3.1415927F * 2.0F;
                 float f1 = this.random.nextFloat() * 0.5F + 0.5F;
-                float f2 = (float) MathHelper.sin(f) * (float) i * 0.5F * f1;
+                float f2 = MathHelper.sin(f) * (float) i * 0.5F * f1;
                 float f3 = MathHelper.cos(f) * (float) i * 0.5F * f1;
                 World world = this.world;
                 EnumParticle enumparticle = this.n();
@@ -279,7 +279,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         return super.prepare(difficultydamagescaler, groupdataentity);
     }
 
-    static class PathfinderGoalSlimeIdle extends PathfinderGoal {
+    public static class PathfinderGoalSlimeIdle extends PathfinderGoal {
 
         private EntitySlime a;
 
@@ -297,7 +297,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
     }
 
-    static class PathfinderGoalSlimeRandomJump extends PathfinderGoal {
+    public static class PathfinderGoalSlimeRandomJump extends PathfinderGoal {
 
         private EntitySlime a;
 
@@ -320,7 +320,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
     }
 
-    static class PathfinderGoalSlimeRandomDirection extends PathfinderGoal {
+    public static class PathfinderGoalSlimeRandomDirection extends PathfinderGoal {
 
         private EntitySlime a;
         private float b;
@@ -345,7 +345,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
     }
 
-    static class PathfinderGoalSlimeNearestPlayer extends PathfinderGoal {
+    public static class PathfinderGoalSlimeNearestPlayer extends PathfinderGoal {
 
         private EntitySlime a;
         private int b;
@@ -378,7 +378,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
     }
 
-    static class ControllerMoveSlime extends ControllerMove {
+    public static class ControllerMoveSlime extends ControllerMove {
 
         private float g;
         private int h;

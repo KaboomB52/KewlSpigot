@@ -1,0 +1,13 @@
+--- a/net/minecraft/server/TileEntitySkull.java
++++ b/net/minecraft/server/TileEntitySkull.java
+@@ -105,4 +105,10 @@
+     public void setRotation(int i) {
+         this.rotation = i;
+     }
++
++    // CraftBukkit start - add method
++    public int getRotation() {
++        return this.rotation;
++    }
++    // CraftBukkit end
+ }

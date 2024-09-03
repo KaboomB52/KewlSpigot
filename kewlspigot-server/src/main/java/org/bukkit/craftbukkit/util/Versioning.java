@@ -13,7 +13,7 @@ public final class Versioning {
 		String result = "Unknown-Version";
 
 		InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream(
-				"META-INF/maven/org.eytril.spigot/spigotx-api/pom.properties");
+				"META-INF/maven/org.eytril.spigot/kewlspigot-api/pom.properties");
 		Properties properties = new Properties();
 
 		if (stream != null) {

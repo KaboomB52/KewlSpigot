@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
-import org.bukkit.event.entity.EntityCombustEvent;
-
 import java.util.Calendar;
+
+import org.bukkit.event.entity.EntityCombustEvent; // CraftBukkit
 
 public class EntitySkeleton extends EntityMonster implements IRangedEntity {
 
@@ -149,7 +149,7 @@ public class EntitySkeleton extends EntityMonster implements IRangedEntity {
     }
     // CraftBukkit end */
 
-    protected void dropDeathLoot(boolean flag, int i) {
+    public void dropDeathLoot(boolean flag, int i) {
         super.dropDeathLoot(flag, i); // CraftBukkit
         int j;
         int k;
@@ -227,12 +227,19 @@ public class EntitySkeleton extends EntityMonster implements IRangedEntity {
 
     }
 
-    public void a(EntityLiving entityliving, float f) {
-        EntityArrow entityarrow = new EntityArrow(this.world, this, entityliving, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
+    // joeleoli start
+    public EntityArrow prepareArrow(EntityLiving entityLiving, float damage) {
+        return new EntityArrow(this.world, this, entityLiving, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
+    }
+    // joeleoli end
+
+    @Override
+    public void a(EntityLiving entityLiving, float damage) {
+        EntityArrow entityarrow = prepareArrow(entityLiving, damage);
         int i = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_DAMAGE.id, this.bA());
         int j = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK.id, this.bA());
 
-        entityarrow.b((double) (f * 2.0F) + this.random.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().a() * 0.11F));
+        entityarrow.b((double) (damage * 2.0F) + this.random.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().a() * 0.11F));
         if (i > 0) {
             entityarrow.b(entityarrow.j() + (double) i * 0.5D + 0.5D);
         }

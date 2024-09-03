@@ -1,0 +1,23 @@
+--- a/net/minecraft/server/Block.java
++++ b/net/minecraft/server/Block.java
+@@ -336,7 +336,8 @@
+             int j = this.getDropCount(i, world.random);
+ 
+             for (int k = 0; k < j; ++k) {
+-                if (world.random.nextFloat() <= f) {
++                // CraftBukkit - <= to < to allow for plugins to completely disable block drops from explosions
++                if (world.random.nextFloat() < f) {
+                     Item item = this.getDropType(iblockdata, world.random, i);
+ 
+                     if (item != null) {
+@@ -1002,4 +1003,10 @@
+             return this.getBreakSound();
+         }
+     }
++
++    // CraftBukkit start
++    public int getExpDrop(World world, IBlockData data, int enchantmentLevel) {
++        return 0;
++    }
++    // CraftBukkit end
+ }

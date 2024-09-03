@@ -1,0 +1,248 @@
+--- a/net/minecraft/server/DedicatedServer.java
++++ b/net/minecraft/server/DedicatedServer.java
+@@ -15,10 +15,20 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++// CraftBukkit start
++import java.io.PrintStream;
++import org.apache.logging.log4j.Level;
++
++import org.bukkit.craftbukkit.LoggerOutputStream;
++import org.bukkit.event.server.ServerCommandEvent;
++import org.bukkit.craftbukkit.util.Waitable;
++import org.bukkit.event.server.RemoteServerCommandEvent;
++// CraftBukkit end
++
+ public class DedicatedServer extends MinecraftServer implements IMinecraftServer {
+ 
+     private static final Logger LOGGER = LogManager.getLogger();
+-    private final List<ServerCommand> l = Collections.synchronizedList(Lists.newArrayList());
++    private final List<ServerCommand> l = Collections.synchronizedList(Lists.<ServerCommand>newArrayList()); // CraftBukkit - fix decompile error
+     private RemoteStatusListener m;
+     private RemoteControlListener n;
+     public PropertyManager propertyManager;
+@@ -27,8 +37,10 @@
+     private WorldSettings.EnumGamemode r;
+     private boolean s;
+ 
+-    public DedicatedServer(File file) {
+-        super(file, Proxy.NO_PROXY, DedicatedServer.a);
++    // CraftBukkit start - Signature changed
++    public DedicatedServer(joptsimple.OptionSet options) {
++        super(options, Proxy.NO_PROXY, DedicatedServer.a);
++        // CraftBukkit end
+         Thread thread = new Thread("Server Infinisleeper") {
+             {
+                 this.setDaemon(true);
+@@ -50,13 +62,27 @@
+     protected boolean init() throws IOException {
+         Thread thread = new Thread("Server console handler") {
+             public void run() {
+-                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in));
++                // CraftBukkit start
++                if (!org.bukkit.craftbukkit.Main.useConsole) {
++                    return;
++                }
++                // CraftBukkit end
+ 
++                jline.console.ConsoleReader bufferedreader = reader; // CraftBukkit
+                 String s;
+ 
+                 try {
+-                    while (!DedicatedServer.this.isStopped() && DedicatedServer.this.isRunning() && (s = bufferedreader.readLine()) != null) {
+-                        DedicatedServer.this.issueCommand(s, DedicatedServer.this);
++                    // CraftBukkit start - JLine disabling compatibility
++                    while (!isStopped() && isRunning()) {
++                        if (org.bukkit.craftbukkit.Main.useJline) {
++                            s = bufferedreader.readLine(">", null);
++                        } else {
++                            s = bufferedreader.readLine();
++                        }
++                        if (s != null && s.trim().length() > 0) { // Trim to filter lines which are just spaces
++                            issueCommand(s, DedicatedServer.this);
++                        }
++                        // CraftBukkit end
+                     }
+                 } catch (IOException ioexception) {
+                     DedicatedServer.LOGGER.error("Exception handling console input", ioexception);
+@@ -65,6 +91,27 @@
+             }
+         };
+ 
++        // CraftBukkit start - TODO: handle command-line logging arguments
++        java.util.logging.Logger global = java.util.logging.Logger.getLogger("");
++        global.setUseParentHandlers(false);
++        for (java.util.logging.Handler handler : global.getHandlers()) {
++            global.removeHandler(handler);
++        }
++        global.addHandler(new org.bukkit.craftbukkit.util.ForwardLogHandler());
++
++        final org.apache.logging.log4j.core.Logger logger = ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger());
++        for (org.apache.logging.log4j.core.Appender appender : logger.getAppenders().values()) {
++            if (appender instanceof org.apache.logging.log4j.core.appender.ConsoleAppender) {
++                logger.removeAppender(appender);
++            }
++        }
++
++        new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
++
++        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
++        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
++        // CraftBukkit end
++
+         thread.setDaemon(true);
+         thread.start();
+         DedicatedServer.LOGGER.info("Starting minecraft server version 1.8.8");
+@@ -73,7 +120,7 @@
+         }
+ 
+         DedicatedServer.LOGGER.info("Loading properties");
+-        this.propertyManager = new PropertyManager(new File("server.properties"));
++        this.propertyManager = new PropertyManager(this.options); // CraftBukkit - CLI argument support
+         this.p = new EULA(new File("eula.txt"));
+         if (!this.p.a()) {
+             DedicatedServer.LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
+@@ -129,6 +176,8 @@
+                 return false;
+             }
+ 
++            this.a((PlayerList) (new DedicatedPlayerList(this))); // CraftBukkit
++
+             if (!this.getOnlineMode()) {
+                 DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
+                 DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
+@@ -143,7 +192,7 @@
+             if (!NameReferencingFileConverter.a(this.propertyManager)) {
+                 return false;
+             } else {
+-                this.a((PlayerList) (new DedicatedPlayerList(this)));
++                this.convertable = new WorldLoaderServer(server.getWorldContainer()); // CraftBukkit - moved from MinecraftServer constructor
+                 long j = System.nanoTime();
+ 
+                 if (this.U() == null) {
+@@ -198,7 +247,18 @@
+                     DedicatedServer.LOGGER.info("Starting remote control listener");
+                     this.n = new RemoteControlListener(this);
+                     this.n.a();
++                    this.remoteConsole = new org.bukkit.craftbukkit.command.CraftRemoteConsoleCommandSender(); // CraftBukkit
++                }
++
++                // CraftBukkit start
++                if (this.server.getBukkitSpawnRadius() > -1) {
++                    DedicatedServer.LOGGER.info("'settings.spawn-radius' in bukkit.yml has been moved to 'spawn-protection' in server.properties. I will move your config for you.");
++                    this.propertyManager.properties.remove("spawn-protection");
++                    this.propertyManager.getInt("spawn-protection", this.server.getBukkitSpawnRadius());
++                    this.server.removeBukkitSpawnRadius();
++                    this.propertyManager.savePropertiesFile();
+                 }
++                // CraftBukkit end
+ 
+                 if (this.aS() > 0L) {
+                     Thread thread1 = new Thread(new ThreadWatchdog(this));
+@@ -213,6 +273,12 @@
+         }
+     }
+ 
++    // CraftBukkit start
++    public PropertyManager getPropertyManager() {
++        return this.propertyManager;
++    }
++    // CraftBukkit end
++
+     public void setGamemode(WorldSettings.EnumGamemode worldsettings_enumgamemode) {
+         super.setGamemode(worldsettings_enumgamemode);
+         this.r = worldsettings_enumgamemode;
+@@ -265,7 +331,7 @@
+         System.exit(0);
+     }
+ 
+-    protected void B() {
++    public void B() { // CraftBukkit - fix decompile error
+         super.B();
+         this.aO();
+     }
+@@ -296,7 +362,15 @@
+         while (!this.l.isEmpty()) {
+             ServerCommand servercommand = (ServerCommand) this.l.remove(0);
+ 
+-            this.getCommandHandler().a(servercommand.source, servercommand.command);
++            // CraftBukkit start - ServerCommand for preprocessing
++            ServerCommandEvent event = new ServerCommandEvent(console, servercommand.command);
++            server.getPluginManager().callEvent(event);
++            if (event.isCancelled()) continue;
++            servercommand = new ServerCommand(event.getCommand(), servercommand.source);
++
++            // this.getCommandHandler().a(servercommand.source, servercommand.command); // Called in dispatchServerCommand
++            server.dispatchServerCommand(console, servercommand);
++            // CraftBukkit end
+         }
+ 
+     }
+@@ -491,13 +565,60 @@
+     }
+ 
+     public String getPlugins() {
+-        return "";
+-    }
++        // CraftBukkit start - Whole method
++        StringBuilder result = new StringBuilder();
++        org.bukkit.plugin.Plugin[] plugins = server.getPluginManager().getPlugins();
++
++        result.append(server.getName());
++        result.append(" on Bukkit ");
++        result.append(server.getBukkitVersion());
++
++        if (plugins.length > 0 && server.getQueryPlugins()) {
++            result.append(": ");
++
++            for (int i = 0; i < plugins.length; i++) {
++                if (i > 0) {
++                    result.append("; ");
++                }
+ 
+-    public String executeRemoteCommand(String s) {
+-        RemoteControlCommandListener.getInstance().i();
+-        this.b.a(RemoteControlCommandListener.getInstance(), s);
+-        return RemoteControlCommandListener.getInstance().j();
++                result.append(plugins[i].getDescription().getName());
++                result.append(" ");
++                result.append(plugins[i].getDescription().getVersion().replaceAll(";", ","));
++            }
++        }
++
++        return result.toString();
++        // CraftBukkit end
++    }
++
++    // CraftBukkit start - fire RemoteServerCommandEvent
++    public String executeRemoteCommand(final String s) {
++        Waitable<String> waitable = new Waitable<String>() {
++            @Override
++            protected String evaluate() {
++                RemoteControlCommandListener.getInstance().i();
++                // Event changes start
++                RemoteServerCommandEvent event = new RemoteServerCommandEvent(remoteConsole, s);
++                server.getPluginManager().callEvent(event);
++                if (event.isCancelled()) {
++                    return "";
++                }
++                // Event change end
++                ServerCommand serverCommand = new ServerCommand(event.getCommand(), RemoteControlCommandListener.getInstance());
++                server.dispatchServerCommand(remoteConsole, serverCommand);
++                return RemoteControlCommandListener.getInstance().j();
++            }
++        };
++        processQueue.add(waitable);
++        try {
++            return waitable.get();
++        } catch (java.util.concurrent.ExecutionException e) {
++            throw new RuntimeException("Exception processing rcon command " + s, e.getCause());
++        } catch (InterruptedException e) {
++            Thread.currentThread().interrupt(); // Maintain interrupted state
++            throw new RuntimeException("Interrupted processing rcon command " + s, e);
++        }
++        // CraftBukkit end
+     }
+ 
+     public PlayerList getPlayerList() {

@@ -1,0 +1,44 @@
+--- a/net/minecraft/server/ChatModifier.java
++++ b/net/minecraft/server/ChatModifier.java
+@@ -254,16 +254,18 @@
+     }
+ 
+     public int hashCode() {
+-        int i = this.b.hashCode();
++        // CraftBukkit start - fix npe
++        int i = b == null ? 0 : this.b.hashCode();
+ 
+-        i = 31 * i + this.c.hashCode();
+-        i = 31 * i + this.d.hashCode();
+-        i = 31 * i + this.e.hashCode();
+-        i = 31 * i + this.f.hashCode();
+-        i = 31 * i + this.g.hashCode();
+-        i = 31 * i + this.h.hashCode();
+-        i = 31 * i + this.i.hashCode();
+-        i = 31 * i + this.j.hashCode();
++        i = 31 * i + (c == null ? 0 : this.c.hashCode());
++        i = 31 * i + (d == null ? 0 : this.d.hashCode());
++        i = 31 * i + (e == null ? 0 : this.e.hashCode());
++        i = 31 * i + (f == null ? 0 : this.f.hashCode());
++        i = 31 * i + (g == null ? 0 : this.g.hashCode());
++        i = 31 * i + (h == null ? 0 : this.h.hashCode());
++        i = 31 * i + (this.i == null ? 0 : this.i.hashCode());
++        i = 31 * i + (j == null ? 0 : this.j.hashCode());
++        // CraftBukkit end
+         return i;
+     }
+ 
+@@ -429,11 +431,11 @@
+             }
+         }
+ 
+-        public JsonElement serialize(Object object, Type type, JsonSerializationContext jsonserializationcontext) {
++        public JsonElement serialize(ChatModifier object, Type type, JsonSerializationContext jsonserializationcontext) { // CraftBukkit - fix decompile error
+             return this.a((ChatModifier) object, type, jsonserializationcontext);
+         }
+ 
+-        public Object deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
++        public ChatModifier deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException { // CraftBukkit - fix decompile error
+             return this.a(jsonelement, type, jsondeserializationcontext);
+         }
+     }

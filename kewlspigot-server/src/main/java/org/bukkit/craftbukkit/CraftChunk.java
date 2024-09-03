@@ -317,25 +317,6 @@ public class CraftChunk implements Chunk {
 		return new CraftChunkSnapshot(getX(), getZ(), world.getName(), world.getFullTime(), sectionBlockIDs, sectionBlockData, sectionSkyLights, sectionEmitLights, sectionEmpty, hmap, biome, biomeTemp, biomeRain);
 	}
 
-	// SpigotX start
-	@Override
-	public FakeMultiBlockChange createFakeBlockUpdate(final Location[] locations, final int[] ids, final int[] datas) {
-		PacketPlayOutMultiBlockChange packetPlayOutMultiBlockChange = new PacketPlayOutMultiBlockChange(locations.length, new short[locations.length], this.getHandle());
-		int index = 0;
-		for (PacketPlayOutMultiBlockChange.MultiBlockChangeInfo blockChangeInfo : packetPlayOutMultiBlockChange.getB()) {
-			blockChangeInfo.setC(net.minecraft.server.Block.getByCombinedId(ids[index]));
-			blockChangeInfo.setC(blockChangeInfo.c().getBlock().fromLegacyData(datas[index]));
-
-			Location location = locations[index];
-			blockChangeInfo.setB((short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY()));
-
-			index++;
-		}
-
-		return new CraftFakeMultiBlockChange(packetPlayOutMultiBlockChange);
-	}
-	// SpigotX end
-
 	@Override
 	public org.eytril.spigot.chunksnapshot.ChunkSnapshot takeSnapshot() {
 		net.minecraft.server.Chunk handle = getHandle();

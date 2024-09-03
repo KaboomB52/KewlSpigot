@@ -582,17 +582,17 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public double getX() {
-        return entity.getX();
+        return entity.locX;
     }
 
     @Override
     public double getY() {
-        return entity.getY();
+        return entity.locY;
     }
 
     @Override
     public double getZ() {
-        return entity.getZ();
+        return entity.locZ;
     }
 
     public Spigot spigot()

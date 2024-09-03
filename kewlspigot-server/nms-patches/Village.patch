@@ -1,0 +1,11 @@
+--- a/net/minecraft/server/Village.java
++++ b/net/minecraft/server/Village.java
+@@ -62,7 +62,7 @@
+                 EntityIronGolem entityirongolem = new EntityIronGolem(this.a);
+ 
+                 entityirongolem.setPosition(vec3d.a, vec3d.b, vec3d.c);
+-                this.a.addEntity(entityirongolem);
++                this.a.addEntity(entityirongolem, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.VILLAGE_DEFENSE); // CraftBukkit
+                 ++this.l;
+             }
+         }

@@ -1,43 +1,95 @@
 package net.minecraft.server;
 
-import co.aikar.timings.SpigotTimings;
-import co.aikar.timings.Timing;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.TravelAgent;
-import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
-import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.plugin.PluginManager;
-import org.eytril.spigot.util.OptimizedRemoveUtil;
-import org.spigotmc.event.entity.EntityDismountEvent;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Marker {
+// CraftBukkit start
+import co.aikar.timings.SpigotTimings;
+import co.aikar.timings.Timings;
+import co.aikar.timings.TimingsManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.TravelAgent;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Vehicle;
+import co.aikar.timings.Timing; // Spigot
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.plugin.PluginManager;
+// CraftBukkit end
+
+// PaperSpigot start
+import org.bukkit.util.NumberConversions;
+import org.spigotmc.event.entity.EntityDismountEvent;
+// PaperSpigot end
+
+public abstract class Entity implements ICommandListener {
+
+	public enum EntitySize {
+		SIZE_1,
+		SIZE_2,
+		SIZE_3,
+		SIZE_4,
+		SIZE_5,
+		SIZE_6;
+		public int getXZCoord(double loc) {
+			double diff = loc - (NumberConversions.floor(loc) + 0.5D);
+			switch (this) {
+				case SIZE_1:
+					if (diff < 0.0D ? diff < -0.3125D : diff < 0.3125D) {
+						return NumberConversions.ceil(loc * 32.0D);
+					}
+					return NumberConversions.floor(loc * 32.0D);
+				case SIZE_2:
+					if (diff < 0.0D ? diff < -0.3125D : diff < 0.3125D) {
+						return NumberConversions.floor(loc * 32.0D);
+					}
+					return NumberConversions.ceil(loc * 32.0D);
+				case SIZE_3:
+					if (diff > 0.0D) {
+						return NumberConversions.floor(loc * 32.0D);
+					}
+					return NumberConversions.ceil(loc * 32.0D);
+				case SIZE_4:
+					if (diff < 0.0D ? diff < -0.1875D : diff < 0.1875D) {
+						return NumberConversions.ceil(loc * 32.0D);
+					}
+					return NumberConversions.floor(loc * 32.0D);
+				case SIZE_5:
+					if (diff < 0.0D ? diff < -0.1875D : diff < 0.1875D) {
+						return NumberConversions.floor(loc * 32.0D);
+					}
+					return NumberConversions.ceil(loc * 32.0D);
+				case SIZE_6:
+				default:
+					if (diff > 0.0D) {
+						return NumberConversions.ceil(loc * 32.0D);
+					}
+					return NumberConversions.floor(loc * 32.0D);
+			}
+		}
+	}
+	public EntitySize size;
 
 	// CraftBukkit start
 	private static final int CURRENT_LEVEL = 2;
-
 	static boolean isLevelAtLeast(NBTTagCompound tag, int level) {
 		return tag.hasKey("Bukkit.updateLevel") && tag.getInt("Bukkit.updateLevel") >= level;
 	}
@@ -45,7 +97,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 	private static final AxisAlignedBB a = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 	private static int entityCount;
-
 	private int id;
 	public double j;
 	public boolean k;
@@ -100,8 +151,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	private double ar;
 	private double as;
 	public boolean ad;
-	private boolean needsRemoval = false;
-
 	// PaperSpigot start - EAR: Fix bug with teleporting entities
 	public boolean isAddedToChunk() {
 		int chunkX = MathHelper.floor(locX / 16.0D);
@@ -110,25 +159,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 		return ad && getChunkX() == chunkX && getChunkY() == chunkY || getChunkZ() == chunkZ;
 	}
-
-	public int ae;
-
-	public int getChunkX() {
-		return ae;
-	} // PAIL
-
-	public int af;
-
-	public int getChunkY() {
-		return af;
-	} // PAIL
-
-	public int ag;
-
-	public int getChunkZ() {
-		return ag;
-	} // PAIL
-
+	public int ae; public int getChunkX() { return ae; } // PAIL
+	public int af; public int getChunkY() { return af; } // PAIL
+	public int ag; public int getChunkZ() { return ag; } // PAIL
 	// PaperSpigot end
 	public boolean ah;
 	public boolean ai;
@@ -154,9 +187,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	public final boolean defaultActivationState;
 	public long activatedTick = Integer.MIN_VALUE;
 	public boolean fromMobSpawner;
-
-	public void inactiveTick() {
-	}
+	public void inactiveTick() { }
 	// Spigot end
 
 	public int getId() {
@@ -177,6 +208,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		this.boundingBox = Entity.a;
 		this.width = 0.6F;
 		this.length = 1.8F;
+		this.size = EntitySize.SIZE_2; // CraftBukkit
 		this.h = 1;
 		this.random = new Random();
 		this.maxFireTicks = 1;
@@ -184,9 +216,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		this.uniqueID = MathHelper.a(this.random);
 		this.au = new CommandObjectiveExecutor();
 		this.world = world;
-
 		this.setPosition(0.0D, 0.0D, 0.0D);
-
 		if (world != null) {
 			this.dimension = world.worldProvider.getDimension();
 			// Spigot start
@@ -229,12 +259,27 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 			this.width = f;
 			this.length = f1;
-
 			this.a(new AxisAlignedBB(this.getBoundingBox().a, this.getBoundingBox().b, this.getBoundingBox().c, this.getBoundingBox().a + (double) this.width, this.getBoundingBox().b + (double) this.length, this.getBoundingBox().c + (double) this.width));
-
 			if (this.width > f2 && !this.justCreated && !this.world.isClientSide) {
 				this.move((double) (f2 - this.width), 0.0D, (double) (f2 - this.width));
 			}
+
+			// CraftBukkit start - figure out entity size for clipping calculations
+			float mod = f % 2f;
+			if (mod < 0.375) {
+				this.size = EntitySize.SIZE_1;
+			} else if (mod < 0.75) {
+				this.size = EntitySize.SIZE_2;
+			} else if (mod < 1.0) {
+				this.size = EntitySize.SIZE_3;
+			} else if (mod < 1.375) {
+				this.size = EntitySize.SIZE_4;
+			} else if (mod < 1.75) {
+				this.size = EntitySize.SIZE_5;
+			} else {
+				this.size = EntitySize.SIZE_6;
+			}
+			// CraftBukkit end
 		}
 
 	}
@@ -355,7 +400,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 					this.fireTicks = 0;
 				}
 			} else {
-				if (this.fireTicks % DedicatedServer.TPS == 0) { // SpigotX - change default to TPS instead of 20
+				if (this.fireTicks % 20 == 0) {
 					this.damageEntity(DamageSource.BURN, 1.0F);
 				}
 
@@ -416,10 +461,10 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		int j = i * 20;
 
 		j = EnchantmentProtection.a(this, j);
-
 		if (this.fireTicks < j) {
 			this.fireTicks = j;
 		}
+
 	}
 
 	public void extinguish() {
@@ -712,6 +757,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 				VehicleBlockCollisionEvent event = new VehicleBlockCollisionEvent(vehicle, bl);
 				world.getServer().getPluginManager().callEvent(event);
 			}
+			// CraftBukkit end
 
 			if (this.s_() && !flag && this.vehicle == null) {
 				double d21 = this.locX - d3;
@@ -722,13 +768,16 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 					d22 = 0.0D;
 				}
 
-				this.M = (float) ((double) this.M + MathHelper.sqrt(d21 * d21 + d23 * d23) * 0.6D);
-				this.N = (float) ((double) this.N + MathHelper.sqrt(d21 * d21 + d22 * d22 + d23 * d23) * 0.6D);
+				if (block != null && this.onGround) {
+					// block.a(this.world, blockposition, this); // CraftBukkit moved down
+				}
 
+				this.M = (float) ((double) this.M + (double) MathHelper.sqrt(d21 * d21 + d23 * d23) * 0.6D);
+				this.N = (float) ((double) this.N + (double) MathHelper.sqrt(d21 * d21 + d22 * d22 + d23 * d23) * 0.6D);
 				if (this.N > (float) this.h && block.getMaterial() != Material.AIR) {
 					this.h = (int) this.N + 1;
 					if (this.V()) {
-						float f = (float) MathHelper.sqrt(this.motX * this.motX * 0.20000000298023224D + this.motY * this.motY + this.motZ * this.motZ * 0.20000000298023224D) * 0.35F;
+						float f = MathHelper.sqrt(this.motX * this.motX * 0.20000000298023224D + this.motY * this.motY + this.motZ * this.motZ * 0.20000000298023224D) * 0.35F;
 
 						if (f > 1.0F) {
 							f = 1.0F;
@@ -737,28 +786,41 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 						this.makeSound(this.P(), f, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
 					}
 
-					this.a(blockposition, block);
-					block.a(this.world, blockposition, this);
+					//this.a(blockposition, block);
+					block.a(this.world, blockposition, this); // CraftBukkit moved from above
 				}
 			}
+
+			// CraftBukkit start - Move to the top of the method
+            /*
+            try {
+                this.checkBlockCollisions();
+            } catch (Throwable throwable) {
+                CrashReport crashreport = CrashReport.a(throwable, "Checking entity block collision");
+                CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being checked for collision");
+
+                this.appendEntityCrashDetails(crashreportsystemdetails);
+                throw new ReportedException(crashreport);
+            }
+            */
+			// CraftBukkit end
 
 			boolean flag2 = this.U();
 
 			if (this.world.e(this.getBoundingBox().shrink(0.001D, 0.001D, 0.001D))) {
 				this.burn(1);
-
 				if (!flag2) {
 					++this.fireTicks;
-
-					if (this.fireTicks <= 0) {
+					// CraftBukkit start - Not on fire yet
+					if (this.fireTicks <= 0) { // Only throw events on the first combust, otherwise it spams
 						EntityCombustEvent event = new EntityCombustEvent(getBukkitEntity(), 8);
-
 						world.getServer().getPluginManager().callEvent(event);
 
 						if (!event.isCancelled()) {
 							setOnFire(event.getDuration());
 						}
 					} else {
+						// CraftBukkit end
 						this.setOnFire(8);
 					}
 				}
@@ -786,46 +848,49 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	}
 
 	protected void checkBlockCollisions() {
-		BlockPosition blockPosition = new BlockPosition(this.getBoundingBox().a + 0.001D, this.getBoundingBox().b + 0.001D, this.getBoundingBox().c + 0.001D);
-		BlockPosition blockPosition2 = new BlockPosition(this.getBoundingBox().d - 0.001D, this.getBoundingBox().e - 0.001D, this.getBoundingBox().f - 0.001D);
+		BlockPosition blockposition = new BlockPosition(this.getBoundingBox().a + 0.001D, this.getBoundingBox().b + 0.001D, this.getBoundingBox().c + 0.001D);
+		BlockPosition blockposition1 = new BlockPosition(this.getBoundingBox().d - 0.001D, this.getBoundingBox().e - 0.001D, this.getBoundingBox().f - 0.001D);
 
-		if (this.world.areChunksLoadedBetween(blockPosition, blockPosition2)) {
-			for (int i = blockPosition.getX(); i <= blockPosition2.getX(); ++i) {
-				for (int j = blockPosition.getY(); j <= blockPosition2.getY(); ++j) {
-					for (int k = blockPosition.getZ(); k <= blockPosition2.getZ(); ++k) {
-						BlockPosition innerBlockPosition = new BlockPosition(i, j, k);
-						IBlockData blockData = this.world.getType(innerBlockPosition);
+		if (this.world.areChunksLoadedBetween(blockposition, blockposition1)) {
+			for (int i = blockposition.getX(); i <= blockposition1.getX(); ++i) {
+				for (int j = blockposition.getY(); j <= blockposition1.getY(); ++j) {
+					for (int k = blockposition.getZ(); k <= blockposition1.getZ(); ++k) {
+						BlockPosition blockposition2 = new BlockPosition(i, j, k);
+						IBlockData iblockdata = this.world.getType(blockposition2);
 
 						try {
-							blockData.getBlock().a(this.world, innerBlockPosition, blockData, this);
+							iblockdata.getBlock().a(this.world, blockposition2, iblockdata, this);
 						} catch (Throwable throwable) {
 							CrashReport crashreport = CrashReport.a(throwable, "Colliding entity with block");
 							CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Block being collided with");
 
-							CrashReportSystemDetails.a(crashreportsystemdetails, innerBlockPosition, blockData);
+							CrashReportSystemDetails.a(crashreportsystemdetails, blockposition2, iblockdata);
 							throw new ReportedException(crashreport);
 						}
 					}
 				}
 			}
 		}
+
 	}
 
 	protected void a(BlockPosition blockposition, Block block) {
-		Block.StepSound stepSound = block.stepSound;
+		Block.StepSound block_stepsound = block.stepSound;
 
 		if (this.world.getType(blockposition.up()).getBlock() == Blocks.SNOW_LAYER) {
-			stepSound = Blocks.SNOW_LAYER.stepSound;
-			this.makeSound(stepSound.getStepSound(), stepSound.getVolume1() * 0.15F, stepSound.getVolume2());
+			block_stepsound = Blocks.SNOW_LAYER.stepSound;
+			this.makeSound(block_stepsound.getStepSound(), block_stepsound.getVolume1() * 0.15F, block_stepsound.getVolume2());
 		} else if (!block.getMaterial().isLiquid()) {
-			this.makeSound(stepSound.getStepSound(), stepSound.getVolume1() * 0.15F, stepSound.getVolume2());
+			this.makeSound(block_stepsound.getStepSound(), block_stepsound.getVolume1() * 0.15F, block_stepsound.getVolume2());
 		}
+
 	}
 
 	public void makeSound(String s, float f, float f1) {
 		if (!this.R()) {
 			this.world.makeSound(this, s, f, f1);
 		}
+
 	}
 
 	public boolean R() {
@@ -861,10 +926,11 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return null;
 	}
 
-	protected void burn(float i) {
+	protected void burn(float i) { // CraftBukkit - int -> float
 		if (!this.fireProof) {
-			this.damageEntity(DamageSource.FIRE, i);
+			this.damageEntity(DamageSource.FIRE, (float) i);
 		}
+
 	}
 
 	public final boolean isFireProof() {
@@ -903,15 +969,15 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	}
 
 	protected void X() {
-		float f = (float) MathHelper.sqrt(this.motX * this.motX * 0.20000000298023224D + this.motY * this.motY + this.motZ * this.motZ * 0.20000000298023224D) * 0.2F;
+		float f = MathHelper.sqrt(this.motX * this.motX * 0.20000000298023224D + this.motY * this.motY + this.motZ * this.motZ * 0.20000000298023224D) * 0.2F;
 
 		if (f > 1.0F) {
 			f = 1.0F;
 		}
 
 		this.makeSound(this.aa(), f, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
 		float f1 = (float) MathHelper.floor(this.getBoundingBox().b);
+
 		int i;
 		float f2;
 		float f3;
@@ -927,12 +993,14 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
 			this.world.addParticle(EnumParticle.WATER_SPLASH, this.locX + (double) f2, (double) (f1 + 1.0F), this.locZ + (double) f3, this.motX, this.motY, this.motZ, new int[0]);
 		}
+
 	}
 
 	public void Y() {
 		if (this.isSprinting() && !this.V()) {
 			this.Z();
 		}
+
 	}
 
 	protected void Z() {
@@ -944,8 +1012,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		Block block = iblockdata.getBlock();
 
 		if (block.b() != -1) {
-			this.world.addParticle(EnumParticle.BLOCK_CRACK, this.locX + ((double) this.random.nextFloat() - 0.5D) * (double) this.width, this.getBoundingBox().b + 0.1D, this.locZ + ((double) this.random.nextFloat() - 0.5D) * (double) this.width, -this.motX * 4.0D, 1.5D, -this.motZ * 4.0D, new int[]{Block.getCombinedId(iblockdata)});
+			this.world.addParticle(EnumParticle.BLOCK_CRACK, this.locX + ((double) this.random.nextFloat() - 0.5D) * (double) this.width, this.getBoundingBox().b + 0.1D, this.locZ + ((double) this.random.nextFloat() - 0.5D) * (double) this.width, -this.motX * 4.0D, 1.5D, -this.motZ * 4.0D, new int[] { Block.getCombinedId(iblockdata)});
 		}
+
 	}
 
 	protected String aa() {
@@ -985,7 +1054,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			f3 = f2 / f3;
 			f *= f3;
 			f1 *= f3;
-			float f4 = (float) MathHelper.sin(this.yaw * 3.1415927F / 180.0F);
+			float f4 = MathHelper.sin(this.yaw * 3.1415927F / 180.0F);
 			float f5 = MathHelper.cos(this.yaw * 3.1415927F / 180.0F);
 
 			this.motX += (double) (f * f5 - f1 * f4);
@@ -1000,12 +1069,13 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	}
 
 	public void spawnIn(World world) {
+		// CraftBukkit start
 		if (world == null) {
 			die();
 			this.world = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
 			return;
 		}
-
+		// CraftBukkit end
 		this.world = world;
 	}
 
@@ -1071,7 +1141,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		double d4 = this.locY - d1;
 		double d5 = this.locZ - d2;
 
-		return MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+		return (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
 	}
 
 	public double h(Entity entity) {
@@ -1082,11 +1152,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return d0 * d0 + d1 * d1 + d2 * d2;
 	}
 
-	public void d(EntityHuman entityhuman) {
-	}
+	public void d(EntityHuman entityhuman) {}
 
-	int numCollisions = 0;
-
+	int numCollisions = 0; // Spigot
 	public void collide(Entity entity) {
 		if (entity.passenger != this && entity.vehicle != this) {
 			if (!entity.noclip && !this.noclip) {
@@ -1095,7 +1163,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 				double d2 = MathHelper.a(d0, d1);
 
 				if (d2 >= 0.009999999776482582D) {
-					d2 = MathHelper.sqrt(d2);
+					d2 = (double) MathHelper.sqrt(d2);
 					d0 /= d2;
 					d1 /= d2;
 					double d3 = 1.0D / d2;
@@ -1110,7 +1178,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 					d1 *= 0.05000000074505806D;
 					d0 *= (double) (1.0F - this.U);
 					d1 *= (double) (1.0F - this.U);
-
 					if (this.passenger == null) {
 						this.g(-d0, 0.0D, -d1);
 					}
@@ -1157,9 +1224,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 	protected final Vec3D f(float f, float f1) {
 		float f2 = MathHelper.cos(-f1 * 0.017453292F - 3.1415927F);
-		float f3 = (float) MathHelper.sin(-f1 * 0.017453292F - 3.1415927F);
+		float f3 = MathHelper.sin(-f1 * 0.017453292F - 3.1415927F);
 		float f4 = -MathHelper.cos(-f * 0.017453292F);
-		float f5 = (float) MathHelper.sin(-f * 0.017453292F);
+		float f5 = MathHelper.sin(-f * 0.017453292F);
 
 		return new Vec3D((double) (f3 * f4), (double) f5, (double) (f2 * f4));
 	}
@@ -1172,8 +1239,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return false;
 	}
 
-	public void b(Entity entity, int i) {
-	}
+	public void b(Entity entity, int i) {}
 
 	public boolean c(NBTTagCompound nbttagcompound) {
 		String s = this.ag();
@@ -1201,9 +1267,11 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 	public void e(NBTTagCompound nbttagcompound) {
 		try {
-			nbttagcompound.set("Pos", this.a(new double[]{this.locX, this.locY, this.locZ}));
-			nbttagcompound.set("Motion", this.a(new double[]{this.motX, this.motY, this.motZ}));
+			nbttagcompound.set("Pos", this.a(new double[] { this.locX, this.locY, this.locZ}));
+			nbttagcompound.set("Motion", this.a(new double[] { this.motX, this.motY, this.motZ}));
 
+			// CraftBukkit start - Checking for NaN pitch/yaw and resetting to zero
+			// TODO: make sure this is the best way to address this.
 			if (Float.isNaN(this.yaw)) {
 				this.yaw = 0;
 			}
@@ -1211,8 +1279,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			if (Float.isNaN(this.pitch)) {
 				this.pitch = 0;
 			}
+			// CraftBukkit end
 
-			nbttagcompound.set("Rotation", this.a(this.yaw, this.pitch));
+			nbttagcompound.set("Rotation", this.a(new float[] { this.yaw, this.pitch}));
 			nbttagcompound.setFloat("FallDistance", this.fallDistance);
 			nbttagcompound.setShort("Fire", (short) this.fireTicks);
 			nbttagcompound.setShort("Air", (short) this.getAirTicks());
@@ -1222,11 +1291,12 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			nbttagcompound.setInt("PortalCooldown", this.portalCooldown);
 			nbttagcompound.setLong("UUIDMost", this.getUniqueID().getMostSignificantBits());
 			nbttagcompound.setLong("UUIDLeast", this.getUniqueID().getLeastSignificantBits());
+			// CraftBukkit start
 			nbttagcompound.setLong("WorldUUIDLeast", this.world.getDataManager().getUUID().getLeastSignificantBits());
 			nbttagcompound.setLong("WorldUUIDMost", this.world.getDataManager().getUUID().getMostSignificantBits());
 			nbttagcompound.setInt("Bukkit.updateLevel", CURRENT_LEVEL);
 			nbttagcompound.setInt("Spigot.ticksLived", this.ticksLived);
-
+			// CraftBukkit end
 			if (this.getCustomName() != null && this.getCustomName().length() > 0) {
 				nbttagcompound.setString("CustomName", this.getCustomName());
 				nbttagcompound.setBoolean("CustomNameVisible", this.getCustomNameVisible());
@@ -1264,15 +1334,28 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			this.motX = nbttaglist1.d(0);
 			this.motY = nbttaglist1.d(1);
 			this.motZ = nbttaglist1.d(2);
+
+            /* CraftBukkit start - Moved section down
+            if (Math.abs(this.motX) > 10.0D) {
+                this.motX = 0.0D;
+            }
+
+            if (Math.abs(this.motY) > 10.0D) {
+                this.motY = 0.0D;
+            }
+
+            if (Math.abs(this.motZ) > 10.0D) {
+                this.motZ = 0.0D;
+            }
+            // CraftBukkit end */
+
 			this.lastX = this.P = this.locX = nbttaglist.d(0);
 			this.lastY = this.Q = this.locY = nbttaglist.d(1);
 			this.lastZ = this.R = this.locZ = nbttaglist.d(2);
 			this.lastYaw = this.yaw = nbttaglist2.e(0);
 			this.lastPitch = this.pitch = nbttaglist2.e(1);
-
 			this.f(this.yaw);
 			this.g(this.yaw);
-
 			this.fallDistance = nbttagcompound.getFloat("FallDistance");
 			this.fireTicks = nbttagcompound.getShort("Fire");
 			this.setAirTicks(nbttagcompound.getShort("Air"));
@@ -1280,7 +1363,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			this.dimension = nbttagcompound.getInt("Dimension");
 			this.invulnerable = nbttagcompound.getBoolean("Invulnerable");
 			this.portalCooldown = nbttagcompound.getInt("PortalCooldown");
-
 			if (nbttagcompound.hasKeyOfType("UUIDMost", 4) && nbttagcompound.hasKeyOfType("UUIDLeast", 4)) {
 				this.uniqueID = new UUID(nbttagcompound.getLong("UUIDMost"), nbttagcompound.getLong("UUIDLeast"));
 			} else if (nbttagcompound.hasKeyOfType("UUID", 8)) {
@@ -1289,7 +1371,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 			this.setPosition(this.locX, this.locY, this.locZ);
 			this.setYawPitch(this.yaw, this.pitch);
-
 			if (nbttagcompound.hasKeyOfType("CustomName", 8) && nbttagcompound.getString("CustomName").length() > 0) {
 				this.setCustomName(nbttagcompound.getString("CustomName"));
 			}
@@ -1298,22 +1379,25 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 			this.au.a(nbttagcompound);
 			this.b(nbttagcompound.getBoolean("Silent"));
 			this.a(nbttagcompound);
-
 			if (this.af()) {
 				this.setPosition(this.locX, this.locY, this.locZ);
 			}
 
+			// CraftBukkit start
 			if (this instanceof EntityLiving) {
 				EntityLiving entity = (EntityLiving) this;
 
 				this.ticksLived = nbttagcompound.getInt("Spigot.ticksLived");
 
+				// Reset the persistence for tamed animals
 				if (entity instanceof EntityTameableAnimal && !isLevelAtLeast(nbttagcompound, 2) && !nbttagcompound.getBoolean("PersistenceRequired")) {
 					EntityInsentient entityinsentient = (EntityInsentient) entity;
 					entityinsentient.persistent = !entityinsentient.isTypeNotPersistent();
 				}
 			}
+			// CraftBukkit end
 
+			// CraftBukkit start - Exempt Vehicles from notch's sanity check
 			if (!(getBukkitEntity() instanceof Vehicle)) {
 				if (Math.abs(this.motX) > 10.0D) {
 					this.motX = 0.0D;
@@ -1327,7 +1411,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 					this.motZ = 0.0D;
 				}
 			}
+			// CraftBukkit end
 
+			// CraftBukkit start - Reset world
 			if (this instanceof EntityPlayer) {
 				Server server = Bukkit.getServer();
 				org.bukkit.World bworld = null;
@@ -1347,8 +1433,10 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 					bworld = ((org.bukkit.craftbukkit.CraftServer) server).getServer().getWorldServer(entityPlayer.dimension).getWorld();
 				}
 
-				spawnIn(bworld == null ? null : ((CraftWorld) bworld).getHandle());
+				spawnIn(bworld == null? null : ((CraftWorld) bworld).getHandle());
 			}
+			// CraftBukkit end
+
 		} catch (Throwable throwable) {
 			CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
 			CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being loaded");
@@ -1370,8 +1458,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 	protected abstract void b(NBTTagCompound nbttagcompound);
 
-	public void ah() {
-	}
+	public void ah() {}
 
 	protected NBTTagList a(double... adouble) {
 		NBTTagList nbttaglist = new NBTTagList();
@@ -1411,16 +1498,16 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 	public EntityItem a(ItemStack itemstack, float f) {
 		if (itemstack.count != 0 && itemstack.getItem() != null) {
+			// CraftBukkit start - Capture drops for death event
 			if (this instanceof EntityLiving && ((EntityLiving) this).drops != null) {
 				((EntityLiving) this).drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(itemstack));
 				return null;
 			}
-
+			// CraftBukkit end
 			EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + (double) f, this.locZ, itemstack);
 
 			entityitem.p();
 			this.world.addEntity(entityitem);
-
 			return entityitem;
 		} else {
 			return null;
@@ -1435,16 +1522,16 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		if (this.noclip) {
 			return false;
 		} else {
-			BlockPosition.MutableBlockPosition mutableBlockPosition = new BlockPosition.MutableBlockPosition(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+			BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
 			for (int i = 0; i < 8; ++i) {
 				int j = MathHelper.floor(this.locY + (double) (((float) ((i >> 0) % 2) - 0.5F) * 0.1F) + (double) this.getHeadHeight());
 				int k = MathHelper.floor(this.locX + (double) (((float) ((i >> 1) % 2) - 0.5F) * this.width * 0.8F));
 				int l = MathHelper.floor(this.locZ + (double) (((float) ((i >> 2) % 2) - 0.5F) * this.width * 0.8F));
 
-				if (mutableBlockPosition.getX() != k || mutableBlockPosition.getY() != j || mutableBlockPosition.getZ() != l) {
-					mutableBlockPosition.c(k, j, l);
-					if (this.world.getType(mutableBlockPosition).getBlock().w()) {
+				if (blockposition_mutableblockposition.getX() != k || blockposition_mutableblockposition.getY() != j || blockposition_mutableblockposition.getZ() != l) {
+					blockposition_mutableblockposition.c(k, j, l);
+					if (this.world.getType(blockposition_mutableblockposition).getBlock().w()) {
 						return true;
 					}
 				}
@@ -1530,6 +1617,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return (double) this.length * 0.75D;
 	}
 
+	// CraftBukkit start
 	protected CraftEntity bukkitEntity;
 
 	public CraftEntity getBukkitEntity() {
@@ -1543,45 +1631,39 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		Entity originalVehicle = this.vehicle;
 		Entity originalPassenger = this.vehicle == null ? null : this.vehicle.passenger;
 		PluginManager pluginManager = Bukkit.getPluginManager();
-
-		getBukkitEntity();
-
+		getBukkitEntity(); // make sure bukkitEntity is initialised
+		// CraftBukkit end
 		this.ar = 0.0D;
 		this.as = 0.0D;
-
 		if (entity == null) {
 			if (this.vehicle != null) {
+				// CraftBukkit start
 				if ((this.bukkitEntity instanceof LivingEntity) && (this.vehicle.getBukkitEntity() instanceof Vehicle)) {
 					VehicleExitEvent event = new VehicleExitEvent((Vehicle) this.vehicle.getBukkitEntity(), (LivingEntity) this.bukkitEntity);
-
 					pluginManager.callEvent(event);
 
 					if (event.isCancelled() || vehicle != originalVehicle) {
 						return;
 					}
 				}
-
-				EntityDismountEvent dismountEvent = new EntityDismountEvent(this.getBukkitEntity(), this.vehicle.getBukkitEntity());
-
+				// CraftBukkit end
+				// PaperSpigot start - make EntityDismountEvent cancellable
+				EntityDismountEvent dismountEvent = new EntityDismountEvent(this.getBukkitEntity(), this.vehicle.getBukkitEntity()); // Spigot
 				pluginManager.callEvent(dismountEvent);
-
-				if (dismountEvent.isCancelled()) {
-					return;
-				}
-
+				if (dismountEvent.isCancelled()) return;
+				// PaperSpigot end
 				this.setPositionRotation(this.vehicle.locX, this.vehicle.getBoundingBox().b + (double) this.vehicle.length, this.vehicle.locZ, this.yaw, this.pitch);
-
 				this.vehicle.passenger = null;
 			}
 
 			this.vehicle = null;
 		} else {
+			// CraftBukkit start
 			if ((this.bukkitEntity instanceof LivingEntity) && (entity.getBukkitEntity() instanceof Vehicle) && entity.world.isChunkLoaded((int) entity.locX >> 4, (int) entity.locZ >> 4, true)) {
+				// It's possible to move from one vehicle to another.  We need to check if they're already in a vehicle, and fire an exit event if they are.
 				VehicleExitEvent exitEvent = null;
-
 				if (this.vehicle != null && this.vehicle.getBukkitEntity() instanceof Vehicle) {
 					exitEvent = new VehicleExitEvent((Vehicle) this.vehicle.getBukkitEntity(), (LivingEntity) this.bukkitEntity);
-
 					pluginManager.callEvent(exitEvent);
 
 					if (exitEvent.isCancelled() || this.vehicle != originalVehicle || (this.vehicle != null && this.vehicle.passenger != originalPassenger)) {
@@ -1590,29 +1672,31 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 				}
 
 				VehicleEnterEvent event = new VehicleEnterEvent((Vehicle) entity.getBukkitEntity(), this.bukkitEntity);
-
 				pluginManager.callEvent(event);
 
+				// If a plugin messes with the vehicle or the vehicle's passenger
 				if (event.isCancelled() || this.vehicle != originalVehicle || (this.vehicle != null && this.vehicle.passenger != originalPassenger)) {
+					// If we only cancelled the enterevent then we need to put the player in a decent position.
 					if (exitEvent != null && this.vehicle == originalVehicle && this.vehicle != null && this.vehicle.passenger == originalPassenger) {
 						this.setPositionRotation(this.vehicle.locX, this.vehicle.getBoundingBox().b + (double) this.vehicle.length, this.vehicle.locZ, this.yaw, this.pitch);
 						this.vehicle.passenger = null;
 						this.vehicle = null;
 					}
-
 					return;
 				}
 			}
-
-			if (entity.world.isChunkLoaded((int) entity.locX >> 4, (int) entity.locZ >> 4, true)) {
-				org.spigotmc.event.entity.EntityMountEvent event = new org.spigotmc.event.entity.EntityMountEvent(this.getBukkitEntity(), entity.getBukkitEntity());
-
-				pluginManager.callEvent(event);
-
-				if (event.isCancelled()) {
+			// CraftBukkit end
+			// Spigot Start
+			if ( entity.world.isChunkLoaded( (int) entity.locX >> 4, (int) entity.locZ >> 4, true ) )
+			{
+				org.spigotmc.event.entity.EntityMountEvent event = new org.spigotmc.event.entity.EntityMountEvent( this.getBukkitEntity(), entity.getBukkitEntity() );
+				pluginManager.callEvent( event );
+				if ( event.isCancelled() )
+				{
 					return;
 				}
 			}
+			// Spigot End
 
 			if (this.vehicle != null) {
 				this.vehicle.passenger = null;
@@ -1668,8 +1752,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return null;
 	}
 
-	public void setEquipment(int i, ItemStack itemstack) {
-	}
+	public void setEquipment(int i, ItemStack itemstack) {}
 
 	public boolean isBurning() {
 		boolean flag = this.world != null && this.world.isClientSide;
@@ -1717,10 +1800,11 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		byte b0 = this.datawatcher.getByte(0);
 
 		if (flag) {
-			this.datawatcher.watch(0, Byte.valueOf((byte) (b0 | 1 << i)));
+			this.datawatcher.watch(0, (byte) (b0 | 1 << i));
 		} else {
-			this.datawatcher.watch(0, Byte.valueOf((byte) (b0 & ~(1 << i))));
+			this.datawatcher.watch(0, (byte) (b0 & ~(1 << i)));
 		}
+
 	}
 
 	public int getAirTicks() {
@@ -1760,30 +1844,26 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		if (this.fireProof) {
 			return;
 		}
-
 		CraftEventFactory.entityDamage = entitylightning;
-
 		if (!this.damageEntity(DamageSource.LIGHTNING, 5.0F)) {
 			CraftEventFactory.entityDamage = null;
 			return;
 		}
-
+		// CraftBukkit end
 		++this.fireTicks;
-
 		if (this.fireTicks == 0) {
+			// CraftBukkit start - Call a combust event when lightning strikes
 			EntityCombustByEntityEvent entityCombustEvent = new EntityCombustByEntityEvent(stormBukkitEntity, thisBukkitEntity, 8);
-
 			pluginManager.callEvent(entityCombustEvent);
-
 			if (!entityCombustEvent.isCancelled()) {
 				this.setOnFire(entityCombustEvent.getDuration());
 			}
+			// CraftBukkit end
 		}
 
 	}
 
-	public void a(EntityLiving entityliving) {
-	}
+	public void a(EntityLiving entityliving) {}
 
 	protected boolean j(double d0, double d1, double d2) {
 		BlockPosition blockposition = new BlockPosition(d0, d1, d2);
@@ -1880,11 +1960,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return 0.0F;
 	}
 
-	public void f(float f) {
-	}
+	public void f(float f) {}
 
-	public void g(float f) {
-	}
+	public void g(float f) {}
 
 	public boolean aD() {
 		return true;
@@ -1895,7 +1973,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 	}
 
 	public String toString() {
-		return String.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]", new Object[]{this.getClass().getSimpleName(), this.getName(), Integer.valueOf(this.id), this.world == null ? "~NULL~" : this.world.getWorldData().getName(), Double.valueOf(this.locX), Double.valueOf(this.locY), Double.valueOf(this.locZ)});
+		return String.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]", new Object[] { this.getClass().getSimpleName(), this.getName(), Integer.valueOf(this.id), this.world == null ? "~NULL~" : this.world.getWorldData().getName(), Double.valueOf(this.locX), Double.valueOf(this.locY), Double.valueOf(this.locZ)});
 	}
 
 	public boolean isInvulnerable(DamageSource damagesource) {
@@ -1995,7 +2073,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 				entity.bukkitEntity = this.getBukkitEntity();
 
 				if (this instanceof EntityInsentient) {
-					((EntityInsentient) this).unleash(true, false); // Unleash to prevent duping of leads.
+					((EntityInsentient)this).unleash(true, false); // Unleash to prevent duping of leads.
 				}
 				// CraftBukkit end
 			}
@@ -2052,9 +2130,9 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 				return this.a();
 			}
 		});
-		crashreportsystemdetails.a("Entity\'s Exact location", (Object) String.format("%.2f, %.2f, %.2f", new Object[]{Double.valueOf(this.locX), Double.valueOf(this.locY), Double.valueOf(this.locZ)}));
+		crashreportsystemdetails.a("Entity\'s Exact location", (Object) String.format("%.2f, %.2f, %.2f", new Object[] { Double.valueOf(this.locX), Double.valueOf(this.locY), Double.valueOf(this.locZ)}));
 		crashreportsystemdetails.a("Entity\'s Block location", (Object) CrashReportSystemDetails.a((double) MathHelper.floor(this.locX), (double) MathHelper.floor(this.locY), (double) MathHelper.floor(this.locZ)));
-		crashreportsystemdetails.a("Entity\'s Momentum", (Object) String.format("%.2f, %.2f, %.2f", new Object[]{Double.valueOf(this.motX), Double.valueOf(this.motY), Double.valueOf(this.motZ)}));
+		crashreportsystemdetails.a("Entity\'s Momentum", (Object) String.format("%.2f, %.2f, %.2f", new Object[] { Double.valueOf(this.motX), Double.valueOf(this.motY), Double.valueOf(this.motZ)}));
 		crashreportsystemdetails.a("Entity\'s Rider", new Callable() {
 			public String a() throws Exception {
 				return Entity.this.passenger.toString();
@@ -2120,8 +2198,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		this.setPositionRotation(d0, d1, d2, this.yaw, this.pitch);
 	}
 
-	public void i(int i) {
-	}
+	public void i(int i) {}
 
 	public EnumDirection getDirection() {
 		return EnumDirection.fromType2(MathHelper.floor((double) (this.yaw * 4.0F / 360.0F) + 0.5D) & 3);
@@ -2187,8 +2264,7 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return false;
 	}
 
-	public void sendMessage(IChatBaseComponent ichatbasecomponent) {
-	}
+	public void sendMessage(IChatBaseComponent ichatbasecomponent) {}
 
 	public boolean a(int i, String s) {
 		return true;
@@ -2238,18 +2314,6 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 		return false;
 	}
 
-	public double getX() {
-		return locX;
-	}
-
-	public double getY() {
-		return locY;
-	}
-
-	public double getZ() {
-		return locZ;
-	}
-
 	protected void a(EntityLiving entityliving, Entity entity) {
 		if (entity instanceof EntityLiving) {
 			EnchantmentManager.a((EntityLiving) entity, (Entity) entityliving);
@@ -2257,16 +2321,4 @@ public abstract class Entity implements ICommandListener, OptimizedRemoveUtil.Ma
 
 		EnchantmentManager.b(entityliving, entity);
 	}
-
-	// TacoSpigot start
-	@Override
-	public boolean isNeedRemoval() {
-		return this.needsRemoval;
-	}
-
-	@Override
-	public void markRemoval() {
-		this.needsRemoval = true;
-	}
-	// TacoSpigot end
 }

@@ -1,0 +1,14 @@
+--- a/net/minecraft/server/EntityItemFrame.java
++++ b/net/minecraft/server/EntityItemFrame.java
+@@ -27,6 +27,11 @@
+             return false;
+         } else if (!damagesource.isExplosion() && this.getItem() != null) {
+             if (!this.world.isClientSide) {
++                // CraftBukkit start - fire EntityDamageEvent
++                if (org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f, false) || this.dead) {
++                    return true;
++                }
++                // CraftBukkit end
+                 this.a(damagesource.getEntity(), false);
+                 this.setItem((ItemStack) null);
+             }

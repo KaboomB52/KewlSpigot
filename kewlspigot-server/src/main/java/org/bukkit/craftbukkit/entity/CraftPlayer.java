@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import org.bukkit.*;
 import org.eytril.spigot.KewlSpigot;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -63,20 +64,7 @@ import net.minecraft.server.WorldServer;
 import net.minecraft.server.WorldSettings;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Achievement;
-import org.bukkit.BanList;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
-import org.bukkit.WeatherType;
-import org.bukkit.World;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -109,6 +97,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.StandardMessenger;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
+import org.eytril.spigot.event.PlayerHealthChangeEvent;
 import org.github.paperspigot.Title;
 
 // PaperSpigot start
@@ -1570,7 +1559,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 	}
 
 	public void setRealHealth(double health) {
+		double previous = health;
+
 		this.health = health;
+
+		if (previous != health) {
+			Bukkit.getPluginManager().callEvent(new PlayerHealthChangeEvent(this, previous, health));
+		}
 	}
 
 	public void updateScaledHealth() {

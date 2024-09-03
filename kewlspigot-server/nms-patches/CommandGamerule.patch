@@ -1,0 +1,23 @@
+--- a/net/minecraft/server/CommandGamerule.java
++++ b/net/minecraft/server/CommandGamerule.java
+@@ -20,7 +20,7 @@
+     }
+ 
+     public void execute(ICommandListener icommandlistener, String[] astring) throws CommandException {
+-        GameRules gamerules = this.d();
++        GameRules gamerules = icommandlistener.getWorld().getGameRules(); // CraftBukkit - Use current world
+         String s = astring.length > 0 ? astring[0] : "";
+         String s1 = astring.length > 1 ? a(astring, 1) : "";
+ 
+@@ -85,4 +85,11 @@
+     private GameRules d() {
+         return MinecraftServer.getServer().getWorldServer(0).getGameRules();
+     }
++
++    // CraftBukkit start - fix decompile error
++    @Override
++    public int compareTo(ICommand o) {
++        return a((ICommand) o);
++    }
++    // CraftBukkit end
+ }

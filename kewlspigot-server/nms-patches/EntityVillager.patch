@@ -1,0 +1,19 @@
+--- a/net/minecraft/server/EntityVillager.java
++++ b/net/minecraft/server/EntityVillager.java
+@@ -2,6 +2,7 @@
+ 
+ import java.util.Iterator;
+ import java.util.Random;
++import org.bukkit.craftbukkit.entity.CraftVillager; // CraftBukkit
+ 
+ public class EntityVillager extends EntityAgeable implements IMerchant, NPC {
+ 
+@@ -29,7 +30,7 @@
+ 
+     public EntityVillager(World world, int i) {
+         super(world);
+-        this.inventory = new InventorySubcontainer("Items", false, 8);
++        this.inventory = new InventorySubcontainer("Items", false, 8, (CraftVillager) this.getBukkitEntity()); // CraftBukkit add argument
+         this.setProfession(i);
+         this.setSize(0.6F, 1.8F);
+         ((Navigation) this.getNavigation()).b(true);

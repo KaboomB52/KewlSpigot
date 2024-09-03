@@ -3,8 +3,10 @@ package net.minecraft.server;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.eytril.spigot.event.WitherShootEvent;
 
 import java.util.Iterator;
 import java.util.List;
@@ -241,9 +243,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                             if (entity instanceof EntityHuman && ((EntityHuman) entity).abilities.isInvulnerable) {
                                 this.b(i, 0);
                             } else {
-                                this.a(i + 1, (EntityLiving) entity);
-                                this.bn[i - 1] = this.ticksLived + 40 + this.random.nextInt(20);
-                                this.bo[i - 1] = 0;
+                                WitherShootEvent event = new WitherShootEvent((Wither) this.bukkitEntity, entity.bukkitEntity);
+                                if (event.isCancelled()) {
+                                    this.a(i + 1, (EntityLiving) entity);
+                                    this.bn[i - 1] = this.ticksLived + 40 + this.random.nextInt(20);
+                                    this.bo[i - 1] = 0;
+                                }
                             }
                         } else {
                             this.b(i, 0);

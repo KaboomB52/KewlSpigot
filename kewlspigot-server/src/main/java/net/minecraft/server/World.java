@@ -1401,8 +1401,7 @@ public abstract class World implements IBlockAccess {
 
         this.methodProfiler.c("remove");
         timings.entityRemoval.startTiming(); // Spigot
-        //this.entityList.removeAll(this.g);
-        tickPosition = OptimizedRemoveUtil.removeAll(this.entityList, this.g, tickPosition);
+        this.entityList.removeAll(this.g);
 
         int j;
         int k;
