@@ -18,7 +18,7 @@ public class KewlCommand extends Command {
                     " * §eContributor: §fzanon7",
                     "",
                     "§3Give us money: §ahttps://ko-fi.com/ianrich",
-                    "§Visit us: §bhttps://github.com/KaboomB52/KewlSpigot",
+                    "§3Visit us: §bhttps://github.com/KaboomB52/KewlSpigot",
                     ""
             )
             .toArray(String[]::new);
