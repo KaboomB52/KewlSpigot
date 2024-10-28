@@ -106,6 +106,14 @@ public interface World extends PluginMessageRecipient, Metadatable {
     public Block getHighestBlockAt(Location location);
 
     /**
+     * Finds an entity in this world that has the uuid.
+     *
+     * @param uuid
+     * @return
+     */
+    public Entity getEntity(UUID uuid);
+
+    /**
      * Gets the {@link Chunk} at the given coordinates
      *
      * @param x X-coordinate of the chunk

@@ -643,6 +643,17 @@ public class CraftWorld implements World {
         return getHighestBlockAt(location.getBlockX(), location.getBlockZ());
     }
 
+    // Kab - API Change
+    @Override
+    public Entity getEntity(UUID uuid){
+        for (Entity ent : getEntities()){
+            if(ent.getUniqueId() == uuid){
+                return ent;
+            }
+        }
+        return null;
+    }
+
     public Biome getBiome(int x, int z) {
         return CraftBlock.biomeBaseToBiome(this.world.getBiome(new BlockPosition(x, 0, z)));
     }
