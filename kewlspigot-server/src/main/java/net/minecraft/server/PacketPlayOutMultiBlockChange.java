@@ -4,67 +4,76 @@ import java.io.IOException;
 
 public class PacketPlayOutMultiBlockChange implements Packet<PacketListenerPlayOut> {
 
-    private ChunkCoordIntPair a;
-    private MultiBlockChangeInfo[] b;
+    public ChunkCoordIntPair a;
+    public MultiBlockChangeInfo[] b;
 
-    public PacketPlayOutMultiBlockChange() {
+    public PacketPlayOutMultiBlockChange() {}
 
-    }
+    public PacketPlayOutMultiBlockChange(int i, short[] ashort, Chunk chunk) {
+        this.a = new ChunkCoordIntPair(chunk.locX, chunk.locZ);
+        this.b = new MultiBlockChangeInfo[i];
 
-    public PacketPlayOutMultiBlockChange(int paramInt, short[] paramArrayOfShort, Chunk paramChunk) {
-        this.a = new ChunkCoordIntPair(paramChunk.locX, paramChunk.locZ);
-
-        this.b = new MultiBlockChangeInfo[paramInt];
-        for (byte b1 = 0; b1 < this.b.length; b1++) {
-            this.b[b1] = new MultiBlockChangeInfo(this, paramArrayOfShort[b1], paramChunk);
+        for (int j = 0; j < this.b.length; ++j) {
+            this.b[j] = new MultiBlockChangeInfo(ashort[j], chunk);
         }
+
     }
 
-    public void a(PacketDataSerializer paramPacketDataSerializer) throws IOException {
-        this.a = new ChunkCoordIntPair(paramPacketDataSerializer.readInt(), paramPacketDataSerializer.readInt());
-        this.b = new MultiBlockChangeInfo[paramPacketDataSerializer.e()];
+    public void a(PacketDataSerializer packetdataserializer) throws IOException {
+        this.a = new ChunkCoordIntPair(packetdataserializer.readInt(), packetdataserializer.readInt());
+        this.b = new MultiBlockChangeInfo[packetdataserializer.e()];
 
-        for (byte b1 = 0; b1 < this.b.length; b1++) {
-            this.b[b1] = new MultiBlockChangeInfo(this, paramPacketDataSerializer.readShort(), Block.d.a(paramPacketDataSerializer.e()));
+        for (int i = 0; i < this.b.length; ++i) {
+            this.b[i] = new MultiBlockChangeInfo(packetdataserializer.readShort(), (IBlockData) Block.d.a(packetdataserializer.e()));
         }
+
     }
 
-    public void b(PacketDataSerializer paramPacketDataSerializer) throws IOException {
-        paramPacketDataSerializer.writeInt(this.a.x);
-        paramPacketDataSerializer.writeInt(this.a.z);
-        paramPacketDataSerializer.b(this.b.length);
-        for (MultiBlockChangeInfo multiBlockChangeInfo : this.b) {
-            paramPacketDataSerializer.writeShort(multiBlockChangeInfo.b());
-            paramPacketDataSerializer.b(Block.d.b(multiBlockChangeInfo.c()));
+    public void b(PacketDataSerializer packetdataserializer) throws IOException {
+        packetdataserializer.writeInt(this.a.x);
+        packetdataserializer.writeInt(this.a.z);
+        packetdataserializer.b(this.b.length);
+        MultiBlockChangeInfo[] apacketplayoutmultiblockchange_multiblockchangeinfo = this.b;
+        int i = apacketplayoutmultiblockchange_multiblockchangeinfo.length;
+
+        for (int j = 0; j < i; ++j) {
+            MultiBlockChangeInfo packetplayoutmultiblockchange_multiblockchangeinfo = apacketplayoutmultiblockchange_multiblockchangeinfo[j];
+
+            packetdataserializer.writeShort(packetplayoutmultiblockchange_multiblockchangeinfo.b());
+            packetdataserializer.b(Block.d.b(packetplayoutmultiblockchange_multiblockchangeinfo.c()));
         }
+
     }
 
-    public void setChanges(MultiBlockChangeInfo[] b) {
-        this.b = b;
+    public void a(PacketListenerPlayOut packetlistenerplayout) {
+        packetlistenerplayout.a(this);
     }
 
-    public void a(PacketListenerPlayOut paramPacketListenerPlayOut) {
-        paramPacketListenerPlayOut.a(this);
+    public MultiBlockChangeInfo newBlockChangeInfo(short short0, IBlockData iblockdata) {
+        return new MultiBlockChangeInfo(short0,iblockdata);
+    }
+
+    public MultiBlockChangeInfo newBlockChangeInfo(short short0, Chunk chunk) {
+        return new MultiBlockChangeInfo(short0,chunk);
     }
 
     public class MultiBlockChangeInfo {
 
-        public final short b;
-        public IBlockData c;
+        private final short b;
+        private final IBlockData c;
 
-        public MultiBlockChangeInfo(PacketPlayOutMultiBlockChange this$0, short param1Short, IBlockData param1IBlockData) {
-            this.b = param1Short;
-            this.c = param1IBlockData;
+        public MultiBlockChangeInfo(short short0, IBlockData iblockdata) {
+            this.b = short0;
+            this.c = iblockdata;
         }
 
-        public MultiBlockChangeInfo(PacketPlayOutMultiBlockChange this$0, short param1Short, Chunk param1Chunk) {
-            this.b = param1Short;
-            this.c = param1Chunk.getBlockData(a());
+        public MultiBlockChangeInfo(short short0, Chunk chunk) {
+            this.b = short0;
+            this.c = chunk.getBlockData(this.a());
         }
-
 
         public BlockPosition a() {
-            return new BlockPosition(PacketPlayOutMultiBlockChange.this.a.a(this.b >> 12 & 0xF, this.b & 0xFF, this.b >> 8 & 0xF));
+            return new BlockPosition(PacketPlayOutMultiBlockChange.this.a.a(this.b >> 12 & 15, this.b & 255, this.b >> 8 & 15));
         }
 
         public short b() {
