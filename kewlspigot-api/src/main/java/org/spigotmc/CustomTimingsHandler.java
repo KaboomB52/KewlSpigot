@@ -26,11 +26,9 @@ package org.spigotmc;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.AuthorNagException;
 import org.bukkit.plugin.Plugin;
-import co.aikar.timings.NullTimingHandler;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import co.aikar.timings.TimingsManager;
-import sun.reflect.Reflection;
 
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -52,7 +50,7 @@ public final class CustomTimingsHandler {
 
         Plugin plugin = null;
         try {
-             plugin = TimingsManager.getPluginByClassloader(Reflection.getCallerClass(2));
+             plugin = TimingsManager.getPluginByClassloader(getCallerClass(2));
         } catch (Exception ignored) {}
 
         new AuthorNagException("Deprecated use of CustomTimingsHandler. Please Switch to Timings.of ASAP").printStackTrace();
@@ -72,5 +70,14 @@ public final class CustomTimingsHandler {
 
     public void startTiming() { handler.startTiming(); }
     public void stopTiming() { handler.stopTiming(); }
+
+    public static Class<?> getCallerClass(int depth) {
+        StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+        return walker.walk(frames -> frames
+                .skip(depth - 1) // Skip frames to reach the desired depth
+                .findFirst()
+                .map(StackWalker.StackFrame::getDeclaringClass)
+                .orElse(null)); // Return null if no class is found
+    }
 
 }
