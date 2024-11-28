@@ -57,11 +57,6 @@ public class KnockbackCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermission(sender)) return true;
-//        if(!(sender instanceof Player)) {
-//            sender.sendMessage("You must be a player to use this command."); // TODO
-//            return false;
-//        } we dont need this
-        Player player = (Player)sender;
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sendHelp(sender);
@@ -76,27 +71,27 @@ public class KnockbackCommand extends Command {
                             CraftKnockbackProfile profile = new CraftKnockbackProfile(args[1]);
                             KewlSpigot.INSTANCE.getConfig().getKbProfiles().add(profile);
                             profile.save();
-                            knockbackCommandMain(player);
-                            player.sendMessage("§aThe profile §e" + args[1] + " §ahas been created.");
+                            knockbackCommandMain(sender);
+                            sender.sendMessage("§aThe profile §e" + args[1] + " §ahas been created.");
                             return true;
                         } else {
-                            player.sendMessage("§cA knockback profile with that name already exists.");
+                            sender.sendMessage("§cA knockback profile with that name already exists.");
                         }
                         break;
                     }
                     case "delete": {
                         if (KewlSpigot.INSTANCE.getConfig().getCurrentKb().getName().equalsIgnoreCase(args[1])) {
-                            knockbackCommandMain(player);
-                            player.sendMessage("§cYou cannot delete the profile that is being used.");
+                            knockbackCommandMain(sender);
+                            sender.sendMessage("§cYou cannot delete the profile that is being used.");
                             return false;
                         }
                         if (KewlSpigot.INSTANCE.getConfig().getKbProfiles().removeIf(profile -> profile.getName().equalsIgnoreCase(args[1]))) {
                             KewlSpigot.INSTANCE.getConfig().set("knockback.profiles." + args[1], null);
-                            knockbackCommandMain(player);
-                            player.sendMessage("§aThe profile §e" + args[1] + " §ahas been removed.");
+                            knockbackCommandMain(sender);
+                            sender.sendMessage("§aThe profile §e" + args[1] + " §ahas been removed.");
                             return true;
                         } else {
-                            player.sendMessage("§cThis profile doesn't exist.");
+                            sender.sendMessage("§cThis profile doesn't exist.");
                         }
                         break;
                     }
@@ -104,22 +99,22 @@ public class KnockbackCommand extends Command {
                         KnockbackProfile profile = KewlSpigot.INSTANCE.getConfig().getKbProfileByName(args[1]);
                         if (profile != null) {
                             if (KewlSpigot.INSTANCE.getConfig().getCurrentKb().getName().equalsIgnoreCase(args[1])) {
-                                player.sendMessage("§cThis profile is loaded.");
+                                sender.sendMessage("§cThis profile is loaded.");
                                 return false;
                             }
                             KewlSpigot.INSTANCE.getConfig().setCurrentKb(profile);
                             KewlSpigot.INSTANCE.getConfig().set("knockback.current", profile.getName());
                             KewlSpigot.INSTANCE.getConfig().save();
-                            knockbackCommandMain(player);
-                            player.sendMessage("§aThe profile §e" + args[1] + " §ahas been loaded.");
+                            knockbackCommandMain(sender);
+                            sender.sendMessage("§aThe profile §e" + args[1] + " §ahas been loaded.");
                             return true;
                         } else {
-                            player.sendMessage("§cThis profile doesn't exist.");
+                            sender.sendMessage("§cThis profile doesn't exist.");
                         }
                         break;
                     }
                     default: {
-                        knockbackCommandMain(player);
+                        knockbackCommandMain(sender);
                     }
                 }
                 break;
@@ -147,41 +142,41 @@ public class KnockbackCommand extends Command {
                 if (args[0].equalsIgnoreCase("edit")) {
                     KnockbackProfile profile = KewlSpigot.INSTANCE.getConfig().getKbProfileByName(args[1].toLowerCase());
                     if (profile == null) {
-                        player.sendMessage("§cThis profile doesn't exist.");
+                        sender.sendMessage("§cThis profile doesn't exist.");
                         return false;
                     }
                     switch (args[2].toLowerCase()) {
                         case "horfriction": case "horizontalfriction": {
                             if (!org.apache.commons.lang3.math.NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setHorizontalFriction(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fhorizontal-friction §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fhorizontal-friction §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "verfriction": case "verticalfriction": {
                             if (!org.apache.commons.lang3.math.NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setVerticalFriction(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical-friction §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical-friction §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "hor": case "horizontal": {
                             if (!org.apache.commons.lang3.math.NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setHorizontal(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fhorizontal §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fhorizontal §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "vert": case "vertical": {
@@ -192,40 +187,40 @@ public class KnockbackCommand extends Command {
                             double value = Double.parseDouble(args[3]);
                             profile.setVertical(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "extrahor": case "extrahorizontal": {
                             if (!org.apache.commons.lang3.math.NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setExtraHorizontal(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fextra-horizontal §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fextra-horizontal §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "extravert": case "extravertical": {
                             if (!org.apache.commons.lang3.math.NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setExtraVertical(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fextra-vertical §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fextra-vertical §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                         case "vertmax": case "verticalmax": {
                             if (!NumberUtils.isNumber(args[3])) {
-                                player.sendMessage("§f" + args[3] + " §c is not a number.");
+                                sender.sendMessage("§f" + args[3] + " §c is not a number.");
                                 return false;
                             }
                             double value = Double.parseDouble(args[3]);
                             profile.setVerticalLimit(value);
                             profile.save();
-                            player.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical-max §asetting to §f" + args[3] + "§a.");
+                            sender.sendMessage("§aChanged §f\"" + profile.getName() + "\"§a's §fvertical-max §asetting to §f" + args[3] + "§a.");
                             break;
                         }
                     }
@@ -233,24 +228,24 @@ public class KnockbackCommand extends Command {
                 break;
             }
             default: {
-                knockbackCommandMain(player);
+                knockbackCommandMain(sender);
             }
         }
         return false;
     }
 
-    private void knockbackCommandMain(Player player) {
-        player.sendMessage("" + "\n" + "§3Knockback Profiles:\n\n"); // most people make this smaller/simpler but for a lot of people its easier to just see them all
+    private void knockbackCommandMain(CommandSender sender) {
+        sender.sendMessage("" + "\n" + "§3Knockback Profiles:\n\n"); // most people make this smaller/simpler but for a lot of people its easier to just see them all
 
         for (KnockbackProfile profile : KewlSpigot.INSTANCE.getConfig().getKbProfiles()) {
             boolean current = KewlSpigot.INSTANCE.getConfig().getCurrentKb().getName().equals(profile.getName());
-            player.sendMessage(profile.getName() + (current ? ChatColor.GREEN + " [Active]" : ""));
+            sender.sendMessage(profile.getName() + (current ? ChatColor.GREEN + " [Active]" : ""));
 
             for (String values : profile.getValues()) {
-                player.sendMessage(" * §b" + values);
+                sender.sendMessage(" * §b" + values);
             }
         }
-        player.sendMessage("");
+        sender.sendMessage("");
     }
 
     private boolean isProfileName(String name) {
