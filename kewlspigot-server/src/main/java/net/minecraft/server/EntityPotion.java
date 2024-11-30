@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.eytril.spigot.KewlSpigot;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,23 +24,25 @@ public class EntityPotion extends EntityProjectile {
     public EntityPotion(World world, EntityLiving entityliving, ItemStack itemstack) {
         super(world, entityliving);
         this.item = itemstack;
+        this.healPotion = item.getData() == 16421;
     }
 
     public EntityPotion(World world, double d0, double d1, double d2, ItemStack itemstack) {
         super(world, d0, d1, d2);
         this.item = itemstack;
+        this.healPotion = item.getData() == 16421;
     }
 
     protected float m() {
-        return 0.05F;
+        return KewlSpigot.INSTANCE.getConfig().getPotionFallSpeed();
     }
 
     protected float j() {
-        return 0.5F;
+        return KewlSpigot.INSTANCE.getConfig().getPotionThrowMultiplier();
     }
 
     protected float l() {
-        return -20.0F;
+        return KewlSpigot.INSTANCE.getConfig().getPotionThrowOffset();
     }
 
     public void setPotionValue(int i) {

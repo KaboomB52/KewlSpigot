@@ -44,6 +44,12 @@ public class KewlConfig {
     private boolean disableJoinMessage;
     private boolean disableLeaveMessage;
 
+    private float potionThrowMultiplier;
+    private float potionThrowOffset;
+    private float potionFallSpeed;
+
+    private boolean smoothHealPotions;
+
     public KewlConfig() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream is = classLoader.getResourceAsStream("version.properties");
@@ -126,6 +132,12 @@ public class KewlConfig {
         this.blockOperations = this.getBoolean("block-operations", false);
         this.disableJoinMessage = this.getBoolean("disable-join-message", true);
         this.disableLeaveMessage = this.getBoolean("disable-leave-message", true);
+
+        this.potionThrowMultiplier = this.getFloat("potion-throw-multiplier", 0.5f);
+        this.potionThrowOffset = this.getFloat("potion-throw-offset", -10.0f);
+        this.potionFallSpeed = this.getFloat("potion-fall-speed", 0.05f);
+
+        this.smoothHealPotions = this.getBoolean("smooth-heal-potions", true);
 
         KewlBridge.disableOpPermissions = this.getBoolean("disable-op", false);
 
