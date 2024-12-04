@@ -17,6 +17,7 @@ This is a spigot built to be performant and optimized while allowing customizabi
  - Tickloop fixes.<br>
  - A lot of data leak fixes.<br>
  - Customizable enchant limits.<br>
+ - A custom ASM event bus to make events run faster. (2 to 4x faster)<br>
 
 ### Contributing
 Contributions of all sorts are welcome. We use GitHub's pull requests to add in your code!<br>
