@@ -1,10 +1,11 @@
-package org.bukkit.event.entity;
+package org.bukkit.event.potion;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;

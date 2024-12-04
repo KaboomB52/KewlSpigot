@@ -57,6 +57,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.potion.PotionSplashEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.meta.BookMeta;

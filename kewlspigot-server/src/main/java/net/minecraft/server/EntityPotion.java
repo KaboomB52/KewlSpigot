@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.potion.PotionSplashEvent;
 import org.eytril.spigot.KewlSpigot;
 
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class EntityPotion extends EntityProjectile {
                         }
                     }
 
-                    org.bukkit.event.entity.PotionSplashEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPotionSplashEvent(this, affected);
+                    PotionSplashEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPotionSplashEvent(this, affected);
 
                     if (event.getEntity().getShooter() instanceof Player) {
                         Player shooter = (Player) event.getEntity().getShooter();

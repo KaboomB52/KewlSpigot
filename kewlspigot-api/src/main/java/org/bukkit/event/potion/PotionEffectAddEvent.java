@@ -1,4 +1,4 @@
-package org.bukkit.event.entity;
+package org.bukkit.event.potion;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
