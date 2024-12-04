@@ -2,6 +2,7 @@ package org.eytril.spigot;
 
 import org.eytril.spigot.command.KewlCommand;
 import org.eytril.spigot.command.PotionCommand;
+import org.eytril.spigot.command.TPSCommand;
 import org.eytril.spigot.handler.MovementHandler;
 import org.eytril.spigot.command.KnockbackCommand;
 import org.eytril.spigot.handler.PacketHandler;
@@ -21,7 +22,7 @@ public enum KewlSpigot {
 
     private KewlConfig config;
 
-    public static String version = "1.0.3";
+    public static String version = "1.0.4";
     private Set<PacketHandler> packetHandlers = new HashSet<>();
     private Set<MovementHandler> movementHandlers = new HashSet<>();
 
@@ -55,6 +56,7 @@ public enum KewlSpigot {
 		commands.put("knockback", new KnockbackCommand());
         commands.put("kewl", new KewlCommand());
         commands.put("potion", new PotionCommand());
+        commands.put("tps", new TPSCommand());
 
 		for (Map.Entry<String, Command> entry : commands.entrySet()) {
 			MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Spigot", entry.getValue());

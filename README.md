@@ -13,11 +13,12 @@ This is a spigot built to be performant and optimized while allowing customizabi
  - GoatSpigot (Johannes [Karhu Dev])
 
 ### New Features
- - Custom KB System allowing for changing the Vertical and Horizontal friction at different values.<br>
+ - Custom KB System built for more customization.<br>
  - Tickloop fixes.<br>
- - A lot of data leak fixes.<br>
+ - Fixed a lot of data leaks.<br>
  - Customizable enchant limits.<br>
  - A custom ASM event bus to make events run faster. (2 to 4x faster)<br>
+ - Fixed potion delay.
 
 ### Contributing
 Contributions of all sorts are welcome. We use GitHub's pull requests to add in your code!<br>

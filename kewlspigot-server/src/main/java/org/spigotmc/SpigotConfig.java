@@ -240,10 +240,6 @@ public class SpigotConfig {
         }
     }
 
-    private static void tpsCommand() {
-        commands.put("tps", new TicksPerSecondCommand("tps"));
-    }
-
     public static int playerSample;
 
     private static void playerSample() {

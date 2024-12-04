@@ -48,6 +48,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     public static final long SEC_IN_NANO = 1000000000;
     private static final int SAMPLE_INTERVAL = TPS;
     public static long LAST_TICK_TIME;
+    public static double AVERAGE_TICK_TIME;
     public static long TICK_TIME = SEC_IN_NANO / TPS;
     public static long NORMAL_TICK_TIME = TPS / 20;
     public Convertable convertable;
@@ -595,6 +596,10 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
                     this.nextTickTime += 50L;
                     this.methodProfiler.a("tick");
                     this.A();
+                    final long endTime = System.nanoTime();
+                    final double duration = (endTime - lastTick) / 1000000.0;
+                    final long remaining = MinecraftServer.TICK_TIME - (endTime - lastTick) - catchupTime;
+                    MinecraftServer.AVERAGE_TICK_TIME = duration;
                     this.methodProfiler.c("nextTickWait");
                     this.mayHaveDelayedTasks = true;
                     this.delayedTasksMaxNextTickTime = Math.max(getMillis() + 50L, this.nextTickTime);

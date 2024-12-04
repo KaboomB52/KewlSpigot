@@ -244,8 +244,8 @@ public class KnockbackCommand extends Command {
             for (String values : profile.getValues()) {
                 sender.sendMessage(" * §b" + values);
             }
+            sender.sendMessage("");
         }
-        sender.sendMessage("");
     }
 
     private boolean isProfileName(String name) {

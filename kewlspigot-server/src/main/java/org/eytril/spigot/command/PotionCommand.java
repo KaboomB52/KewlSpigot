@@ -21,9 +21,9 @@ public class PotionCommand extends Command {
     private final String[] help = Stream.of(
                     "",
                     "§3Potion Commands:",
-                    " * §b/potion §fspeed §7<speed>",
-                    " * §b/potion §multiplier §7<distance>",
-                    " * §b/potion §foffset §7<offset>",
+                    " * §b/potion §fspeed §7<value>",
+                    " * §b/potion §fmultiplier §7<value>",
+                    " * §b/potion §foffset §7<value>",
                     " * §b/potion §fsmooth §7<true|false>",
                     ""
             )
