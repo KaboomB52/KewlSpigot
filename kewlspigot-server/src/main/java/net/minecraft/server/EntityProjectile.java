@@ -143,8 +143,10 @@ public abstract class EntityProjectile extends Entity implements IProjectile {
                     float f = 0.3F;
                     AxisAlignedBB axisalignedbb = entity1.getBoundingBox().grow((double) f, (double) f, (double) f);
                     MovingObjectPosition movingobjectposition1 = axisalignedbb.a(vec3d, vec3d1);
-                    if (healPotion && KewlSpigot.INSTANCE.getConfig().isSmoothHealPotions() && movingobjectposition1 == null && entity1 == entityliving && ticksLived % 3 == 0 && !entity1.inWater && !entity1.ab() && !entity1.isSneaking()) {
-                        movingobjectposition1 = new MovingObjectPosition(entity1);
+                    if(healPotion != null) {
+                        if (healPotion && KewlSpigot.INSTANCE.getConfig().isSmoothHealPotions() && movingobjectposition1 == null && entity1 == entityliving && ticksLived % 3 == 0 && !entity1.inWater && !entity1.ab() && !entity1.isSneaking()) {
+                            movingobjectposition1 = new MovingObjectPosition(entity1);
+                        }
                     }
                     if (movingobjectposition1 != null) {
                         double d1 = vec3d.distanceSquared(movingobjectposition1.pos);
