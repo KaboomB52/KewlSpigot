@@ -24,7 +24,7 @@ public enum KewlSpigot {
 
     private KewlConfig config;
 
-    public static String version = "1.0.4";
+    public static String version = "1.0.5";
     private Set<PacketHandler> packetHandlers = new HashSet<>();
     private Set<MovementHandler> movementHandlers = new HashSet<>();
 

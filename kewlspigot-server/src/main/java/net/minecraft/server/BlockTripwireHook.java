@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
@@ -113,12 +114,12 @@ public class BlockTripwireHook extends Block {
                 flag5 = false;
             } else {
                 if (k == i) {
-                    iblockdata2 = Objects.requireNonNullElse(iblockdata1, iblockdata2);
+                    iblockdata2 = MoreObjects.firstNonNull(iblockdata1, iblockdata2);
                 }
 
-                boolean flag7 = !((Boolean) iblockdata2.get(BlockTripwire.DISARMED)).booleanValue();
-                boolean flag8 = ((Boolean) iblockdata2.get(BlockTripwire.POWERED)).booleanValue();
-                boolean flag9 = ((Boolean) iblockdata2.get(BlockTripwire.SUSPENDED)).booleanValue();
+                boolean flag7 = !iblockdata2.get(BlockTripwire.DISARMED);
+                boolean flag8 = iblockdata2.get(BlockTripwire.POWERED);
+                boolean flag9 = iblockdata2.get(BlockTripwire.SUSPENDED);
 
                 flag5 &= flag9 == flag4;
                 flag6 |= flag7 && flag8;
