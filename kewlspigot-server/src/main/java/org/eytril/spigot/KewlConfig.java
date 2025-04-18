@@ -112,6 +112,8 @@ public class KewlConfig {
             profile.setHorizontal(this.getDouble(path + ".horizontal", 0.35D));
             profile.setVertical(this.getDouble(path + ".vertical", 0.35D));
             profile.setVerticalLimit(this.getDouble(path + ".vertical-limit", 0.4D));
+            profile.setExtraVertical(this.getDouble(path + ".extra-vertical", 0.085D));
+            profile.setExtraHorizontal(this.getDouble(path + ".extra-horizontal", 0.424D));
         }
 
         this.currentKb = this.getKbProfileByName(this.getString("knockback.current", "default"));
