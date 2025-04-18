@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -25,6 +27,8 @@ public enum KewlSpigot {
     public static String version = "1.0.4";
     private Set<PacketHandler> packetHandlers = new HashSet<>();
     private Set<MovementHandler> movementHandlers = new HashSet<>();
+
+    public static final ExecutorService asyncExecutor = Executors.newFixedThreadPool(8); // adjust as needed
 
     public KewlConfig getConfig() {
         return this.config;

@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.eytril.spigot.KewlSpigot;
 import org.github.paperspigot.exception.ServerInternalException;
 
 import java.io.*;
@@ -181,23 +182,24 @@ public class WorldNBTStorage implements IDataManager, IPlayerFileData {
     }
 
     public void save(EntityHuman entityhuman) {
-        try {
-            NBTTagCompound nbttagcompound = new NBTTagCompound();
+        KewlSpigot.asyncExecutor.submit(() -> {
+            try {
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-            entityhuman.e(nbttagcompound);
-            File file = new File(this.playerDir, entityhuman.getUniqueID().toString() + ".dat.tmp");
-            File file1 = new File(this.playerDir, entityhuman.getUniqueID().toString() + ".dat");
+                entityhuman.e(nbttagcompound);
+                File file = new File(this.playerDir, entityhuman.getUniqueID().toString() + ".dat.tmp");
+                File file1 = new File(this.playerDir, entityhuman.getUniqueID().toString() + ".dat");
 
-            NBTCompressedStreamTools.a(nbttagcompound, (OutputStream) (new FileOutputStream(file)));
-            if (file1.exists()) {
-                file1.delete();
+                NBTCompressedStreamTools.a(nbttagcompound, (OutputStream) (new FileOutputStream(file)));
+                if (file1.exists()) {
+                    file1.delete();
+                }
+
+                file.renameTo(file1);
+            } catch (Exception exception) {
+                WorldNBTStorage.a.warn("Failed to save player data for " + entityhuman.getName());
             }
-
-            file.renameTo(file1);
-        } catch (Exception exception) {
-            WorldNBTStorage.a.warn("Failed to save player data for " + entityhuman.getName());
-        }
-
+        });
     }
 
     public NBTTagCompound load(EntityHuman entityhuman) {

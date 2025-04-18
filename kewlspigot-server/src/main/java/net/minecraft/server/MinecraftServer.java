@@ -20,6 +20,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.craftbukkit.Main;
+import org.eytril.spigot.KewlSpigot;
 import org.eytril.spigot.tick.ReentrantIAsyncHandler;
 import org.eytril.spigot.tick.TasksPerTick;
 
@@ -84,7 +85,7 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     private String J;
     private boolean demoMode;
     private boolean M;
-    private boolean N;
+    public boolean N;
     private String O = "";
     private String P = "";
     public boolean Q;
@@ -440,30 +441,32 @@ public abstract class MinecraftServer extends ReentrantIAsyncHandler<TasksPerTic
     }
 
     protected void saveChunks(boolean flag) throws ExceptionWorldConflict { // CraftBukkit - added throws
-        if (!this.N) {
-            WorldServer[] aworldserver = this.worldServer;
-            int i = aworldserver.length;
+        KewlSpigot.asyncExecutor.submit(() -> {
+            if (!this.N) {
+                WorldServer[] aworldserver = this.worldServer;
+                int i = aworldserver.length;
 
-            // CraftBukkit start
-            for (int j = 0; j < worlds.size(); ++j) {
-                WorldServer worldserver = worlds.get(j);
-                // CraftBukkit end
+                // CraftBukkit start
+                for (int j = 0; j < worlds.size(); ++j) {
+                    WorldServer worldserver = worlds.get(j);
+                    // CraftBukkit end
 
-                if (worldserver != null) {
-                    if (!flag) {
-                        MinecraftServer.LOGGER.info("Saving chunks for level \'" + worldserver.getWorldData().getName() + "\'/" + worldserver.worldProvider.getName());
-                    }
+                    if (worldserver != null) {
+                        if (!flag) {
+                            MinecraftServer.LOGGER.info("Saving chunks for level \'" + worldserver.getWorldData().getName() + "\'/" + worldserver.worldProvider.getName());
+                        }
 
-                    try {
-                        worldserver.save(true, (IProgressUpdate) null);
-                        worldserver.saveLevel(); // CraftBukkit
-                    } catch (ExceptionWorldConflict exceptionworldconflict) {
-                        MinecraftServer.LOGGER.warn(exceptionworldconflict.getMessage());
+                        try {
+                            worldserver.save(true, (IProgressUpdate) null);
+                            worldserver.saveLevel(); // CraftBukkit
+                        } catch (ExceptionWorldConflict exceptionworldconflict) {
+                            MinecraftServer.LOGGER.warn(exceptionworldconflict.getMessage());
+                        }
                     }
                 }
-            }
 
-        }
+            }
+        });
     }
 
     // CraftBukkit start
