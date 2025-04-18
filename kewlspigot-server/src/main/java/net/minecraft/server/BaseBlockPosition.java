@@ -2,6 +2,8 @@ package net.minecraft.server;
 
 import com.google.common.base.Objects;
 
+import java.util.StringJoiner;
+
 public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
 
     public static final BaseBlockPosition ZERO = new BaseBlockPosition(0, 0, 0);
@@ -79,8 +81,13 @@ public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
         return this.c((double) baseblockposition.getX(), (double) baseblockposition.getY(), (double) baseblockposition.getZ());
     }
 
+    @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).add("z", this.getZ()).toString();
+        return new StringJoiner(", ", getClass().getSimpleName() + "{", "}")
+                .add("x=" + getX())
+                .add("y=" + getY())
+                .add("z=" + getZ())
+                .toString();
     }
 
     // Paperspigot - Signature change, Object -> BaseBlockPosition

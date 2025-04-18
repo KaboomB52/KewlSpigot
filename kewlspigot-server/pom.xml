@@ -22,8 +22,8 @@
         <minecraft.version>1.8.8</minecraft.version>
         <minecraft_version>1_8_R3</minecraft_version>
         <buildtag.prefix>git-Bukkit-</buildtag.prefix>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>

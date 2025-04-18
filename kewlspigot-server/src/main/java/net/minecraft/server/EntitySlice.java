@@ -111,7 +111,7 @@ public class EntitySlice<T> extends AbstractSet<T> {
                 List list = (List) EntitySlice.this.b.get(EntitySlice.this.b(oclass));
 
                 if (list == null) {
-                    return Iterators.emptyIterator();
+                    return Collections.emptyIterator();
                 } else {
                     Iterator iterator = list.iterator();
 
@@ -122,7 +122,7 @@ public class EntitySlice<T> extends AbstractSet<T> {
     }
 
     public Iterator<T> iterator() {
-        return this.e.isEmpty() ? Iterators.<T>emptyIterator() : Iterators.unmodifiableIterator(this.e.iterator());
+        return this.e.isEmpty() ? Collections.emptyIterator() : Iterators.unmodifiableIterator(this.e.iterator());
     }
 
     public int size() {
