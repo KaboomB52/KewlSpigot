@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @AllArgsConstructor
+@AllArgsConstructor @Getter @Setter
 public class EquipmentSetEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
@@ -18,7 +18,6 @@ public class EquipmentSetEvent extends Event {
     private final int slot;
     private final ItemStack previousItem;
     private final ItemStack newItem;
-
 
     public static HandlerList getHandlerList() {
         return handlers;

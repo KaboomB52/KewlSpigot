@@ -1,7 +1,7 @@
-# Kewl Spigot
+# KewlSpigot
 A fork of SpigotX (based on ClubSpigot)
 
-This is a spigot built to be performant and optimized while allowing customizability over kb and smoother pots.
+This is a spigot built to be performant and optimized, adding features to make better pvp.
 
 ### We currently use patches from the following spigots (authors are also listed if found):
  - MineTick (Poweruser)
@@ -23,9 +23,5 @@ This is a spigot built to be performant and optimized while allowing customizabi
 ### Contributing
 Contributions of all sorts are welcome. We use GitHub's pull requests to add in your code!<br>
 Simply make a pull request and after reviewing it and testing it on a demo server it will be added to the repo!
-
-### Servers that use KewlSpigot
- - Sarefine (sarefine.us)
- - MineOrigins (mineorigins.net)
 
 **This spigot is free for everyone, feel free to contribute if you want to!**

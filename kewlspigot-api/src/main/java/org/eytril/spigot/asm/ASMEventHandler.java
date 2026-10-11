@@ -3,5 +3,5 @@ package org.eytril.spigot.asm;
 import org.bukkit.event.Event;
 
 public interface ASMEventHandler {
-    void handle(Event event);
+    void handle(Event event) throws Throwable;
 }
